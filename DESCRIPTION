@@ -1,0 +1,25 @@
+Package: multiverseHabitat
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Date: 2022-07-25
+Authors@R: c(
+    person(given = "Benjamin Michael",
+           family = "Marshall",
+           role = c("aut", "cre"),
+           email = "benjaminmichaelmarshall@gmail.com",
+           comment = c(ORCID = "0000-0001-9554-0605")),
+    person(given = "Alexander Bradley",
+           family = "Duthie",
+           role = c("aut"),
+           email = "alexander.duthie@stir.ac.uk",
+           comment = c(ORCID = "0000-0001-8343-4995")))
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Depends: R (>= 3.5.0)
+Imports: abmAnimalMovement
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
