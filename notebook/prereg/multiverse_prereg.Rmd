@@ -135,8 +135,57 @@ However, as not all choices are equally valid, so multiverse analysis cannot sim
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Casual Forests @bryan_replicator_2019].
 
 Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
+
+
 The initial step will be to develop an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type).
 The goal of the multiverse will be to run a multitude of sampling/data processing/analysis approaches on that simulated animal movement data, to determine which pathway or series of decisions gets closest to the predefined parameter used to simulate the data initially.
 If a sufficiently diverse set of scenarios can be explored in the multiverse, the third step will be applying the now know uncertainty from particular choices to explore whether different choices would have changed conclusions in real-world datasets.
+
+# Methods
+
+## Simulating the Scenarios
+
+Three scenarios - three species - three landscapes
+How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world.
+Weighted landscapes translated into three-tier categories
+Two years of simulation, one for model, second for validation
+
+## Sampling and Analysis Options
+
+Ultimate number of variations will be dictated by computational costs.
+
+### Sampling
+
+Three species
+Number of individuals sampled from pre-simulated population.
+```{r samplingNum}
+# possible way of generating a range that is skewed to more realistic number while still hitting the extremes
+exp(seq(log(1), log(200), length.out = 8))
+```
+Tracking length - max one year
+Tracking frequency - important to consider timing as well
+Tracking timing in relation to activity of animal
+Tracking consistency - might be very difficult to define systematically
+
+Error is likely not worth the effort right now, too much complexity linked to cleaning
+
+### Analysis
+
+Joo et al - R packages, adeHabaitaths, amt, and possibly ctmcmove
+adeHabitaths has the wides designs and compana, possibly another
+amt is rsf and ssf - possible extension using Muff et al for pop level ssf
+ctmcmove need more investigation
+
+maybe a super naive measure like Simpson's index?
+
+### Validation
+
+comparing estimates to a second year of data
+
+## Hypotheses
+
+sample size helps
+frequency helps when closer to decision making time frame
+longer tracking is better
 
 # References
