@@ -132,23 +132,48 @@ Ideally we can use multiverse analysis with preregistrations to boost transparen
 Given the success of meta-analyses to overcome short-comings in the publication record [e.g., p-hacking; @head_extent_2015], multiverse analysis may aid the direction of future research efforts by providing a means of meeting calls to replicate results before collecting more [@nuijten_verify_2018].
 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
-If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Casual Forests @bryan_replicator_2019].
+If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Causal Forests @bryan_replicator_2019].
 
-Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
+Here we explore using a multiverse approach how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat preference.
 
+<!-- Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach. -->
 
-The initial step will be to develop an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type).
-The goal of the multiverse will be to run a multitude of sampling/data processing/analysis approaches on that simulated animal movement data, to determine which pathway or series of decisions gets closest to the predefined parameter used to simulate the data initially.
-If a sufficiently diverse set of scenarios can be explored in the multiverse, the third step will be applying the now know uncertainty from particular choices to explore whether different choices would have changed conclusions in real-world datasets.
+<!-- The initial step will be to develop an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type). -->
+<!-- The goal of the multiverse will be to run a multitude of sampling/data processing/analysis approaches on that simulated animal movement data, to determine which pathway or series of decisions gets closest to the predefined parameter used to simulate the data initially. -->
+<!-- If a sufficiently diverse set of scenarios can be explored in the multiverse, the third step will be applying the now know uncertainty from particular choices to explore whether different choices would have changed conclusions in real-world datasets. -->
 
 # Methods
 
 ## Simulating the Scenarios
 
-Three scenarios - three species - three landscapes
-How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world.
-Weighted landscapes translated into three-tier categories
-Two years of simulation, one for model, second for validation
+<!-- Three scenarios - three species - three landscapes -->
+We simulated three scenarios/species, comprising of different animals and landscapes.
+We simulated the landscapes using NLMR, and the animal movement using abmAnimalMovement.
+The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
+The full details of how the scenarios were parametrised can be found in [CITE], and also in the abmAnimalMovement github repository [LINK].
+
+In brief:
+- Species 1, Badger: 
+- Species 2, Vulture: 
+- Species 3, King cobra: 
+
+<!-- How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world. -->
+Using these setting we simulated 200 individuals of each species.
+Each simulation contained of 1,051,200 time steps (i.e., movement choices made by the animal) comprising a dataset that represented two years worth of movement data.
+<!-- Two years of simulation, one for model, second for validation -->
+We split each individual's dataset into year 1 and 2, reserving year 2 data for validation purposes.
+
+<!-- Weighted landscapes translated into three-tier categories -->
+Our landscapes comprise of three elements, which are considered by the animal differently depending on the behavioural state the animal is in.
+The three elements are matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
+The three are non-independent, and based on a single initial random generation using a Gaussian field.
+<!-- [MORE SETTINGS HERE?] -->
+From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas. 
+Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease and also housing higher shelter quality, and more barren areas with high movement ease but with minimal foraging value.
+<!-- figure here of landscapes -->
+While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
+Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis.
+<!-- figure here of landscapes turned into categories -->
 
 ## Sampling and Analysis Options
 
