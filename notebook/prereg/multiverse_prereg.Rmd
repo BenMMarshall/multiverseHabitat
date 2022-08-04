@@ -134,7 +134,7 @@ Given the success of meta-analyses to overcome short-comings in the publication 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Causal Forests @bryan_replicator_2019].
 
-Here we explore using a multiverse approach how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat preference.
+Here, using a multiverse approach, we explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat preference.
 
 <!-- Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach. -->
 
@@ -158,18 +158,19 @@ In brief:
 - Species 3, King cobra: 
 
 <!-- How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world. -->
-Using these setting we simulated 200 individuals of each species.
-Each simulation contained of 1,051,200 time steps (i.e., movement choices made by the animal) comprising a dataset that represented two years worth of movement data.
+Using these setting we simulated a population individuals of each species.
 <!-- Two years of simulation, one for model, second for validation -->
-We split each individual's dataset into year 1 and 2, reserving year 2 data for validation purposes.
+Each simulation contained sufficient time steps (i.e., movement choices made by the animal) to provide data for model generation and validation.
 
 <!-- Weighted landscapes translated into three-tier categories -->
 Our landscapes comprise of three elements, which are considered by the animal differently depending on the behavioural state the animal is in.
 The three elements are matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
 The three are non-independent, and based on a single initial random generation using a Gaussian field.
+
 <!-- [MORE SETTINGS HERE?] -->
 From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas. 
 Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease and also housing higher shelter quality, and more barren areas with high movement ease but with minimal foraging value.
+
 <!-- figure here of landscapes -->
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
 Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis.
@@ -177,31 +178,68 @@ Therefore, to simply the interpretation of the multiverse we simplify out landsc
 
 ## Sampling and Analysis Options
 
-Ultimate number of variations will be dictated by computational costs.
+Ultimately number of variations and choices we are able to explore will be dictated by computational costs and therefore time; however, below we describe the currently planned decision nodes.
 
 ### Sampling
 
-Three species
-Number of individuals sampled from pre-simulated population.
+As stated we have three species simulations planned using the abmAnimalMovement package.
+The first decision point of a study would be the number of individuals sampled from that population (i.e., sample size).
 ```{r samplingNum}
 # possible way of generating a range that is skewed to more realistic number while still hitting the extremes
 exp(seq(log(1), log(200), length.out = 8))
 ```
-Tracking length - max one year
-Tracking frequency - important to consider timing as well
-Tracking timing in relation to activity of animal
-Tracking consistency - might be very difficult to define systematically
 
-Error is likely not worth the effort right now, too much complexity linked to cleaning
+<!-- Tracking length - max one year -->
+<!-- Tracking frequency - important to consider timing as well -->
+<!-- Tracking timing in relation to activity of animal -->
+<!-- Tracking consistency - might be very difficult to define systematically -->
+The next decisions all concern data quantity.
+We aim to vary tracking duration and tracking frequency primarily, while keep consistency fixed.
+While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we will not explore tracking consistency at this time.
+Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
+For this exploration we will assume that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
+This only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day are all outside of the active period.
+
+<!-- Error is likely not worth the effort right now, too much complexity linked to cleaning -->
+Data or location quality is another point of sampling variation.
+Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
+As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
 ### Analysis
 
-Joo et al - R packages, adeHabaitaths, amt, and possibly ctmcmove
-adeHabitaths has the wides designs and compana, possibly another
-amt is rsf and ssf - possible extension using Muff et al for pop level ssf
-ctmcmove need more investigation
+<!-- Joo et al - R packages, adeHabaitaths, amt, and possibly ctmcmove -->
+<!-- adeHabitaths has the wides designs and compana, possibly another -->
+<!-- amt is rsf and ssf - possible extension using Muff et al for pop level ssf -->
+<!-- ctmcmove need more investigation -->
+<!-- maybe a super naive measure like Simpson's index? -->
+For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
+R presents the number one tool for analysing animal movement data [JOO CITE].
+Joo et al., [CITE] provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
+Specifically, we will explore the decisions made during the workflows using adeHabaitatHS, amt, and ctmcmove R packages.
+<!-- need to test ctmcmove with data I am familiar with to see if it works, doesn't appear to have  a vignette -->
+In addition, we will include a older method that targets availability versus used more naively: Manley's Standardized Habitat Selection Index.
 
-maybe a super naive measure like Simpson's index?
+#### adeHabaitatHS
+- define available area
+- wides II or III
+- compana
+- eisera
+- engen
+- k-select
+
+#### amt
+- rsf or ssf
+- model formula
+- number of options
+
+#### ctmcmove
+- 
+- 
+
+#### Manley's Index
+- what counts as available
+
+<!-- pop level or summary of individuals, the latter would dodge the need to vary sample size -->
 
 ### Validation
 
