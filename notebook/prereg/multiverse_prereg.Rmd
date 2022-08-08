@@ -184,6 +184,7 @@ Ultimately number of variations and choices we are able to explore will be dicta
 
 As stated we have three species simulations planned using the abmAnimalMovement package.
 The first decision point of a study would be the number of individuals sampled from that population (i.e., sample size).
+However, as many of the habitat selection analyses focus on individual selection we will not explore study sample size initially.
 ```{r samplingNum}
 # possible way of generating a range that is skewed to more realistic number while still hitting the extremes
 exp(seq(log(1), log(200), length.out = 8))
@@ -193,7 +194,7 @@ exp(seq(log(1), log(200), length.out = 8))
 <!-- Tracking frequency - important to consider timing as well -->
 <!-- Tracking timing in relation to activity of animal -->
 <!-- Tracking consistency - might be very difficult to define systematically -->
-The next decisions all concern data quantity.
+The first decision point decisions concern data quantity.
 We aim to vary tracking duration and tracking frequency primarily, while keep consistency fixed.
 While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we will not explore tracking consistency at this time.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
@@ -207,39 +208,34 @@ As the causes and measurement of error, as well as the solutions to, location er
 
 ### Analysis
 
-<!-- Joo et al - R packages, adeHabaitaths, amt, and possibly ctmcmove -->
-<!-- adeHabitaths has the wides designs and compana, possibly another -->
-<!-- amt is rsf and ssf - possible extension using Muff et al for pop level ssf -->
-<!-- ctmcmove need more investigation -->
-<!-- maybe a super naive measure like Simpson's index? -->
 For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
 R presents the number one tool for analysing animal movement data [JOO CITE].
 Joo et al., [CITE] provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
 Specifically, we will explore the decisions made during the workflows using adeHabaitatHS, amt, and ctmcmove R packages.
-<!-- need to test ctmcmove with data I am familiar with to see if it works, doesn't appear to have  a vignette -->
-In addition, we will include a older method that targets availability versus used more naively: Manley's Standardized Habitat Selection Index.
 
 #### adeHabaitatHS
 - define available area
 - wides II or III
 - compana
 - eisera
-- engen
-- k-select
+- engen - no because it doesn't have the II and III choice
+- k-select - no because it is better suited to continuous habitat variables using PCA
 
 #### amt
-- rsf or ssf
-- model formula
+- hsf or ssf
+- hsf available area definition
+- hsf point weighting
+- for higher res data, use of bursts?
+- model formula - issf vs ssf, maybe step::interactions
+- extract covariates from start end or mid
 - number of options
 
 #### ctmcmove
-- 
-- 
+- define the sequence of times on which to sample the imputed path
+- varying the spacing of the knots
+- LinearInterp or ShortestPath
+- CAR1 and CAR2
 
-#### Manley's Index
-- what counts as available
-
-<!-- pop level or summary of individuals, the latter would dodge the need to vary sample size -->
 
 ### Validation
 
@@ -250,5 +246,11 @@ comparing estimates to a second year of data
 sample size helps
 frequency helps when closer to decision making time frame
 longer tracking is better
+
+## Possible Additional Explorations
+
+<!-- pop level or summary of individuals, the latter would dodge the need to vary sample size -->
+Sample size impact on population level estimates of preference.
+Exploring the same decisions with different simulations of animal movement.
 
 # References
