@@ -25,15 +25,15 @@ library(fda)
 ## Problems with fitting the functional movement model can often be fixed by
 ## varying the spacing of the knots.
 knots = seq(min(t),max(t),by=1/4)
+
 ## create B-spline basis vectors used to approximate the path
 b=create.bspline.basis(c(min(t),max(t)),breaks=knots,norder=3)
 ## define the sequence of times on which to sample the imputed path
 tpred=seq(min(t),max(t),by=1/24/60)
 
 
-
 ## Fit latent Gaussian model using MCMC
-out=mcmc.fmove(xy,t,b,tpred,QQ="CAR",n.mcmc=400,a=1,r=1,num.paths.save=30)
+out=mcmc.fmove(xy,t,b,tpred,QQ="CAR1",n.mcmc=400,a=1,r=1,num.paths.save=30)
 str(out)
 
 ## plot 3 imputed paths
