@@ -212,40 +212,110 @@ For the analysis decisions we focus entirely on decisions that can come out of a
 R presents the number one tool for analysing animal movement data [JOO CITE].
 Joo et al., [CITE] provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
 Specifically, we will explore the decisions made during the workflows using adeHabaitatHS, amt, and ctmcmove R packages.
+Combined the packages offer many options for habitat analysis, we will focus on six.
+Three from the adeHabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
+Two from the amt package: resource selection function (RSF), step selection function (SSF); and one from the ctmcmove package using a continuous time Markov chain (CTMC) framework.
+Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection
 
-#### adeHabaitatHS
-- define available area
-- wides II or III
-- compana
-- eisera
-- engen - no because it doesn't have the II and III choice
-- k-select - no because it is better suited to continuous habitat variables using PCA
+<!-- #### adeHabaitatHS -->
+<!-- - define available area -->
+<!-- - wides II or III -->
+<!-- - compana -->
+<!-- - eisera -->
+<!-- - engen - no because it doesn't have the II and III choice -->
+<!-- - k-select - no because it is better suited to continuous habitat variables using PCA -->
 
-#### amt
-- hsf or ssf
-- hsf available area definition
-- hsf point weighting
-- for higher res data, use of bursts?
-- model formula - issf vs ssf, maybe step::interactions
-- extract covariates from start end or mid
-- number of options
+<!-- #### amt -->
+<!-- - rsf or ssf -->
+<!-- - rsf available area definition -->
+<!-- - rsf point weighting -->
+<!-- - for higher res data, use of bursts? -->
+<!-- - model formula - issf vs ssf, maybe step::interactions -->
+<!-- - extract covariates from start end or mid -->
+<!-- - number of options -->
+<!-- could vary the distributions sl and ta are based on?  -->
+<!-- no resampling or burst because we have artifically consistent data collected -->
 
-#### ctmcmove
-- define the sequence of times on which to sample the imputed path
-- varying the spacing of the knots
-- LinearInterp or ShortestPath
-- CAR1 and CAR2
+<!-- #### ctmcmove -->
+<!-- - define the sequence of times on which to sample the imputed path -->
+<!-- - varying the spacing of the knots -->
+<!-- - LinearInterp or ShortestPath -->
+<!-- - CAR1 and CAR2 -->
 
+The methods from the adeHabitatHS package all require similar choices to be made.
+First is whether to approach the habitat selection analysis as a type II or III design (we are ignoring type I as we are aiming to estimate individuals' habitat selection).
+Type II is the habitat selection of an individual animal in relation to the available habitats on a population or landscape scale.
+The type II designs compares individual usage, to a universal availability. 
+Type III differs by using individually defined available habitat.
+Wides, compana, and eisera analyses can be used in either type II or III scenarios.
 
-### Validation
+Critical to these designs are the definition of availability.
+Type III or animal-specific availability is more simply defined.
+We will use a range of methods are build areas from the recorded locations of the animal.
+Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
+Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use.
+Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal [CITE].
+To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses: the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
 
-comparing estimates to a second year of data
+The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation, which better account for the non-independence and autocorrelative structures within animal movement data.
+We use two of these methods to define availability.
+
+First is the Autocorrelated Kernel Density Estimations (AKDEs) from the ctmm package [CITE].
+The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
+The movement models (Ornstein-Uhlenbeck, Ornstein–Uhlenbeck Foraging, and Independent Identically Distributed) include different levels of autocorrelative structure.
+The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
+Therefore, we will use the guidance from [CITE SILVA] to generate weighted AKDEs using PHREML, and select the best performing by AICc for inclusion in further analysis.
+
+The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs), that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
+DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated. 
+Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used.
+As window and margin are defined by data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency. 
+As our most infrequent tracking is 168 hours (1 week), we will set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
+The broader window and margin sizes will help reduce computational costs.
+
+In a few cases the shorter tracking durations combined with the lower tracking frequencies will preclude calculation of available areas due to having too few locations.
+In these instances we will report an NA as a final result.
+
+Type II designs require the availability to the same for all animals.
+To create population-level availability we will use the above described methods for each individual, then combine the areas into a single polygon.
+We will also include a "landscape" description of availability that will include the entire landscape raster.
+
+Each of these area estimation methods require a choice to be made regarding the outermost boundary.
+MCPs areas are generated based a percentage of the location points; whereas the KDE, AKDE, and dBBMM methods require a contour to be extracted from the utilisation distribution (occurrence distribution for dBBMMs).
+We will explore the impact of using a 90, 95, and 99% contour for all the methods.
+
+Once we have a defined availability area, we will run a number of variations for how many random points will be used to estimate the relative availability of different habitats.
+
+The first method from the amt package we will use is a resource selection function (RSF).
+Like the adeHabitatHS methods, RSFs require a definition of what is available. 
+We will use the same decision steps as for the adeHabitatHS method, including area definition methods (including the landscape level definition), contour decisions, and number of random points.
+The RSF method will have an additional decision node that will alter the weighting of the unused points compared to the used points.
+
+The second amt method does not use an area to define availability.
+Instead step selection functions (SSF) use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
+As a result SSFs have a number of unique decisions.
+First is whether to run the model as an integrated SSF, where the step lengths and turn angles interact with the habitat.
+Second is where the habitat covariate data is extracted from along the step length: start, middle, or the end.
+Third is the number of available random steps to be generated at each time step.
+
+The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path.
+We will vary the spacing of the knots, the times at which the imputed path is sampled, and the precision matrix used during the path imputation.
+We will also vary the method used to convert the imputed path to a continuous-time discrete-space path.
+We will explore the impact of Linear Interpretation versus Shortest Path, and Rook's neighbourhood versus King's neighbourhood.
+
+Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable.
+This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat.
+
+<!-- ### Validation -->
+<!-- comparing estimates to a second year of data -->
 
 ## Hypotheses
 
-sample size helps
-frequency helps when closer to decision making time frame
-longer tracking is better
+Although the study is primarily exploratory, with its scope determined by practical consideration of computational time, we register a few broad hypotheses.
+- increases in tracking duration will lead to more consistent habitat selection results
+- the most accurate estimates of habitat selection will come from tracking frequencies that match closest to the frequency of the animal's selection
+- the choice of method will have a larger impact on selection detection than the decisions within methods
+- ISSF will be the most success method as it matches closest to the underlying simulation mechanism
 
 ## Possible Additional Explorations
 
