@@ -29,11 +29,9 @@ abstract: ---
 keywords: Movement ecology, simulation
 ---
 
-# Multiverse Introduction
+# Introduction
 
 <!-- Baldwin et al 2022 has some solutions for secondary analysis -->
-
-## Research flexibilty and the justification for a multiverse approach
 
 Researchers are intrinsically part of the research process [@levins_dialectical_1985; @tang-martinez_history_2020], and our expectations can shape the answers we find [@holman_evidence_2015].
 While we can strive to conduct research objectively, there are frequent moments during research that require judgement calls [@steegen_increasing_2016].
@@ -134,7 +132,7 @@ Given the success of meta-analyses to overcome short-comings in the publication 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Causal Forests @bryan_replicator_2019].
 
-Here, using a multiverse approach, we explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat preference.
+Here, using a multiverse approach, we explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
 
 <!-- Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach. -->
 
@@ -209,11 +207,11 @@ As the causes and measurement of error, as well as the solutions to, location er
 ### Analysis
 
 For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
-R presents the number one tool for analysing animal movement data [JOO CITE].
-Joo et al., [CITE] provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
-Specifically, we will explore the decisions made during the workflows using adeHabaitatHS, amt, and ctmcmove R packages.
+R presents the number one tool for analysing animal movement data [@joo_recent_2022].
+@joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
+Specifically, we will explore the decisions made during the workflows using adehabaitatHS [@adehabitatHS], amt [@amt], and ctmcmove [@ctmcmove] R packages.
 Combined the packages offer many options for habitat analysis, we will focus on six.
-Three from the adeHabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
+Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
 Two from the amt package: resource selection function (RSF), step selection function (SSF); and one from the ctmcmove package using a continuous time Markov chain (CTMC) framework.
 Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection
 
@@ -234,7 +232,7 @@ Each of the methods require downstream decisions resulting in a "garden of forki
 <!-- - extract covariates from start end or mid -->
 <!-- - number of options -->
 <!-- could vary the distributions sl and ta are based on?  -->
-<!-- no resampling or burst because we have artifically consistent data collected -->
+<!-- no resampling or burst because we have artificially consistent data collected -->
 
 <!-- #### ctmcmove -->
 <!-- - define the sequence of times on which to sample the imputed path -->
@@ -242,7 +240,7 @@ Each of the methods require downstream decisions resulting in a "garden of forki
 <!-- - LinearInterp or ShortestPath -->
 <!-- - CAR1 and CAR2 -->
 
-The methods from the adeHabitatHS package all require similar choices to be made.
+The methods from the adehabitatHS package all require similar choices to be made.
 First is whether to approach the habitat selection analysis as a type II or III design (we are ignoring type I as we are aiming to estimate individuals' habitat selection).
 Type II is the habitat selection of an individual animal in relation to the available habitats on a population or landscape scale.
 The type II designs compares individual usage, to a universal availability. 
@@ -254,21 +252,21 @@ Type III or animal-specific availability is more simply defined.
 We will use a range of methods are build areas from the recorded locations of the animal.
 Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use.
-Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal [CITE].
-To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses: the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
+Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal [@silva_reptiles_2020].
+To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses [@crane_lots_2020] <!--more refs for other groups?-->: the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
 
-The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation, which better account for the non-independence and autocorrelative structures within animal movement data.
+The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation [@silva_reptiles_2020], which better account for the non-independence and autocorrelative structures within animal movement data [@Noonan2018].
 We use two of these methods to define availability.
 
-First is the Autocorrelated Kernel Density Estimations (AKDEs) from the ctmm package [CITE].
+First is the Autocorrelated Kernel Density Estimations (AKDEs) [@Fleming2015; @Fleming2017] from the ctmm package [@ctmm; @Calabrese2016].
 The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
 The movement models (Ornstein-Uhlenbeck, Ornstein–Uhlenbeck Foraging, and Independent Identically Distributed) include different levels of autocorrelative structure.
 The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
-Therefore, we will use the guidance from [CITE SILVA] to generate weighted AKDEs using PHREML, and select the best performing by AICc for inclusion in further analysis.
+Therefore, we will use the guidance from [@silva_autocorrelationinformed_2022] to generate weighted AKDEs using PHREML, and select the best performing by AICc for inclusion in further analysis.
 
-The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs), that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
-DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated. 
-Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used.
+The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs) [@Kranstauber2012] from the move package [@move], that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
+DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated [@Kranstauber2012]. 
+<!-- Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used. -->
 As window and margin are defined by data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency. 
 As our most infrequent tracking is 168 hours (1 week), we will set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
 The broader window and margin sizes will help reduce computational costs.
@@ -287,8 +285,8 @@ We will explore the impact of using a 90, 95, and 99% contour for all the method
 Once we have a defined availability area, we will run a number of variations for how many random points will be used to estimate the relative availability of different habitats.
 
 The first method from the amt package we will use is a resource selection function (RSF).
-Like the adeHabitatHS methods, RSFs require a definition of what is available. 
-We will use the same decision steps as for the adeHabitatHS method, including area definition methods (including the landscape level definition), contour decisions, and number of random points.
+Like the adehabitatHS methods, RSFs require a definition of what is available. 
+We will use the same decision steps as for the adehabitatHS method, including area definition methods (including the landscape level definition), contour decisions, and number of random points.
 The RSF method will have an additional decision node that will alter the weighting of the unused points compared to the used points.
 
 The second amt method does not use an area to define availability.
@@ -317,10 +315,24 @@ Although the study is primarily exploratory, with its scope determined by practi
 - the choice of method will have a larger impact on selection detection than the decisions within methods
 - ISSF will be the most success method as it matches closest to the underlying simulation mechanism
 
-## Possible Additional Explorations
-
+<!-- ## Possible Additional Explorations -->
 <!-- pop level or summary of individuals, the latter would dodge the need to vary sample size -->
-Sample size impact on population level estimates of preference.
-Exploring the same decisions with different simulations of animal movement.
+<!-- Sample size impact on population level estimates of preference. -->
+<!-- Exploring the same decisions with different simulations of animal movement. -->
+
+# Acknowledgements
+
+# Software availablity
+
+We used *R* `r paste0("v.", version$major, ".", version$minor)` [@base] via *RStudio* v.`r rstudioapi::versionInfo()$version` [@rstudio], and used *rmarkdown* `r paste0("v.", packageVersion("rmarkdown"))` [@rmarkdown2022; @rmarkdown2018; @rmarkdown2020], *bookdown* `r paste0("v.", packageVersion("bookdown"))` [@bookdown2016; @R-bookdown], *tinytex* `r paste0("v.", packageVersion("tinytex"))` [@tinytex2019; @tinytex2022], and *knitr* `r paste0("v.", packageVersion("knitr"))` [@knitr2015; @knitr2014; @knitr2022] packages to generate type-set outputs.
+
+@osfr
+
+<!-- other packs here -->
+We generated R package citations with the aid of *grateful* `r paste0("v.", packageVersion("grateful"))` [@grateful].
+
+# Data availabilty
+
+
 
 # References
