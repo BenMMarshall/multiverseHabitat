@@ -1,0 +1,31 @@
+---
+title: "PackageCitation"
+author: "Benjamin Michael Marshall"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: "packages_refs.bib"
+---
+```{r pcks, include=TRUE}
+pcks <- grateful::scan_packages(cite.tidyverse = FALSE, dependencies = TRUE)
+
+additionalVec <- c("osfr", "move", "ctmm", "ctmcmove", "adehabitatHS", "amt")
+additionalPcks <- data.frame("pkg" = additionalVec,
+                             "version" = unlist(lapply(additionalVec, function(x){as.character(packageVersion(x))})))
+
+pcks <- rbind(pcks, additionalPcks)
+```
+```{r citeGen, include=TRUE}
+
+grateful::cite_packages(
+  output = "citekeys",
+  pkgs = pcks$pkg,
+  include.RStudio = TRUE,
+  bib.file = "packages_refs.bib")
+
+```
+
+We used *R* `r paste0("v.", version$major, ".", version$minor)` [@base] via *RStudio* v.`r rstudioapi::versionInfo()$version` [@rstudioapi].
+<!-- We used *ggplot2* `r paste0("v.", packageVersion("ggplot2"))` for creating figures [@ggplot2], with the expansions: *ggpubr* `r paste0("v.", packageVersion("ggpubr"))` [@ggpubr], *ggtext* `r paste0("v.", packageVersion("ggtext"))` [@ggtext], *ggspatial* `r paste0("v.", packageVersion("ggspatial"))` [@ggspatial], and *scico* `r paste0("v.", packageVersion("scico"))` [@scico]. -->
+<!-- We used the *dplyr* `r paste0("v.", packageVersion("dplyr"))` and *stringr* `r paste0("v.", packageVersion("stringr"))` packages for data manipulation [@dplyr; @stringr]. -->
+<!-- We used *sp* `r paste0("v.", packageVersion("sp"))` [@sp], *adehabitatHR* `r paste0("v.", packageVersion("adehabitatHR"))` [@adehabitatHR], *ctmm* `r paste0("v.", packageVersion("ctmm"))` [@ctmm], *move* `r paste0("v.", packageVersion("move"))` [@move], *rgeos* `r paste0("v.", packageVersion("rgeos"))` [@rgeos] for manipulation of spatial data and estimation of space use. -->
+We generated R package citations with the aid of *grateful* `r paste0("v.", packageVersion("grateful"))` [@grateful].
