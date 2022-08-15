@@ -22,3 +22,7 @@ usethis::edit_r_environ()
 # check access is gained
 osfProject <- osf_retrieve_node("https://osf.io/5dgs9")
 osfProject
+
+cffr::cff_create()
+cffr::cff_gha_update()
+

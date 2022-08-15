@@ -56,7 +56,7 @@ adeMethods_list <-
       lapply(avail_03list_avaiableAreas, function(x){
         lapply(avail_04list_avaiableContour, function(x){
           lapply(avail_05list_availablePointsMultiplier, function(x){
-            "Result"
+            list("Result" = "Result")
           })
         })
       })
@@ -79,7 +79,7 @@ rsfMethods_list <-
              lapply(avail_04list_avaiableContour, function(x){
                lapply(avail_05list_availablePointsMultiplier, function(x){
                  lapply(rsf_01list_weighting, function(x){
-                   "Result"
+                   list("Result" = "Result")
                  })
                })
              })
@@ -101,7 +101,7 @@ ssfMethods_list <-
          lapply(ssf_01list_modelForm, function(x){
            lapply(ssf_02list_covariateExtract, function(x){
              lapply(ssf_03list_availableSteps, function(x){
-               "Result"
+               list("Result" = "Result")
              })
            })
          })
@@ -117,10 +117,10 @@ ctmc_02_imputeTimes <- c(1/24/60, 1/24/30, 1/24, 1)
 ctmc_02list_imputeTimes <- vec2NamedList(ctmc_02_imputeTimes)
 
 ctmc_03_precisionMat <- c("CAR1", "CAR2")
-ctmc_03list_precisionMat <- vec2NamedList(ctmc_04_precisionMat)
+ctmc_03list_precisionMat <- vec2NamedList(ctmc_03_precisionMat)
 
 ctmc_04_interpMethod <- c("LinearInterp", "ShortestPath")
-ctmc_04list_interpMethod <- vec2NamedList(ctmc_03_interpMethod)
+ctmc_04list_interpMethod <- vec2NamedList(ctmc_04_interpMethod)
 
 ctmc_05_interpDirec <- c("LinearInterp", "ShortestPath")
 ctmc_05list_interpDirec <- vec2NamedList(ctmc_05_interpDirec)
@@ -132,7 +132,7 @@ ctmcMethods_list <-
              lapply(ctmc_03list_precisionMat, function(x){
                lapply(ctmc_04list_interpMethod, function(x){
                  lapply(ctmc_05list_interpDirec, function(x){
-                   "Result"
+                   list("Result" = "Result")
                  })
                })
              })
@@ -178,27 +178,202 @@ fullMultiverse_list <-
 fullMultiverse_tree <- as.Node(fullMultiverse_list)
 print(fullMultiverse_tree)
 
-fullMultiverse_dendro <- as.dendrogram(fullMultiverse_tree$
-                                         samp_01_species___species1_Badger$
-                                         samp_02_trackingFreq___1hrs$
-                                         samp_03_trackingDura___30days$
-                                         method_01_habitatMethod___ade_Compana)
-
-fullMultiverse_nwk <- ToNewick(fullMultiverse_tree)
+# fullMultiverse_tree$samp_01_species___species1_Badger$leafCount
+#
+# fullMultiverse_dendro <- as.dendrogram(fullMultiverse_tree$
+#                                          samp_01_species___species1_Badger$
+#                                          samp_02_trackingFreq___1hrs$
+#                                          samp_03_trackingDura___30days$
+#                                          method_01_habitatMethod___ade_Compana)
+#
+# fullMultiverse_nwk <- ToNewick(fullMultiverse_tree)
 
 # plot(fullMultiverse_dendro, center = TRUE,
 #      leaflab = "none")
 
 library(ggplot2)
 library(ggtree)
+library(ape)
+library(castor)# fast phylo calcs
+library(here)
 
-nwkTree <- ToNewick(fullMultiverse_tree$
-                      samp_01_species___species1_Badger$
-                      samp_02_trackingFreq___1hrs$
-                      samp_03_trackingDura___30days$
-                      method_01_habitatMethod___ade_Compana)
+library(parallel)
+detectCores()
 
-tree <- read.tree(text = nwkTree)
+fullMultiverse_tree$
+  samp_01_species___species1_Badger$
+  samp_02_trackingFreq___0.5hrs$
+  samp_03_trackingDura___365days$method_01_habitatMethod___ade_Wides$leafCount
 
-ggplot(tree) +
+fullMultiverse_tree$
+  samp_01_species___species1_Badger$
+  samp_02_trackingFreq___0.5hrs$
+  samp_03_trackingDura___365days$
+  method_01_habitatMethod___ade_Wides$
+  avail_02_designType___II$
+  avail_03_avaiableAreas___dBBMM$
+  avail_04_avaiableContour___90$avail_05_availablePointsMultiplier___1
+fullMultiverse_list$
+  samp_01_species___species1_Badger$
+  samp_02_trackingFreq___0.5hrs$
+  samp_03_trackingDura___365days$
+  method_01_habitatMethod___ade_Wides$
+  avail_02_designType___II$
+  avail_03_avaiableAreas___dBBMM$
+  avail_04_avaiableContour___90$avail_05_availablePointsMultiplier___1
+
+analysisSubTreeNodes <- names(fullMultiverse_tree$
+                                samp_01_species___species1_Badger$
+                                samp_02_trackingFreq___0.5hrs$
+                                samp_03_trackingDura___365days$children)
+
+# analysisSubTreeNodes <- analysisSubTreeNodes[5:6]
+
+# fullMultiverse_tree$
+#   samp_01_species___species1_Badger$
+#   samp_02_trackingFreq___0.5hrs$
+#   samp_03_trackingDura___365days$method_01_habitatMethod___ade_Compana$leafCount
+#
+# fullMultiverse_tree$
+#   samp_01_species___species1_Badger$
+#   samp_02_trackingFreq___0.5hrs$
+#   samp_03_trackingDura___365days$method_01_habitatMethod___ctmc_ctmc$leafCount
+
+# subnode <- analysisSubTreeNodes[1]
+# tictoc::tic()
+# tempSubTree <- fullMultiverse_tree$
+#   samp_01_species___species1_Badger$
+#   samp_02_trackingFreq___0.5hrs$
+#   samp_03_trackingDura___365days[[subnode]]
+# analysisSubTreeList[[i]] <- as.phylo(tempSubTree)
+# tictoc::toc()
+#
+# beepr::beep()
+
+analysisSubTreeList <- vector("list", length = length(analysisSubTreeNodes))
+# names(analysisSubTreeList) <- analysisSubTreeNodes
+i <- 0
+for(subnode in analysisSubTreeNodes){
+  i <- i+1
+  print(subnode)
+
+  tempSubTree <- fullMultiverse_tree$
+    samp_01_species___species1_Badger$
+    samp_02_trackingFreq___0.5hrs$
+    samp_03_trackingDura___365days[[subnode]]
+
+  analysisSubTreeList[[i]] <- as.phylo(tempSubTree)
+  # analysisSubTreeList[[i]] <- ToNewick(tempSubTree)
+
+  write_tree(analysisSubTreeList[[i]],
+             file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")),
+             include_edge_labels = TRUE,
+             include_edge_numbers = TRUE)
+  # write.tree(analysisSubTreeList[[i]],
+  #            file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")))
+
+}
+# # comboTreeFull <- do.call(join_rooted_trees, analysisSubTreeList)
+# analysisSubTreeList
+# comboTreeFull <- do.call(join_rooted_trees, c(analysisSubTreeList, list(target_edge1 = 0,
+#                                                  target_edge_length1 = 1, root_edge_length2 = 1)))
+
+
+
+# parrellel testing -------------------------------------------------------
+
+# library(foreach)
+library(doParallel)
+
+# lapply(analysisSubTreeNodes,
+#        FUN = function(subnode){
+#          tempSubTree <- fullMultiverse_tree$
+#            samp_01_species___species1_Badger$
+#            samp_02_trackingFreq___0.5hrs$
+#            samp_03_trackingDura___365days[[subnode]]
+#          return(as.phylo(tempSubTree))
+#        })
+
+# analysisSubTreeNodes <- analysisSubTreeNodes[1:2]
+
+phyloList <- parallel::mclapply(analysisSubTreeNodes,
+                                FUN = function(subnode){
+                                  tempSubTree <- fullMultiverse_tree$
+                                    samp_01_species___species1_Badger$
+                                    samp_02_trackingFreq___0.5hrs$
+                                    samp_03_trackingDura___365days[[subnode]]
+                                  return(as.phylo(tempSubTree))
+                                },
+                                mc.cores = ifelse(length(analysisSubTreeNodes) < detectCores(),
+                                                  length(analysisSubTreeNodes), detectCores()))
+
+# setup parallel backend to use many processors
+cores <- detectCores()
+# cl <- makeCluster(cores[1]-1, oufile = "") # leave one free # oufile to help with progress bar
+cl <- makeCluster(2, outfile = "") # leave one free # oufile to help with progress bar
+registerDoParallel(cl)
+
+# analysisSubTreeNodes <- analysisSubTreeNodes[1:2]
+
+# which(analysisSubTreeNodes %in% analysisSubTreeNodes[2])
+
+# finalList <- foreach(subnode = analysisSubTreeNodes, .combine = list,
+#                      .packages = c("ape", "castor")) %dopar% {
+#   tempTree = function(subnode){
+#
+#     tempSubTree <- fullMultiverse_tree$
+#       samp_01_species___species1_Badger$
+#       samp_02_trackingFreq___0.5hrs$
+#       samp_03_trackingDura___365days[[subnode]]
+#     return(as.phylo(tempSubTree))
+#
+#     # analysisSubTreeList[[i]] <- as.phylo(tempSubTree)
+#
+#   } # calling a function
+#   # do other things
+#   # setTxtProgressBar(pb, which(analysisSubTreeNodes %in% subnode))
+#   tempTree #Equivalent to finalMatrix = cbind(finalMatrix, tempMatrix)
+# }
+# # stop cluster
+# stopCluster(cl)
+
+
+list.files(here("notebook", "prereg", "decisionTrees"))
+
+inTree <- read_tree(file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")))
+
+# combotreeTest <- join_rooted_trees(analysisSubTreeList[[1]], analysisSubTreeList[[2]], target_edge1 = 0,
+#                   target_edge_length1 = 15, root_edge_length2 = 15)
+
+# read_tree(file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")))
+
+
+# nwkTree <- ToNewick(fullMultiverse_tree$
+#                       samp_01_species___species1_Badger$
+#                       samp_02_trackingFreq___0.5hrs$
+#                       samp_03_trackingDura___365days$method_01_habitatMethod___amt_RSF)
+# nwkTreeWides <- ToNewick(fullMultiverse_tree$
+#                            samp_01_species___species1_Badger$
+#                            samp_02_trackingFreq___0.5hrs$
+#                            samp_03_trackingDura___365days$method_01_habitatMethod___ade_Wides)
+# nwkTreeSSF <- ToNewick(fullMultiverse_tree$
+#                            samp_01_species___species1_Badger$
+#                            samp_02_trackingFreq___0.5hrs$
+#                            samp_03_trackingDura___365days$method_01_habitatMethod___amt_SSF)
+# nwkTreeCTMC <- ToNewick(fullMultiverse_tree$
+#                            samp_01_species___species1_Badger$
+#                            samp_02_trackingFreq___0.5hrs$
+#                            samp_03_trackingDura___365days$method_01_habitatMethod___ctmc_ctmc)
+# comboTree <- ape::bind.tree(read.tree(text = nwkTree), read.tree(text = nwkTreeWides))
+# comboTree2 <- ape::bind.tree(read.tree(text = nwkTreeSSF), read.tree(text = nwkTreeCTMC))
+# # comboTree3 <- ape::bind.tree(comboTree, comboTree2)
+# comboTree3 <- do.call(bind.tree, list(comboTree, comboTree2))
+
+ggplot(combotreeTest$tree) +
   geom_tree()
+
+ggplot(analysisSubTreeList) +
+  geom_tree()
+
+# comboTree$node.label
+

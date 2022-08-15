@@ -1,0 +1,16 @@
+citHeader("To cite multiverseHabitat in publications use:")
+
+citEntry(
+entry    = "Article",
+  title    = "multiverseHabitat",
+  author   = "Benjamin Michael Marshall and Alexander Bradley Duthie",
+  journal  = ,
+  year     = 2022,
+  volume   = ,
+  number   = ,
+  pages    = ,
+  url      = ,
+  textVersion = paste(
+
+  )
+)
