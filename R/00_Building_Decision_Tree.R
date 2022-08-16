@@ -2,6 +2,119 @@
 # https://cran.r-project.org/web/packages/data.tree/vignettes/data.tree.html#tree-creation
 library(data.tree)
 
+library(ape)
+library(treeio)
+library(tidytree)
+
+library(here)
+library(castor)# fast phylo calcs
+
+library(ggplot2)
+library(ggtree)
+
+# Unique labelled nodes for sampling tree ----------------------
+
+### Sampling
+samp_01_sp <- c("sp_B", "sp_V", "sp_K")
+samp_01_sp_list <- as.list(samp_01_sp)
+names(samp_01_sp_list) <- samp_01_sp
+
+samp_02_tf <- c("tf_0.5", "tf_01", "tf_02", "tf_06", "tf_12", "tf_24", "tf_48", "tf_168")
+samp_02_tf_list <- as.list(samp_02_tf)
+names(samp_02_tf_list) <- samp_02_tf
+
+samp_03_td <- c("td_007", "td_015", "td_030", "td_060", "td_120", "td_240", "td_365")
+samp_03_td_list <- as.list(samp_03_td)
+names(samp_03_td_list) <- samp_03_td
+
+anls_01_hm <- c("ade_wid", "ade_com", "ade_eis",
+                "amt_rsf", "amt_ssf",
+                "ctm_ctm")
+anls_01_hm_list <- as.list(anls_01_hm)
+names(anls_01_hm_list) <- anls_01_hm
+
+# created function below is more elegant to be put into lapplys
+# tempDf <- expand.grid(samp_01_sp, samp_02_tf)
+# sprintf('%s.%s', tempDf[,1], tempDf[,2])
+
+# a function to take all combos of any number of vectors and output a vector of each combo pasted together
+allComboVector <- function(..., splitter = "."){
+  argsL <- list(...)
+  expanded <- do.call(expand.grid, argsL)
+  OUT <- apply(expanded, 1, function(x){
+    paste(x, collapse = splitter)
+  })
+  return(OUT)
+}
+
+# allComboVector(samp_01_sp, samp_02_tf)
+# allComboVector(samp_01_sp, samp_02_tf, samp_03_td)
+
+samplingList <- lapply(samp_01_sp_list, function(s01){
+
+  temp_L1 <- lapply(samp_02_tf_list, function(s02){
+
+    allComboVector(s01, s02)
+
+    temp_L2 <- lapply(samp_03_td_list, function(s03){
+
+      allComboVector(s01, s02, s03)
+
+      temp_L3 <- lapply(anls_01_hm_list, function(a01){
+
+        allComboVector(s01, s02, s03, a01)
+
+      })
+      names(temp_L3) <- allComboVector(s01, s02, s03, anls_01_hm)
+      return(temp_L3)
+
+    })
+    names(temp_L2) <- allComboVector(s01, s02, samp_03_td)
+    return(temp_L2)
+
+  })
+  names(temp_L1) <- allComboVector(s01, samp_02_tf)
+  return(temp_L1)
+
+})
+
+samplingList
+
+samplingDataTree <- as.Node(samplingList)
+
+samplingPhylo <- as.phylo(samplingDataTree)
+
+write_tree(samplingPhylo,
+           file = here("notebook", "prereg", "decisionTrees", "samplingTree.txt"),
+           include_edge_labels = TRUE,
+           include_edge_numbers = TRUE)
+
+samplingTreeData <- as.treedata(samplingPhylo)
+
+tidytree::nodeid(samplingTreeData, samplingTreeData@phylo$tip.label)
+
+data2add <- tibble::tibble(
+  "node" = tidytree::nodeid(samplingTreeData, c(samplingTreeData@phylo$node.label, samplingTreeData@phylo$tip.label)),
+  "nodelab" = c(samplingTreeData@phylo$node.label, samplingTreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(samplingTreeData))
+
+data2add$species <- substr(data2add$nodelab, 1, 4)
+
+samplingTreeData_joined <- full_join(samplingTreeData, data2add, by = "node")
+
+ggplot(samplingTreeData_joined, branch.length = "none",
+       aes(colour = species)) +
+  geom_tree(size = 0.1) +
+  # layout_fan(angle = 90) +
+  geom_tiplab(aes(angle=angle), size = 2) +
+  layout_circular() +
+  theme_bw() +
+  theme(panel.grid = element_blank())
+
+
+# Old attempts ------------------------------------------------------------
+
+
 # as a list -----------------------------------------------------------
 
 vec2NamedList <- function(INVECTOR){
@@ -191,12 +304,6 @@ print(fullMultiverse_tree)
 # plot(fullMultiverse_dendro, center = TRUE,
 #      leaflab = "none")
 
-library(ggplot2)
-library(ggtree)
-library(ape)
-library(castor)# fast phylo calcs
-library(here)
-
 library(parallel)
 detectCores()
 
@@ -249,6 +356,7 @@ analysisSubTreeNodes <- names(fullMultiverse_tree$
 # tictoc::toc()
 #
 # beepr::beep()
+tictoc::tic()
 
 analysisSubTreeList <- vector("list", length = length(analysisSubTreeNodes))
 # names(analysisSubTreeList) <- analysisSubTreeNodes
@@ -278,7 +386,11 @@ for(subnode in analysisSubTreeNodes){
 # comboTreeFull <- do.call(join_rooted_trees, c(analysisSubTreeList, list(target_edge1 = 0,
 #                                                  target_edge_length1 = 1, root_edge_length2 = 1)))
 
+tictoc::toc()
+# 8502.333 sec elapsed
 
+analysisSubTreeList
+save(analysisSubTreeList, file = here("notebook", "prereg", "decisionTrees", paste0("analysisSubTreeList.RData")))
 
 # parrellel testing -------------------------------------------------------
 
@@ -295,6 +407,7 @@ library(doParallel)
 #        })
 
 # analysisSubTreeNodes <- analysisSubTreeNodes[1:2]
+tictoc::tic()
 
 phyloList <- parallel::mclapply(analysisSubTreeNodes,
                                 FUN = function(subnode){
@@ -304,46 +417,95 @@ phyloList <- parallel::mclapply(analysisSubTreeNodes,
                                     samp_03_trackingDura___365days[[subnode]]
                                   return(as.phylo(tempSubTree))
                                 },
-                                mc.cores = ifelse(length(analysisSubTreeNodes) < detectCores(),
-                                                  length(analysisSubTreeNodes), detectCores()))
+                                mc.cores = 62)
+tictoc::toc()
+beepr::beep()
+# 4049.673 sec elapsed
 
-# setup parallel backend to use many processors
-cores <- detectCores()
-# cl <- makeCluster(cores[1]-1, oufile = "") # leave one free # oufile to help with progress bar
-cl <- makeCluster(2, outfile = "") # leave one free # oufile to help with progress bar
-registerDoParallel(cl)
+save(phyloList, file = here("notebook", "prereg", "decisionTrees", paste0("phyloList.RData")))
 
-# analysisSubTreeNodes <- analysisSubTreeNodes[1:2]
+join_rooted_trees(phyloList[[1]], phyloList[[2]], target_edge1 = 0,
+                  target_edge_length1 = 15, root_edge_length2 = 15)
 
-# which(analysisSubTreeNodes %in% analysisSubTreeNodes[2])
+comboTreeFull <- do.call(join_rooted_trees, c(phyloList, list(target_edge1 = 0,
+                                                              target_edge_length1 = 1, root_edge_length2 = 1)))
+comboTreeFull <- do.call(join_rooted_trees, c(analysisSubTreeList, list(target_edge1 = 0,
+                                                                        target_edge_length1 = 1, root_edge_length2 = 1)))
 
-# finalList <- foreach(subnode = analysisSubTreeNodes, .combine = list,
-#                      .packages = c("ape", "castor")) %dopar% {
-#   tempTree = function(subnode){
-#
-#     tempSubTree <- fullMultiverse_tree$
-#       samp_01_species___species1_Badger$
-#       samp_02_trackingFreq___0.5hrs$
-#       samp_03_trackingDura___365days[[subnode]]
-#     return(as.phylo(tempSubTree))
-#
-#     # analysisSubTreeList[[i]] <- as.phylo(tempSubTree)
-#
-#   } # calling a function
-#   # do other things
-#   # setTxtProgressBar(pb, which(analysisSubTreeNodes %in% subnode))
-#   tempTree #Equivalent to finalMatrix = cbind(finalMatrix, tempMatrix)
-# }
-# # stop cluster
-# stopCluster(cl)
+for(i in 1:length(phyloList)){
+  if(i == 1){
+    mainTree <- phyloList[[i]]
+  } else if(i == 2){
+    mainTree <- join_rooted_trees(mainTree, phyloList[[i]], target_edge1 = 0,
+                                  target_edge_length1 = 15, root_edge_length2 = 15)
+  } else {
+    mainTree <- join_rooted_trees(mainTree$tree, phyloList[[i]], target_edge1 = 0,
+                                  target_edge_length1 = 0, root_edge_length2 = 15)
+
+  }
+}
+mainTree
+
+
+beast_file <- system.file("examples/MCC_FluA_H3.tree",
+                          package="ggtree")
+beast_tree <- treeio::read.beast(beast_file)
+
+mainTreeData <- as.treedata(mainTree$tree)
+mainTreeData@data
+Nnode2(mainTreeData)
+
+class(mainTree)
+class(beast_tree)
+beast_tree@data$node
+get.data(mainTreeData)
+mainTreeData@phylo$node.label
+mainTreeData@phylo$Nnode
+
+# c(mainTreeData@phylo$node.label, mainTreeData@phylo$tip.label)
+
+Nnode2(mainTreeData)
+tidytree::nodeid(mainTreeData, mainTreeData@phylo$node.label)
+
+tidytree::nodeid(mainTreeData, "avail_04_avaiableContour___90")
+
+data2add <- tibble::tibble(
+  "node" = tidytree::nodeid(mainTreeData, c(mainTreeData@phylo$node.label, mainTreeData@phylo$tip.label)),
+  "nodelab" = c(mainTreeData@phylo$node.label, mainTreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(mainTreeData))
+
+sum(duplicated(data2add$node))
+
+data2add$externalVal[grepl("ssf", data2add$nodelab)] <- -999
+
+mainTreeData <- full_join(mainTreeData, data2add, by = "node")
+
+# mainTreeData@data <-
+#   tibble::tibble("node" = 1:Nnode2(mainTreeData),
+#                  "value" = 1:Nnode2(mainTreeData))
+
+get.data(mainTreeData)
+
+get.data(beast_tree)
+
+mainTree$tree$value <- 100
+
+ggplot(mainTreeData, branch.length = "none",
+       aes(colour = externalVal)) +
+  geom_tree(size = 0.1) +
+  # layout_fan(angle = 90) +
+  geom_tiplab(aes(angle=angle), size = 1) +
+  layout_circular() +
+  theme_bw() +
+  theme(panel.grid = element_blank())
 
 
 list.files(here("notebook", "prereg", "decisionTrees"))
 
 inTree <- read_tree(file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")))
 
-# combotreeTest <- join_rooted_trees(analysisSubTreeList[[1]], analysisSubTreeList[[2]], target_edge1 = 0,
-#                   target_edge_length1 = 15, root_edge_length2 = 15)
+combotreeTest <- join_rooted_trees(analysisSubTreeList[[1]], analysisSubTreeList[[2]], target_edge1 = 0,
+                                   target_edge_length1 = 15, root_edge_length2 = 15)
 
 # read_tree(file = here("notebook", "prereg", "decisionTrees", paste0(subnode, ".txt")))
 
@@ -369,11 +531,10 @@ inTree <- read_tree(file = here("notebook", "prereg", "decisionTrees", paste0(su
 # # comboTree3 <- ape::bind.tree(comboTree, comboTree2)
 # comboTree3 <- do.call(bind.tree, list(comboTree, comboTree2))
 
-ggplot(combotreeTest$tree) +
+ggplot(mainTree$tree) +
   geom_tree()
 
 ggplot(analysisSubTreeList) +
   geom_tree()
 
 # comboTree$node.label
-
