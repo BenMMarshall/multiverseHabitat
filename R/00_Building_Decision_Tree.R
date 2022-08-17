@@ -14,27 +14,35 @@ library(ggtree)
 
 # Unique labelled nodes for sampling tree ----------------------
 
-### Sampling
-samp_01_sp <- c("sp_B", "sp_V", "sp_K")
-samp_01_sp_list <- as.list(samp_01_sp)
-names(samp_01_sp_list) <- samp_01_sp
+vec2NamedList <- function(INVECTOR){
+  OUTLIST <- as.list(INVECTOR)
+  names(OUTLIST) <- INVECTOR
+  return(OUTLIST)
+}
 
-samp_02_tf <- c("tf_0.5", "tf_01", "tf_02", "tf_06", "tf_12", "tf_24", "tf_48", "tf_168")
-samp_02_tf_list <- as.list(samp_02_tf)
-names(samp_02_tf_list) <- samp_02_tf
+### sampling
+# species
+sam_01_sp <- c("sp_B", "sp_V", "sp_K")
+# tracking frequency hours
+sam_02_tf <- c("tf_0.5", "tf_01", "tf_02", "tf_06", "tf_12", "tf_24", "tf_48", "tf_168")
+# tracking duration days
+sam_03_td <- c("td_007", "td_015", "td_030", "td_060", "td_120", "td_240", "td_365")
 
-samp_03_td <- c("td_007", "td_015", "td_030", "td_060", "td_120", "td_240", "td_365")
-samp_03_td_list <- as.list(samp_03_td)
-names(samp_03_td_list) <- samp_03_td
+saList <- lapply(ls(pattern = "sam"), function(x){
+  tempList <- vec2NamedList(get(x))
+  assign(paste0(x, "_list"), tempList)
+})
+names(saList) <- paste0(ls(pattern = "sam"), "_list")
 
-anls_01_hm <- c("ade_wid", "ade_com", "ade_eis",
+list2env(saList, envir = .GlobalEnv)
+# method
+ana_01_hm <- c("ade_wid", "ade_com", "ade_eis",
                 "amt_rsf", "amt_ssf",
                 "ctm_ctm")
-anls_01_hm_list <- as.list(anls_01_hm)
-names(anls_01_hm_list) <- anls_01_hm
+ana_01_hm_list <- vec2NamedList(ana_01_hm)
 
 # created function below is more elegant to be put into lapplys
-# tempDf <- expand.grid(samp_01_sp, samp_02_tf)
+# tempDf <- expand.grid(sam_01_sp, sam_02_tf)
 # sprintf('%s.%s', tempDf[,1], tempDf[,2])
 
 # a function to take all combos of any number of vectors and output a vector of each combo pasted together
@@ -47,62 +55,62 @@ allComboVector <- function(..., splitter = "."){
   return(OUT)
 }
 
-# allComboVector(samp_01_sp, samp_02_tf)
-# allComboVector(samp_01_sp, samp_02_tf, samp_03_td)
+# allComboVector(sam_01_sp, sam_02_tf)
+# allComboVector(sam_01_sp, sam_02_tf, sam_03_td)
 
-samplingList <- lapply(samp_01_sp_list, function(s01){
+samling_List <- lapply(sam_01_sp_list, function(s01){
 
-  temp_L1 <- lapply(samp_02_tf_list, function(s02){
+  temp_L1 <- lapply(sam_02_tf_list, function(s02){
 
     allComboVector(s01, s02)
 
-    temp_L2 <- lapply(samp_03_td_list, function(s03){
+    temp_L2 <- lapply(sam_03_td_list, function(s03){
 
       allComboVector(s01, s02, s03)
 
-      temp_L3 <- lapply(anls_01_hm_list, function(a01){
+      temp_L3 <- lapply(ana_01_hm_list, function(a01){
 
         allComboVector(s01, s02, s03, a01)
 
       })
-      names(temp_L3) <- allComboVector(s01, s02, s03, anls_01_hm)
+      names(temp_L3) <- allComboVector(s01, s02, s03, ana_01_hm)
       return(temp_L3)
 
     })
-    names(temp_L2) <- allComboVector(s01, s02, samp_03_td)
+    names(temp_L2) <- allComboVector(s01, s02, sam_03_td)
     return(temp_L2)
 
   })
-  names(temp_L1) <- allComboVector(s01, samp_02_tf)
+  names(temp_L1) <- allComboVector(s01, sam_02_tf)
   return(temp_L1)
 
 })
 
-samplingList
+samling_List
 
-samplingDataTree <- as.Node(samplingList)
+samling_DataTree <- as.Node(samling_List)
 
-samplingPhylo <- as.phylo(samplingDataTree)
+samling_Phylo <- as.phylo(samling_DataTree)
 
-write_tree(samplingPhylo,
+write_tree(samling_Phylo,
            file = here("notebook", "prereg", "decisionTrees", "samplingTree.txt"),
            include_edge_labels = TRUE,
            include_edge_numbers = TRUE)
 
-samplingTreeData <- as.treedata(samplingPhylo)
+samling_TreeData <- as.treedata(samling_Phylo)
 
-tidytree::nodeid(samplingTreeData, samplingTreeData@phylo$tip.label)
+tidytree::nodeid(samling_TreeData, samling_TreeData@phylo$tip.label)
 
 data2add <- tibble::tibble(
-  "node" = tidytree::nodeid(samplingTreeData, c(samplingTreeData@phylo$node.label, samplingTreeData@phylo$tip.label)),
-  "nodelab" = c(samplingTreeData@phylo$node.label, samplingTreeData@phylo$tip.label),
-  "externalVal" = 1:Nnode2(samplingTreeData))
+  "node" = tidytree::nodeid(samling_TreeData, c(samling_TreeData@phylo$node.label, samling_TreeData@phylo$tip.label)),
+  "nodelab" = c(samling_TreeData@phylo$node.label, samling_TreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(samling_TreeData))
 
 data2add$species <- substr(data2add$nodelab, 1, 4)
 
-samplingTreeData_joined <- full_join(samplingTreeData, data2add, by = "node")
+samling_TreeData_joined <- full_join(samling_TreeData, data2add, by = "node")
 
-ggplot(samplingTreeData_joined, branch.length = "none",
+ggplot(samling_TreeData_joined, branch.length = "none",
        aes(colour = species)) +
   geom_tree(size = 0.1) +
   # layout_fan(angle = 90) +
@@ -112,16 +120,328 @@ ggplot(samplingTreeData_joined, branch.length = "none",
   theme(panel.grid = element_blank())
 
 
+# Analysis trees ----------------------------------------------------------
+rm(list = ls(pattern = "ana"))
+
+# Core ade tree part ------------------------------------------------------
+# method
+ana_01_hm <- c("ade_wid", "ade_com", "ade_eis", "amt_rsf")
+ana_01_hm_list <- vec2NamedList(ana_01_hm)
+# design type II or III
+ana_02_dt <- c("dt_t2", "dt_t3") # applies to first four methods
+# available area
+ana_03_aa <- c("aa_mp", "aa_hr", "aa_ls", "aa_AK", "aa_dB", "aa_ls") # for first four methods
+# available contour
+ana_04_ac <- c("ac_90", "ac_95", "ac_99") # for first four methods
+# available points
+ana_05_ap <- paste0("ap_", round(exp(seq(log(1), log(1000), length.out = 4)), digits = 1)) # high enough would approximate true available %
+
+anList <- lapply(ls(pattern = "ana"), function(x){
+  tempList <- vec2NamedList(get(x))
+  assign(paste0(x, "_list"), tempList)
+})
+names(anList) <- paste0(ls(pattern = "ana"), "_list")
+
+list2env(anList, envir = .GlobalEnv)
+
+analysis_ade_List <- lapply(ana_01_hm_list, function(a01){
+
+  temp_L1 <- lapply(ana_02_dt_list, function(a02){
+
+    allComboVector(a01, a02)
+
+    temp_L2 <- lapply(ana_03_aa_list, function(a03){
+
+      allComboVector(a01, a02, a03)
+
+      temp_L3 <- lapply(ana_04_ac_list, function(a04){
+
+        allComboVector(a01, a02, a03, a04)
+
+        temp_L4 <- lapply(ana_05_ap_list, function(a05){
+
+          allComboVector(a01, a02, a03, a04, a05)
+
+        })
+        names(temp_L4) <- allComboVector(a01, a02, a03, a04, ana_05_ap)
+        return(temp_L4)
+
+      })
+      names(temp_L3) <- allComboVector(a01, a02, a03, ana_04_ac)
+      return(temp_L3)
+
+    })
+    names(temp_L2) <- allComboVector(a01, a02, ana_03_aa)
+    return(temp_L2)
+
+  })
+  names(temp_L1) <- allComboVector(a01, ana_02_dt)
+  return(temp_L1)
+
+})
+
+# analysisAdeDataTree <- as.Node(analysis_ade_List)
+#
+# analysisAdePhylo <- as.phylo(analysisAdeDataTree)
+
+analysis_ade_List
+
+
+# Adding RSF aspect to ade tree -------------------------------------------
+# as they share all nodes bar one
+
+# rsf only , point weighting
+rsf_01_wt <- paste0("wt_", exp(seq(log(1), log(10000), length.out = 5)))
+rsf_01_wt_list <- vec2NamedList(rsf_01_wt)
+
+#### making sure we get the correct point in the tree testing
+# get_elements <- function(x, element) {
+#   if(is.list(x))
+#   {
+#     if(element %in% names(x)) x[[element]]
+#     else lapply(x, get_elements, element = element)
+#   }
+# }
+#
+# grepl("amt.*dt.*aa.*ac.*ap", "amt_rsf.dt_t3.aa_ls.ac_90.ap_1000")
+# # grepl("amt.*dt.*aa.*ac.*ap", "amt_rsf")
+#
+#
+# get_elements(analysis_ade_List, "amt_rsf.dt_t3.aa_ls.ac_90")
+#
+# append()
+
+# analysis_ade_List[grepl("amt", names(analysis_ade_List))]
+# # analysis_ade_List[grepl("amt", names(analysis_ade_List))][dt][aa][ac][ap]
+# analysis_ade_List[grepl("amt", names(analysis_ade_List))][["amt_rsf"]][[1]][[1]][[1]]
+#
+# analysis_ade_List[grepl("amt", names(analysis_ade_List))][["amt_rsf"]][[paste(
+#   "amt_rsf", ana_02_dt, sep = ".")]][[paste(
+#     "amt_rsf", ana_02_dt, ana_03_aa, sep = ".")]][[paste(
+#       "amt_rsf", ana_02_dt, ana_03_aa, ana_04_ac, sep = ".")]][[paste(
+#         "amt_rsf", ana_02_dt, ana_03_aa, ana_04_ac, ana_05_ap, sep = ".")]]
+#
+# names(rsf_01_wt_list) <- paste(
+#   "amt_rsf", ana_02_dt[1], ana_03_aa[1], ana_04_ac[1], ana_05_ap[1], sep = ".",
+#   names(rsf_01_wt_list))
+#
+# analysis_ade_List[grepl("amt", names(analysis_ade_List))][["amt_rsf"]][[paste(
+#   "amt_rsf", ana_02_dt[1], sep = ".")]][[paste(
+#     "amt_rsf", ana_02_dt[1], ana_03_aa[1], sep = ".")]][[paste(
+#       "amt_rsf", ana_02_dt[1], ana_03_aa[1], ana_04_ac[1], sep = ".")]][[paste(
+#         "amt_rsf", ana_02_dt[1], ana_03_aa[1], ana_04_ac[1], ana_05_ap[1], sep = ".")]]
+
+
+for(a02 in ana_02_dt){
+  for(a03 in ana_03_aa){
+    for(a04 in ana_04_ac){
+      for(a05 in ana_05_ap){
+
+        leaves <- paste(
+          "amt_rsf", a02, a03, a04, a05, sep = ".",
+          rsf_01_wt)
+
+        leaves_list <- vec2NamedList(leaves)
+
+        names(leaves_list) <- leaves
+
+        analysis_ade_List[grepl("amt", names(analysis_ade_List))][["amt_rsf"]][[paste(
+          "amt_rsf", a02, sep = ".")]][[paste(
+            "amt_rsf", a02, a03, sep = ".")]][[paste(
+              "amt_rsf", a02, a03, a04, sep = ".")]][[paste(
+                "amt_rsf", a02, a03, a04, a05, sep = ".")]] <- leaves_list
+
+      }
+    }
+  }
+}
+
+# SSF tree ----------------------------------------------------------------
+
+ana_01_hm <- c("amt_ssf")
+ana_01_hm_list <- vec2NamedList(ana_01_hm)
+# issf or ssf
+ssf_01_mf <- c("mf_is", "mf_ss") # applies to first four methods
+# coveraite extract
+ssf_02_ce <- c("ce_st", "ce_mi", "ce_ed") # for first four methods
+# available steps
+ssf_03_as <- paste0("as_", round(exp(seq(log(1), log(500), length.out = 5)), digits = 1)) # for first four methods
+
+ssfList <- lapply(ls(pattern = "ssf"), function(x){
+  tempList <- vec2NamedList(get(x))
+  assign(paste0(x, "_list"), tempList)
+})
+names(ssfList) <- paste0(ls(pattern = "ssf_"), "_list")
+
+list2env(ssfList, envir = .GlobalEnv)
+
+analysis_ssf_List <- lapply(ana_01_hm_list, function(a01){
+
+  temp_L1 <- lapply(ssf_01_mf_list, function(f01){
+
+    allComboVector(a01, f01)
+
+    temp_L2 <- lapply(ssf_02_ce_list, function(f02){
+
+      allComboVector(a01, f01, f02)
+
+      temp_L3 <- lapply(ssf_03_as_list, function(f03){
+
+        allComboVector(a01, f01, f02, f03)
+
+      })
+      names(temp_L3) <- allComboVector(a01, f01, f02, ssf_03_as)
+      return(temp_L3)
+
+    })
+    names(temp_L2) <- allComboVector(a01, f01, ssf_02_ce)
+    return(temp_L2)
+
+  })
+  names(temp_L1) <- allComboVector(a01, ssf_01_mf)
+  return(temp_L1)
+
+})
+
+# ctmc analysis -----------------------------------------------------------
+
+ana_01_hm <- c("ctm_ctm")
+ana_01_hm_list <- vec2NamedList(ana_01_hm)
+# ctmcmove only
+# varying the spacing of the knots, c(1, 1/2, 1/4, 1/16, 1/32)
+ctm_01_ks <- paste0("ks_", round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2))
+# define the sequence of times on which to sample the imputed path, c(1/24/60, 1/24/30, 1/24, 1)
+ctm_02_it <- paste0("it_", c("24/60", "24/30", "24", "1"))
+# precision matrix, CAR1 and CAR2
+ctm_03_pm <- c("pm_c1", "pm_c2")
+# intrepre method, "LinearInterp", "ShortestPath"
+ctm_04_im <- c("im_li", "im_sp")
+
+ctmList <- lapply(ls(pattern = "ctm"), function(x){
+  tempList <- vec2NamedList(get(x))
+  assign(paste0(x, "_list"), tempList)
+})
+names(ctmList) <- paste0(ls(pattern = "ctm_"), "_list")
+
+list2env(ctmList, envir = .GlobalEnv)
+
+analysis_ctm_List <- lapply(ana_01_hm_list, function(a01){
+
+  temp_L1 <- lapply(ctm_01_ks_list, function(c01){
+
+    allComboVector(a01, c01)
+
+    temp_L2 <- lapply(ctm_02_it_list, function(c02){
+
+      allComboVector(a01, c01, c02)
+
+      temp_L3 <- lapply(ctm_03_pm_list, function(c03){
+
+        allComboVector(a01, c01, c02, c03)
+
+        temp_L4 <- lapply(ctm_04_im_list, function(c04){
+
+          allComboVector(a01, c01, c02, c03, c04)
+
+        })
+        names(temp_L4) <- allComboVector(a01, c01, c02, c03, ctm_04_im)
+        return(temp_L4)
+
+      })
+      names(temp_L3) <- allComboVector(a01, c01, c02, ctm_03_pm)
+      return(temp_L3)
+
+    })
+    names(temp_L2) <- allComboVector(a01, c01, ctm_02_it)
+    return(temp_L2)
+
+  })
+  names(temp_L1) <- allComboVector(a01, ctm_01_ks)
+  return(temp_L1)
+
+})
+
+
+# Combine analysis lists --------------------------------------------------
+# https://stackoverflow.com/questions/45091691/convert-a-nested-list-in-dendrogram-tree-with-r
+# x <- analysis_List
+#
+# # flatten list
+# x2 <- paste0(lapply(x, function(y) paste0("(", paste0(y, collapse = ","), ")")), collapse = ",")
+#
+# # remove unwanted characters
+# x2 <- gsub('\"|c|list| ', "", x2)
+# x2 <- paste0("(", x2, ");")
+#
+# # remove brackets from single term list object
+# library(stringr)
+# x3 <- str_replace_all(x2, "\\([a-z]*\\)", function(x) gsub("^\\(|\\)$", "", x))
+#
+# # plot
+# library(ape)
+# plot(read.tree(text = x3))
+#
+# testnew <- read.tree(text = x3)
+
+##########
+
+analysis_List <- append(analysis_ade_List, analysis_ssf_List)
+analysis_List <- append(analysis_List, analysis_ctm_List)
+
+names(analysis_List$ade_com$ade_com.dt_t2)
+analysis_List$ade_com$ade_com.dt_t2
+
+as.Node(analysis_List$ade_com, check = "check")
+
+names(analysis_List)
+
+analysis_DataTree <- as.Node(analysis_List, check = "check")
+
+analysis_DataTree$ade_com$ade_com.dt_t2$`1`$ade_com.dt_t2.aa_mp.ac_90
+
+analysis_Phylo <- as.phylo(analysis_DataTree)
+
+write_tree(analysis_Phylo,
+           file = here("notebook", "prereg", "decisionTrees", "analysisTree.txt"),
+           include_edge_labels = TRUE,
+           include_edge_numbers = TRUE)
+
+analysis_TreeData <- as.treedata(analysis_Phylo)
+
+tidytree::nodeid(analysis_TreeData, analysis_TreeData@phylo$tip.label)
+
+tibble::tibble(
+  "node" = tidytree::nodeid(analysis_TreeData, c(analysis_TreeData@phylo$node.label, analysis_TreeData@phylo$tip.label)),
+  "nodelab" = c(analysis_TreeData@phylo$node.label, analysis_TreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(analysis_TreeData)) %>%
+  print(n = 1000)
+
+data2add <- tibble::tibble(
+  "node" = tidytree::nodeid(analysis_TreeData, c(analysis_TreeData@phylo$node.label, analysis_TreeData@phylo$tip.label)),
+  "nodelab" = c(analysis_TreeData@phylo$node.label, analysis_TreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(analysis_TreeData))
+
+data2add$method <- substr(data2add$nodelab, 1, 2)
+
+analysis_TreeData_joined <- full_join(analysis_TreeData, data2add, by = "node")
+
+ggplot(analysis_TreeData_joined, branch.length = "none",
+       aes(colour = method)) +
+  geom_tree(size = 0.1) +
+  # layout_fan(angle = 90) +
+  geom_tiplab(aes(angle=angle), size = 2) +
+  layout_circular() +
+  theme_bw() +
+  theme(panel.grid = element_blank())
+
+
+
 # Old attempts ------------------------------------------------------------
 
 
 # as a list -----------------------------------------------------------
 
-vec2NamedList <- function(INVECTOR){
-  OUTLIST <- vector("list", length = length(INVECTOR))
-  names(OUTLIST) <- paste0(deparse(substitute(INVECTOR)), "___", INVECTOR)
-  return(OUTLIST)
-}
+
 
 ### Sampling
 samp_01_species <- c("species1_Badger", "species1_Vulture", "species1_Kingcobra")
@@ -411,8 +731,7 @@ tictoc::tic()
 
 phyloList <- parallel::mclapply(analysisSubTreeNodes,
                                 FUN = function(subnode){
-                                  tempSubTree <- fullMultiverse_tree$
-                                    samp_01_species___species1_Badger$
+                                  samp_01_species___species1_Badger$
                                     samp_02_trackingFreq___0.5hrs$
                                     samp_03_trackingDura___365days[[subnode]]
                                   return(as.phylo(tempSubTree))
