@@ -35,7 +35,7 @@ saList <- lapply(ls(pattern = "sam"), function(x){
 names(saList) <- paste0(ls(pattern = "sam"), "_list")
 
 list2env(saList, envir = .GlobalEnv)
-# method
+# method, Wides, Compana, Eisera, RSF, SSF, ctmc
 ana_01_hm <- c("ade.wid", "ade.com", "ade.eis",
                 "amt.rsf", "amt.ssf",
                 "ctm.ctm")
@@ -58,7 +58,7 @@ allComboVector <- function(..., splitter = "__"){
 # allComboVector(sam_01_sp, sam_02_tf)
 # allComboVector(sam_01_sp, sam_02_tf, sam_03_td)
 
-samling_List <- lapply(sam_01_sp_list, function(s01){
+sampling_List <- lapply(sam_01_sp_list, function(s01){
 
   temp_L1 <- lapply(sam_02_tf_list, function(s02){
 
@@ -68,13 +68,13 @@ samling_List <- lapply(sam_01_sp_list, function(s01){
 
       allComboVector(s01, s02, s03)
 
-      temp_L3 <- lapply(ana_01_hm_list, function(a01){
-
-        allComboVector(s01, s02, s03, a01)
-
-      })
-      names(temp_L3) <- allComboVector(s01, s02, s03, ana_01_hm)
-      return(temp_L3)
+      # temp_L3 <- lapply(ana_01_hm_list, function(a01){
+      #
+      #   allComboVector(s01, s02, s03, a01)
+      #
+      # })
+      # names(temp_L3) <- allComboVector(s01, s02, s03, ana_01_hm)
+      # return(temp_L3)
 
     })
     names(temp_L2) <- allComboVector(s01, s02, sam_03_td)
@@ -86,31 +86,31 @@ samling_List <- lapply(sam_01_sp_list, function(s01){
 
 })
 
-samling_List
+sampling_List
 
-samling_DataTree <- as.Node(samling_List)
+sampling_DataTree <- as.Node(sampling_List)
 
-samling_Phylo <- as.phylo(samling_DataTree)
+sampling_Phylo <- as.phylo(sampling_DataTree)
 
-write_tree(samling_Phylo,
+write_tree(sampling_Phylo,
            file = here("notebook", "prereg", "decisionTrees", "samplingTree.txt"),
            include_edge_labels = TRUE,
            include_edge_numbers = TRUE)
 
-samling_TreeData <- as.treedata(samling_Phylo)
+sampling_TreeData <- as.treedata(sampling_Phylo)
 
-tidytree::nodeid(samling_TreeData, samling_TreeData@phylo$tip.label)
+tidytree::nodeid(sampling_TreeData, sampling_TreeData@phylo$tip.label)
 
 data2add <- tibble::tibble(
-  "node" = tidytree::nodeid(samling_TreeData, c(samling_TreeData@phylo$node.label, samling_TreeData@phylo$tip.label)),
-  "nodelab" = c(samling_TreeData@phylo$node.label, samling_TreeData@phylo$tip.label),
-  "externalVal" = 1:Nnode2(samling_TreeData))
+  "node" = tidytree::nodeid(sampling_TreeData, c(sampling_TreeData@phylo$node.label, sampling_TreeData@phylo$tip.label)),
+  "nodelab" = c(sampling_TreeData@phylo$node.label, sampling_TreeData@phylo$tip.label),
+  "externalVal" = 1:Nnode2(sampling_TreeData))
 
 data2add$species <- substr(data2add$nodelab, 1, 4)
 
-samling_TreeData_joined <- full_join(samling_TreeData, data2add, by = "node")
+sampling_TreeData_joined <- full_join(sampling_TreeData, data2add, by = "node")
 
-ggplot(samling_TreeData_joined, branch.length = "none",
+ggplot(sampling_TreeData_joined, branch.length = "none",
        aes(colour = species)) +
   geom_tree(size = 0.1) +
   # layout_fan(angle = 90) +
@@ -259,7 +259,7 @@ for(a02 in ana_02_dt){
               "amt.rsf", a02, a03, a04, sep = "__")]][[paste(
                 "amt.rsf", a02, a03, a04, a05, sep = "__")]] <- lapply(leaves_list, function(x){
                   leaves_list
-                })
+                })# have the list in the list to make sure the nodes don't get removed/turned into leaves at the tree conversion step
 
       }
     }
@@ -441,6 +441,42 @@ ggplot(analysis_TreeData_joined, branch.length = "none",
   layout_circular() +
   theme_bw() +
   theme(panel.grid = element_blank())
+
+
+# Combining sampling and analysis trees -----------------------------------
+# modifed from answer given at: https://stackoverflow.com/questions/63074814/recursively-change-names-in-nested-lists-in-r
+# library(purrr) # not needed anymore
+prefix_all <- function(nested_list, prefix){
+  if(is.null(prefix)) stop("Prefix is null")
+  names(nested_list) <- paste0(prefix, "__", names(nested_list))
+
+  lapply(nested_list, function(x){
+    if (is.list(x)) {
+      prefix_all(x, prefix = prefix)
+    } else {
+      paste0(prefix, "__", x)
+    }
+  })
+}
+# prefix_all(analysis_List, prefix = "sp.B__tf.0.5__td.007__")
+
+sampling_List
+
+apply_to_leaves <- function(nested_list){
+
+  lapply(nested_list, function(x){
+    if (is.list(x)) {
+      apply_to_leaves(x)
+    } else {
+      prefix_all(analysis_List, x)
+    }
+  })
+}
+combined_List <- apply_to_leaves(sampling_List)
+
+combined_DataTree <- as.Node(combined_List, check = "check")
+### BEWARE TAKES A LONG TIME TO COMPLETE
+combined_Phylo <- as.phylo(combined_DataTree)
 
 # Old attempts ------------------------------------------------------------
 
