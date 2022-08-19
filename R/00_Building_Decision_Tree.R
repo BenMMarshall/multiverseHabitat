@@ -12,6 +12,115 @@ library(castor)# fast phylo calcs
 library(ggplot2)
 library(ggtree)
 
+# Recursive function testing ---------------------------------------------
+
+vec2NamedList <- function(INVECTOR){
+  OUTLIST <- as.list(INVECTOR)
+  names(OUTLIST) <- INVECTOR
+  return(OUTLIST)
+}
+
+# species
+sam_01_sp <- c("sp.B", "sp.V", "sp.K")
+# tracking frequency hours
+sam_02_tf <- c("tf.0.5", "tf.01", "tf.02", "tf.06", "tf.12", "tf.24", "tf.48", "tf.168")
+# tracking duration days
+sam_03_td <- c("td.007", "td.015", "td.030", "td.060", "td.120", "td.240", "td.365")
+
+saList <- lapply(ls(pattern = "sam"), function(x){
+  tempList <- vec2NamedList(get(x))
+  assign(paste0(x, "_list"), tempList)
+})
+names(saList) <- paste0(ls(pattern = "sam"), "_list")
+list2env(saList, envir = .GlobalEnv)
+
+apply_to_leaves <- function(nested_list){
+  ### names(nested_list)
+  # lapply(nested_list, function(x, names_above){
+  lapply(nested_list, function(x){
+    if (is.list(x)) {
+      apply_to_leaves(x)
+    } else {
+      # prefix_all(analysis_List, names_above)
+      # sys.call(which = -1)
+      x
+    }
+  })
+}
+
+apply_to_leaves(list(sam_01_sp, sam_02_tf))
+
+build_nested_list <- function(...){
+
+  # inList <- list(sam_01_sp, sam_02_tf)
+  inList <- list(...)
+  nItems <- length(inList)
+  for(n in 2:(nItems)){
+    # item <- inList[[1]]
+    if(n == 2){
+      # n=2
+      nested_list <- nest_list(inList[[n-1]], inList[[n]])
+      names(nested_list) <- inList[[n-1]]
+    } else {
+      nested_list <- lapply(nested_list, function(x){
+        if (is.list(x)) {
+          return(nest_list(x, inList[[n]]))
+        } else {
+          return(inList[[n]])
+        }
+      })
+    }
+  }
+  return(nested_list)
+}
+
+nest_list <- function(parentList, toNest, parentNames = names(parentList)){
+  tempNest <- lapply(seq_along(parentList),
+                     function(x, toNest, parentNames){
+                       names(toNest) <- paste0(parentNames[x], "__", names(toNest))
+                       toNest
+                     }, toNest, parentNames = names(parentList))
+  names(tempNest) <- parentNames
+  return(tempNest)
+  }
+
+initialnest <- nest_list(sam_01_sp_list, sam_02_tf_list)
+initialnest
+testnest <- build_nested_list(sam_01_sp_list, sam_02_tf_list, sam_03_td_list)
+testnest
+
+
+prefix_all <- function(nested_list, prefix){
+  if(is.null(prefix)) stop("Prefix is null")
+  names(nested_list) <- paste0(prefix, "__", names(nested_list))
+
+  lapply(nested_list, function(x){
+    if (is.list(x)) {
+      prefix_all(x, prefix = prefix)
+    } else {
+      paste0(prefix, "__", x)
+    }
+  })
+}
+
+# prefix_all(analysis_List, prefix = "sp.B__tf.0.5__td.007__")
+
+sampling_List
+
+apply_to_leaves <- function(nested_list){
+  ### names(nested_list)
+  # lapply(nested_list, function(x, names_above){
+  lapply(nested_list, function(x){
+    if (is.list(x)) {
+      apply_to_leaves(x)
+    } else {
+      # prefix_all(analysis_List, names_above)
+      prefix_all(analysis_List, x)
+    }
+  })
+}
+combined_List <- apply_to_leaves(sampling_List)
+
 # Unique labelled nodes for sampling tree ----------------------
 
 vec2NamedList <- function(INVECTOR){
@@ -463,11 +572,13 @@ prefix_all <- function(nested_list, prefix){
 sampling_List
 
 apply_to_leaves <- function(nested_list){
-
+### names(nested_list)
+  # lapply(nested_list, function(x, names_above){
   lapply(nested_list, function(x){
     if (is.list(x)) {
       apply_to_leaves(x)
     } else {
+      # prefix_all(analysis_List, names_above)
       prefix_all(analysis_List, x)
     }
   })
