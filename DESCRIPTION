@@ -21,5 +21,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Depends: R (>= 3.5.0)
 Imports: abmAnimalMovement
-Suggests: knitr, rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
