@@ -1,0 +1,33 @@
+testthat::test_that("nest_list object is list", {
+  vector1 <- c("a", "b", "c")
+  vector2 <- c("e", "f", "g", "h")
+  list1 <- vec_to_list(vector1)
+  list2 <- vec_to_list(vector2)
+  nestedList <- nest_list(parentList = list1, toNest = list2, pasteSep = "_")
+  testthat::expect_type(nestedList, "list")
+})
+testthat::test_that("nest_list object within match", {
+  vector1 <- c("a", "b", "c")
+  vector2 <- c("e", "f", "g", "h")
+  list1 <- vec_to_list(vector1)
+  list2 <- vec_to_list(vector2)
+  nestedList <- nest_list(parentList = list1, toNest = list2, pasteSep = "_")
+  testthat::expect_equal(nestedList$a$a_e, "e")
+})
+testthat::test_that("nest_list list name match", {
+  vector1 <- c("a", "b", "c")
+  vector2 <- c("e", "f", "g", "h")
+  list1 <- vec_to_list(vector1)
+  list2 <- vec_to_list(vector2)
+  nestedList <- nest_list(parentList = list1, toNest = list2, pasteSep = "_")
+  testthat::expect_equal(names(nestedList[[1]]), paste(vector1[1], vector2, sep = "_"))
+})
+testthat::test_that("nest_list list sub list length correct", {
+  vector1 <- c("a", "b", "c")
+  vector2 <- c("e", "f", "g", "h")
+  list1 <- vec_to_list(vector1)
+  list2 <- vec_to_list(vector2)
+  nestedList <- nest_list(parentList = list1, toNest = list2, pasteSep = "_")
+  testthat::expect_equal(all(lengths(nestedList) == length(vector2)), TRUE)
+})
+

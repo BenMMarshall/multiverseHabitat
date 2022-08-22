@@ -12,13 +12,8 @@ library(castor)# fast phylo calcs
 library(ggplot2)
 library(ggtree)
 
+library(multiverseHabitat)
 # Recursive function testing ---------------------------------------------
-
-vec2NamedList <- function(INVECTOR){
-  OUTLIST <- as.list(INVECTOR)
-  names(OUTLIST) <- INVECTOR
-  return(OUTLIST)
-}
 
 # species
 sam_01_sp <- c("sp.B", "sp.V", "sp.K")
@@ -28,102 +23,63 @@ sam_02_tf <- c("tf.0.5", "tf.01", "tf.02", "tf.06", "tf.12", "tf.24", "tf.48", "
 sam_03_td <- c("td.007", "td.015", "td.030", "td.060", "td.120", "td.240", "td.365")
 
 saList <- lapply(ls(pattern = "sam"), function(x){
-  tempList <- vec2NamedList(get(x))
+  tempList <- vec_to_list(get(x))
   assign(paste0(x, "_list"), tempList)
 })
 names(saList) <- paste0(ls(pattern = "sam"), "_list")
 list2env(saList, envir = .GlobalEnv)
 
-apply_to_leaves <- function(nested_list){
-  ### names(nested_list)
-  # lapply(nested_list, function(x, names_above){
-  lapply(nested_list, function(x){
-    if (is.list(x)) {
-      apply_to_leaves(x)
-    } else {
-      # prefix_all(analysis_List, names_above)
-      # sys.call(which = -1)
-      x
-    }
-  })
-}
-
-apply_to_leaves(list(sam_01_sp, sam_02_tf))
-
-build_nested_list <- function(...){
-
-  # inList <- list(sam_01_sp, sam_02_tf)
-  inList <- list(...)
-  nItems <- length(inList)
-  for(n in 2:(nItems)){
-    # item <- inList[[1]]
-    if(n == 2){
-      # n=2
-      nested_list <- nest_list(inList[[n-1]], inList[[n]])
-      names(nested_list) <- inList[[n-1]]
-    } else {
-      nested_list <- lapply(nested_list, function(x){
-        if (is.list(x)) {
-          return(nest_list(x, inList[[n]]))
-        } else {
-          return(inList[[n]])
-        }
-      })
-    }
-  }
-  return(nested_list)
-}
-
-nest_list <- function(parentList, toNest, parentNames = names(parentList)){
-  tempNest <- lapply(seq_along(parentList),
-                     function(x, toNest, parentNames){
-                       names(toNest) <- paste0(parentNames[x], "__", names(toNest))
-                       toNest
-                     }, toNest, parentNames = names(parentList))
-  names(tempNest) <- parentNames
-  return(tempNest)
-  }
-
-initialnest <- nest_list(sam_01_sp_list, sam_02_tf_list)
-initialnest
-testnest <- build_nested_list(sam_01_sp_list, sam_02_tf_list, sam_03_td_list)
-testnest
+sampling_List <- build_nested_list(sam_01_sp_list, sam_02_tf_list, sam_03_td_list,
+                              pasteSep = "__")
 
 
-prefix_all <- function(nested_list, prefix){
-  if(is.null(prefix)) stop("Prefix is null")
-  names(nested_list) <- paste0(prefix, "__", names(nested_list))
+vector1 <- c("a", "b", "c")
+vector2 <- c("e", "f", "g", "h")
+vector3 <- c("i", "j")
 
-  lapply(nested_list, function(x){
-    if (is.list(x)) {
-      prefix_all(x, prefix = prefix)
-    } else {
-      paste0(prefix, "__", x)
-    }
-  })
-}
+list1 <- vec_to_list(vector1)
+list2 <- vec_to_list(vector2)
+list3 <- vec_to_list(vector3)
 
-# prefix_all(analysis_List, prefix = "sp.B__tf.0.5__td.007__")
+testCombo <- nest_list(list1, list2)
+lapply(list1, function(x){
+  paste(x, "test")
+})
 
-sampling_List
+testList <- build_nested_list(list1,
+                             list2, pasteSep = "__")
 
-apply_to_leaves <- function(nested_list){
-  ### names(nested_list)
-  # lapply(nested_list, function(x, names_above){
-  lapply(nested_list, function(x){
-    if (is.list(x)) {
-      apply_to_leaves(x)
-    } else {
-      # prefix_all(analysis_List, names_above)
-      prefix_all(analysis_List, x)
-    }
-  })
-}
-combined_List <- apply_to_leaves(sampling_List)
+
+testlistNamed <- prefix_all(testList, "abc", pasteSep = "__")
+
+nestedListPrefix <- prefix_all(testList, "example", pasteSep = "__")
+
+doublenest <- apply_to_leaves(nestedList = testList,
+                              toNest = list3, pasteSep = "__")
+
+is.list(sampling_List$sp.B$sp.B__tf.0.5$sp.B__tf.0.5__td.007)
+x[1]
+
+names(sampling_List["sp.B"])
+names(sampling_List)
+
+# apply_to_leaves <- function(nested_list){
+#   ### names(nested_list)
+#   # lapply(nested_list, function(x, names_above){
+#   lapply(nested_list, function(x){
+#     if (is.list(x)) {
+#       apply_to_leaves(x)
+#     } else {
+#       # prefix_all(analysis_List, names_above)
+#       prefix_all(analysis_List, x)
+#     }
+#   })
+# }
+# combined_List <- apply_to_leaves(sampling_List, pasteSep = "asffd")
 
 # Unique labelled nodes for sampling tree ----------------------
 
-vec2NamedList <- function(INVECTOR){
+vec_to_list <- function(INVECTOR){
   OUTLIST <- as.list(INVECTOR)
   names(OUTLIST) <- INVECTOR
   return(OUTLIST)
@@ -138,7 +94,7 @@ sam_02_tf <- c("tf.0.5", "tf.01", "tf.02", "tf.06", "tf.12", "tf.24", "tf.48", "
 sam_03_td <- c("td.007", "td.015", "td.030", "td.060", "td.120", "td.240", "td.365")
 
 saList <- lapply(ls(pattern = "sam"), function(x){
-  tempList <- vec2NamedList(get(x))
+  tempList <- vec_to_list(get(x))
   assign(paste0(x, "_list"), tempList)
 })
 names(saList) <- paste0(ls(pattern = "sam"), "_list")
@@ -148,7 +104,7 @@ list2env(saList, envir = .GlobalEnv)
 ana_01_hm <- c("ade.wid", "ade.com", "ade.eis",
                 "amt.rsf", "amt.ssf",
                 "ctm.ctm")
-ana_01_hm_list <- vec2NamedList(ana_01_hm)
+ana_01_hm_list <- vec_to_list(ana_01_hm)
 
 # created function below is more elegant to be put into lapplys
 # tempDf <- expand.grid(sam_01_sp, sam_02_tf)
@@ -235,7 +191,7 @@ rm(list = ls(pattern = "ana"))
 # Core ade tree part ------------------------------------------------------
 # method
 ana_01_hm <- c("ade.wid", "ade.com", "ade.eis", "amt.rsf")
-ana_01_hm_list <- vec2NamedList(ana_01_hm)
+ana_01_hm_list <- vec_to_list(ana_01_hm)
 # design type II or III
 ana_02_dt <- c("dt.t2", "dt.t3") # applies to first four methods
 # available area
@@ -247,7 +203,7 @@ ana_04_ac <- c("ac.90", "ac.95", "ac.99") # for first four methods
 ana_05_ap <- paste0("ap.", round(exp(seq(log(1), log(1000), length.out = 4)), digits = 1)) # high enough would approximate true available %
 
 anList <- lapply(ls(pattern = "ana"), function(x){
-  tempList <- vec2NamedList(get(x))
+  tempList <- vec_to_list(get(x))
   assign(paste0(x, "_list"), tempList)
 })
 names(anList) <- paste0(ls(pattern = "ana"), "_list")
@@ -305,7 +261,7 @@ analysis_ade_List
 
 # rsf only , point weighting
 rsf_01_wt <- paste0("wt.", exp(seq(log(1), log(10000), length.out = 5)))
-rsf_01_wt_list <- vec2NamedList(rsf_01_wt)
+rsf_01_wt_list <- vec_to_list(rsf_01_wt)
 
 #### making sure we get the correct point in the tree testing
 # get_elements <- function(x, element) {
@@ -354,7 +310,7 @@ for(a02 in ana_02_dt){
           "amt.rsf", a02, a03, a04, a05, sep = "__",
           rsf_01_wt)
 
-        leaves_list <- vec2NamedList(leaves)
+        leaves_list <- vec_to_list(leaves)
 
         names(leaves_list) <- leaves
 
@@ -378,7 +334,7 @@ for(a02 in ana_02_dt){
 # SSF tree ----------------------------------------------------------------
 
 ana_01_hm <- c("amt.ssf")
-ana_01_hm_list <- vec2NamedList(ana_01_hm)
+ana_01_hm_list <- vec_to_list(ana_01_hm)
 # issf or ssf
 ssf_01_mf <- c("mf.is", "mf.ss") # applies to first four methods
 # coveraite extract
@@ -387,7 +343,7 @@ ssf_02_ce <- c("ce.st", "ce.mi", "ce.ed") # for first four methods
 ssf_03_as <- paste0("as.", round(exp(seq(log(1), log(500), length.out = 5)), digits = 1)) # for first four methods
 
 ssfList <- lapply(ls(pattern = "ssf"), function(x){
-  tempList <- vec2NamedList(get(x))
+  tempList <- vec_to_list(get(x))
   assign(paste0(x, "_list"), tempList)
 })
 names(ssfList) <- paste0(ls(pattern = "ssf_"), "_list")
@@ -428,7 +384,7 @@ analysis_ssf_List <- lapply(ana_01_hm_list, function(a01){
 # ctmc analysis -----------------------------------------------------------
 
 ana_01_hm <- c("ctm.ctm")
-ana_01_hm_list <- vec2NamedList(ana_01_hm)
+ana_01_hm_list <- vec_to_list(ana_01_hm)
 # ctmcmove only
 # varying the spacing of the knots, c(1, 1/2, 1/4, 1/16, 1/32)
 ctm_01_ks <- paste0("ks.", round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2))
@@ -440,7 +396,7 @@ ctm_03_pm <- c("pm.c1", "pm.c2")
 ctm_04_im <- c("im.li", "im.sp")
 
 ctmList <- lapply(ls(pattern = "ctm"), function(x){
-  tempList <- vec2NamedList(get(x))
+  tempList <- vec_to_list(get(x))
   assign(paste0(x, "_list"), tempList)
 })
 names(ctmList) <- paste0(ls(pattern = "ctm_"), "_list")
@@ -555,34 +511,34 @@ ggplot(analysis_TreeData_joined, branch.length = "none",
 # Combining sampling and analysis trees -----------------------------------
 # modifed from answer given at: https://stackoverflow.com/questions/63074814/recursively-change-names-in-nested-lists-in-r
 # library(purrr) # not needed anymore
-prefix_all <- function(nested_list, prefix){
-  if(is.null(prefix)) stop("Prefix is null")
-  names(nested_list) <- paste0(prefix, "__", names(nested_list))
-
-  lapply(nested_list, function(x){
-    if (is.list(x)) {
-      prefix_all(x, prefix = prefix)
-    } else {
-      paste0(prefix, "__", x)
-    }
-  })
-}
+# prefix_all <- function(nested_list, prefix){
+#   if(is.null(prefix)) stop("Prefix is null")
+#   names(nested_list) <- paste0(prefix, "__", names(nested_list))
+#
+#   lapply(nested_list, function(x){
+#     if (is.list(x)) {
+#       prefix_all(x, prefix = prefix)
+#     } else {
+#       paste0(prefix, "__", x)
+#     }
+#   })
+# }
 # prefix_all(analysis_List, prefix = "sp.B__tf.0.5__td.007__")
 
 sampling_List
 
-apply_to_leaves <- function(nested_list){
-### names(nested_list)
-  # lapply(nested_list, function(x, names_above){
-  lapply(nested_list, function(x){
-    if (is.list(x)) {
-      apply_to_leaves(x)
-    } else {
-      # prefix_all(analysis_List, names_above)
-      prefix_all(analysis_List, x)
-    }
-  })
-}
+# apply_to_leaves <- function(nested_list){
+# ### names(nested_list)
+#   # lapply(nested_list, function(x, names_above){
+#   lapply(nested_list, function(x){
+#     if (is.list(x)) {
+#       apply_to_leaves(x)
+#     } else {
+#       # prefix_all(analysis_List, names_above)
+#       prefix_all(analysis_List, x)
+#     }
+#   })
+# }
 combined_List <- apply_to_leaves(sampling_List)
 
 combined_DataTree <- as.Node(combined_List, check = "check")
@@ -598,16 +554,16 @@ combined_Phylo <- as.phylo(combined_DataTree)
 
 ### Sampling
 samp_01_species <- c("species1_Badger", "species1_Vulture", "species1_Kingcobra")
-samp_01list_species <- vec2NamedList(samp_01_species)
+samp_01list_species <- vec_to_list(samp_01_species)
 samp_02_trackingFreq <- c("0.5hrs", "1hrs", "2hrs", "6hrs", "12hrs", "24hrs", "48hrs", "168hrs")
-samp_02list_trackingFreq <- vec2NamedList(samp_02_trackingFreq)
+samp_02list_trackingFreq <- vec_to_list(samp_02_trackingFreq)
 samp_03_trackingDura <- c("7days", "15days", "30days", "60days", "120days", "240days", "365days")
-samp_03list_trackingDura <- vec2NamedList(samp_03_trackingDura)
+samp_03list_trackingDura <- vec_to_list(samp_03_trackingDura)
 
 method_01_habitatMethod <- c("ade_Wides", "ade_Compana", "ade_Eisera",
                              "amt_RSF", "amt_SSF",
                              "ctmc_ctmc")
-method_01list_habitatMethod <- vec2NamedList(method_01_habitatMethod)
+method_01list_habitatMethod <- vec_to_list(method_01_habitatMethod)
 
 # samp_list <-
 #   lapply(samp_01list_species, function(x){
@@ -625,16 +581,16 @@ method_01list_habitatMethod <- vec2NamedList(method_01_habitatMethod)
 
 
 method_01_habitatMethod <- c("ade_Wides", "ade_Compana", "ade_Eisera")
-method_01list_habitatMethod <- vec2NamedList(method_01_habitatMethod)
+method_01list_habitatMethod <- vec_to_list(method_01_habitatMethod)
 
 avail_02_designType <- c("II", "III") # applies to first four methods
-avail_02list_designType <- vec2NamedList(avail_02_designType)
+avail_02list_designType <- vec_to_list(avail_02_designType)
 avail_03_avaiableAreas <- c("MCP", "KDEhref", "KDElscv", "AKDEbest", "dBBMM", "landscape") # for first four methods
-avail_03list_avaiableAreas <- vec2NamedList(avail_03_avaiableAreas)
+avail_03list_avaiableAreas <- vec_to_list(avail_03_avaiableAreas)
 avail_04_avaiableContour <- c("90", "95", "99") # for first four methods
-avail_04list_avaiableContour <- vec2NamedList(avail_04_avaiableContour)
+avail_04list_avaiableContour <- vec_to_list(avail_04_avaiableContour)
 avail_05_availablePointsMultiplier <- exp(seq(log(1), log(1000), length.out = 4)) # high enough would approximate true available %
-avail_05list_availablePointsMultiplier <- vec2NamedList(avail_05_availablePointsMultiplier)
+avail_05list_availablePointsMultiplier <- vec_to_list(avail_05_availablePointsMultiplier)
 
 adeMethods_list <-
   lapply(method_01list_habitatMethod, function(x){
@@ -656,7 +612,7 @@ adeMethods_list$method_01_habitatMethod___ade_Eisera$avail_02_designType___III$a
 
 # rsf only
 rsf_01_weighting <- exp(seq(log(1), log(10000), length.out = 5))
-rsf_01list_weighting <- vec2NamedList(rsf_01_weighting)
+rsf_01list_weighting <- vec_to_list(rsf_01_weighting)
 
 rsfMethods_list <-
   list("method_01list_habitatMethod___amt_RSF" =
@@ -676,11 +632,11 @@ str(rsfMethods_list)
 
 # ssf only
 ssf_01_modelForm <- c("ISSF", "SSF")
-ssf_01list_modelForm <- vec2NamedList(avail_02_designType)
+ssf_01list_modelForm <- vec_to_list(avail_02_designType)
 ssf_02_covariateExtract <- c("start", "middle", "end")
-ssf_02list_covariateExtract <- vec2NamedList(ssf_02_covariateExtract)
+ssf_02list_covariateExtract <- vec_to_list(ssf_02_covariateExtract)
 ssf_03_availableSteps <- exp(seq(log(1), log(500), length.out = 5))
-ssf_03list_availableSteps <- vec2NamedList(ssf_03_availableSteps)
+ssf_03list_availableSteps <- vec_to_list(ssf_03_availableSteps)
 
 ssfMethods_list <-
   list("method_01list_habitatMethod___amt_SSF" =
@@ -697,19 +653,19 @@ str(ssfMethods_list)
 # ctmcmove only
 # varying the spacing of the knots
 ctmc_01_knotSpacing <- c(1, 1/2, 1/4, 1/16, 1/32)
-ctmc_01list_knotSpacing <- vec2NamedList(ctmc_01_knotSpacing)
+ctmc_01list_knotSpacing <- vec_to_list(ctmc_01_knotSpacing)
 # define the sequence of times on which to sample the imputed path
 ctmc_02_imputeTimes <- c(1/24/60, 1/24/30, 1/24, 1)
-ctmc_02list_imputeTimes <- vec2NamedList(ctmc_02_imputeTimes)
+ctmc_02list_imputeTimes <- vec_to_list(ctmc_02_imputeTimes)
 
 ctmc_03_precisionMat <- c("CAR1", "CAR2")
-ctmc_03list_precisionMat <- vec2NamedList(ctmc_03_precisionMat)
+ctmc_03list_precisionMat <- vec_to_list(ctmc_03_precisionMat)
 
 ctmc_04_interpMethod <- c("LinearInterp", "ShortestPath")
-ctmc_04list_interpMethod <- vec2NamedList(ctmc_04_interpMethod)
+ctmc_04list_interpMethod <- vec_to_list(ctmc_04_interpMethod)
 
 ctmc_05_interpDirec <- c("LinearInterp", "ShortestPath")
-ctmc_05list_interpDirec <- vec2NamedList(ctmc_05_interpDirec)
+ctmc_05list_interpDirec <- vec_to_list(ctmc_05_interpDirec)
 
 ctmcMethods_list <-
   list("method_01list_habitatMethod___ctmc_ctmc" =
@@ -733,7 +689,7 @@ str(ctmcMethods_list)
 method_01_habitatMethod <- c("ade_Wides", "ade_Compana", "ade_Eisera",
                              "amt_RSF", "amt_SSF",
                              "ctmc_ctmc")
-method_01list_habitatMethod <- vec2NamedList(method_01_habitatMethod)
+method_01list_habitatMethod <- vec_to_list(method_01_habitatMethod)
 method_01list_habitatMethod <- mapply(function(x, y){x = paste0("method_01list_habitatMethod___", y)},
                                       method_01list_habitatMethod, method_01_habitatMethod)
 
