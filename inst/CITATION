@@ -4,13 +4,13 @@ citEntry(
 entry    = "Article",
   title    = "multiverseHabitat",
   author   = "Benjamin Michael Marshall and Alexander Bradley Duthie",
-  journal  = ,
+  journal  = "NA",
   year     = 2022,
-  volume   = ,
-  number   = ,
-  pages    = ,
+  volume   = 0,
+  number   = 0,
+  pages    = 0-0,
   url      = ,
   textVersion = paste(
-
+"Marshall BM and Duthie AB. 2022. multiverseHabitat"
   )
 )
