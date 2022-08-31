@@ -39,13 +39,7 @@ build_nested_list <- function(..., pasteSep){
       nested_list <- nest_list(inList[[n-1]], inList[[n]], pasteSep = pasteSep)
       names(nested_list) <- inList[[n-1]]
     } else {
-      nested_list <- lapply(nested_list, function(x, pasteSep = pasteSep){
-        if (is.list(x)) {
-          nest_list(x, inList[[n]], pasteSep = pasteSep)
-        } else {
-          inList[[n]]
-        }
-      }, pasteSep = pasteSep)
+      nested_list <- apply_to_leaves(nested_list, inList[[n]], pasteSep = pasteSep)
     }
   }
   return(nested_list)

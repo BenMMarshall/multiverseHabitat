@@ -93,7 +93,7 @@ anList <- lapply(ls(pattern = "ana"), function(x){
 names(anList) <- paste0(ls(pattern = "ana"), "_list")
 list2env(anList, envir = .GlobalEnv)
 
-analysis_List <- build_nested_list(ana_01_hm_list, ana_02_dt_list,
+analysis_List <- build_nested_list(ana_01_hm_list, ana_02_dt_list, ana_03_aa_list,
                                    ana_04_ac_list, ana_05_ap_list,
                                    pasteSep = "__")
 
@@ -147,20 +147,6 @@ ctmList <- lapply(ls(pattern = "ctm"), function(x){
 })
 names(ctmList) <- paste0(ls(pattern = "ctm_"), "_list")
 list2env(ctmList, envir = .GlobalEnv)
-
-
-apply_to_leaves(build_nested_list(ctm_01_hm_list,
-                                  ctm_02_ks_list,
-                                  ctm_03_it_list,
-                                  pasteSep = "__"), ctm_04_pm_list,
-                pasteSep = "__")
-
-build_nested_list(ctm_01_hm_list,
-                  ctm_02_ks_list,
-                  ctm_03_it_list,
-                  ctm_04_pm_list,
-                  ctm_05_im_list,
-                  pasteSep = "__")
 
 ctm_List <- build_nested_list(ctm_01_hm_list,
                               ctm_02_ks_list,
