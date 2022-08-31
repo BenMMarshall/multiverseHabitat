@@ -41,9 +41,9 @@ build_nested_list <- function(..., pasteSep){
     } else {
       nested_list <- lapply(nested_list, function(x, pasteSep = pasteSep){
         if (is.list(x)) {
-          return(nest_list(x, inList[[n]], pasteSep = pasteSep))
+          nest_list(x, inList[[n]], pasteSep = pasteSep)
         } else {
-          return(inList[[n]])
+          inList[[n]]
         }
       }, pasteSep = pasteSep)
     }
