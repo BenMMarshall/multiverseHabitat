@@ -204,6 +204,10 @@ Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
+```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="..."}
+knitr::include_graphics(here::here("notebook", "prereg", "figures", "preregDecisionTrees.png"))
+```
+
 ### Analysis
 
 For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
