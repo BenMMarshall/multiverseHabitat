@@ -9,7 +9,7 @@ entry    = "Article",
   volume   = 0,
   number   = 0,
   pages    = 0-0,
-  url      = ,
+  url      = "NA",
   textVersion = paste(
 "Marshall BM and Duthie AB. 2022. multiverseHabitat"
   )
