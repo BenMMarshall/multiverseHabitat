@@ -38,44 +38,6 @@
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 %% lines to get the code chunks working
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}{}{}
-\newcommand{\AlertTok}[1]{\textbf{#1}}
-\newcommand{\AnnotationTok}[1]{\textit{#1}}
-\newcommand{\AttributeTok}[1]{#1}
-\newcommand{\BaseNTok}[1]{#1}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textit{#1}}
-\newcommand{\CommentVarTok}[1]{\textit{#1}}
-\newcommand{\ConstantTok}[1]{#1}
-\newcommand{\ControlFlowTok}[1]{\textbf{#1}}
-\newcommand{\DataTypeTok}[1]{\underline{#1}}
-\newcommand{\DecValTok}[1]{#1}
-\newcommand{\DocumentationTok}[1]{\textit{#1}}
-\newcommand{\ErrorTok}[1]{\textbf{#1}}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\FloatTok}[1]{#1}
-\newcommand{\FunctionTok}[1]{#1}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textit{#1}}
-\newcommand{\KeywordTok}[1]{\textbf{#1}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{#1}
-\newcommand{\OtherTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textbf{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{#1}
-\newcommand{\SpecialStringTok}[1]{#1}
-\newcommand{\StringTok}[1]{#1}
-\newcommand{\VariableTok}[1]{#1}
-\newcommand{\VerbatimStringTok}[1]{#1}
-\newcommand{\WarningTok}[1]{\textit{#1}}
 
 %% lines to enable bulletpoints in a new notation style
 \providecommand{\tightlist}{%
@@ -223,7 +185,7 @@ We describe the simulated scenarios we plan to base the study upon and a prelimi
 \subsection{Simulating the Scenarios}\label{simulating-the-scenarios}}
 
 We simulated three scenarios/species, comprising of different animals and landscapes.
-We simulated the landscapes using the \emph{NLMR} v.1.1 package (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using \emph{abmAnimalMovement} v.0.0.3.9000 (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
+We simulated the landscapes using the NLMR v.1.1 package (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using abmAnimalMovement v.0.0.3.9000 (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
 The full details of how the scenarios were parametrised can be found in (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}), and also in the abmAnimalMovement github repository (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github}).
 
@@ -243,10 +205,10 @@ From the initial Gaussian field we altered the values to exaggerate the differen
 Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease and also housing higher shelter quality, and more barren areas with high movement ease but with minimal foraging value.
 
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
-Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis.
+Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \ref{fig:landscapeExample}): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{figures/landscapeExample} \caption{...}\label{fig:landscapeExample}
+\includegraphics[width=1\linewidth]{figures/landscapeExample} \caption{An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis.}\label{fig:landscapeExample}
 \end{figure}
 
 \hypertarget{sampling-and-analysis-options}{%
@@ -257,32 +219,22 @@ Ultimately number of variations and choices we are able to explore will be dicta
 \hypertarget{sampling}{%
 \subsubsection{Sampling}\label{sampling}}
 
-As stated we have three species simulations planned using the abmAnimalMovement package.
+As stated we have three species simulations planned using the abmAnimalMovement package (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
 The first decision point of a study would be the number of individuals sampled from that population (i.e., sample size).
 However, as many of the habitat selection analyses focus on individual selection we will not explore study sample size initially.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# possible way of generating a range that is skewed to more realistic number while still hitting the extremes}
-\FunctionTok{exp}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\FunctionTok{log}\NormalTok{(}\DecValTok{1}\NormalTok{), }\FunctionTok{log}\NormalTok{(}\DecValTok{200}\NormalTok{), }\AttributeTok{length.out =} \DecValTok{8}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1]   1.000000   2.131663   4.543988   9.686251  20.647824  44.014204  93.823456
-## [8] 200.000000
-\end{verbatim}
-
-The first decision point decisions concern data quantity.
+The first decisions concern data quantity.
 We aim to vary tracking duration and tracking frequency primarily, while keep consistency fixed.
 While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we will not explore tracking consistency at this time.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
 For this exploration we will assume that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
-This only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day are all outside of the active period.
+This only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
 
 Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
+
+In summary, the sampling decisions will cover species, tracking frequency, and tracking duration (Fig. \ref{fig:decisionTrees}A).
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{figures/preregDecisionTrees} \caption{...}\label{fig:decisionTrees}
@@ -294,21 +246,21 @@ As the causes and measurement of error, as well as the solutions to, location er
 For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
 R presents the number one tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
-Specifically, we will explore the decisions made during the workflows using adehabaitatHS (\protect\hyperlink{ref-adehabitatHS}{Calenge, 2006}), amt (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}), and ctmcmove (\protect\hyperlink{ref-ctmcmove}{Hanks, 2018}) R packages.
+Specifically, we will explore the decisions made during the workflows using adehabitatHS v.0.3.15 (\protect\hyperlink{ref-adehabitatHS}{Calenge, 2006}), amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}), and ctmcmove v.1.2.9 (\protect\hyperlink{ref-ctmcmove}{Hanks, 2018}) R packages.
 Combined the packages offer many options for habitat analysis, we will focus on six.
-Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
+Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (Compana), Eigenanalysis of Selection Ratios (Eisera).
 Two from the amt package: resource selection function (RSF), step selection function (SSF); and one from the ctmcmove package using a continuous time Markov chain (CTMC) framework.
-Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection
+Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection (Fig. \ref{fig:decisionTrees}B).
 
 The methods from the adehabitatHS package all require similar choices to be made.
 First is whether to approach the habitat selection analysis as a type II or III design (we are ignoring type I as we are aiming to estimate individuals' habitat selection).
 Type II is the habitat selection of an individual animal in relation to the available habitats on a population or landscape scale.
 The type II designs compares individual usage, to a universal availability.
 Type III differs by using individually defined available habitat.
-Wides, compana, and eisera analyses can be used in either type II or III scenarios.
+Wides, Compana, and Eisera analyses can be used in either type II or III scenarios.
 
 Critical to these designs are the definition of availability.
-Type III or animal-specific availability is more simply defined.
+Type III is animal or individual-specific availability.
 We will use a range of methods are build areas from the recorded locations of the animal.
 Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use.
@@ -326,10 +278,9 @@ Therefore, we will use the guidance from (\protect\hyperlink{ref-silva_autocorre
 
 The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs) (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}) from the move package (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2022}), that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
 DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}).
-As window and margin are defined by data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency.
+As window and margin are defined by a number of data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency.
 As our most infrequent tracking is 168 hours (1 week), we will set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
 The broader window and margin sizes will help reduce computational costs.
-
 In a few cases the shorter tracking durations combined with the lower tracking frequencies will preclude calculation of available areas due to having too few locations.
 In these instances we will report an NA as a final result.
 
@@ -378,11 +329,11 @@ Although the study is primarily exploratory, with its scope determined by practi
 \hypertarget{software-availablity}{%
 \section{Software availablity}\label{software-availablity}}
 
-We used \emph{R} v.4.2.0 (\protect\hyperlink{ref-base}{R Core Team, 2022}) via \emph{RStudio} v.2022.7.1.554 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}), and used \emph{rmarkdown} v.2.14 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2022}{Allaire et al., 2022}), \emph{bookdown} v.0.27 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022a}), \emph{tinytex} v.0.40 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2022}{2022b}), and \emph{knitr} v.1.39 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2022}{2022c}) packages to generate type-set outputs.
+We used R v.4.2.0 (\protect\hyperlink{ref-base}{R Core Team, 2022}) via RStudio v.2022.7.1.554 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}), and used rmarkdown v.2.14 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2022}{Allaire et al., 2022}), bookdown v.0.27 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022a}), tinytex v.0.40 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2022}{2022b}), and knitr v.1.39 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2022}{2022c}) packages to generate type-set outputs.
 
 Wolen et al. (\protect\hyperlink{ref-osfr}{2020})
 
-We generated R package citations with the aid of \emph{grateful} v.0.1.11 (\protect\hyperlink{ref-grateful}{Rodríguez-Sánchez, Jackson \& Hutchins, 2022}).
+We generated R package citations with the aid of grateful v.0.1.11 (\protect\hyperlink{ref-grateful}{Rodríguez-Sánchez, Jackson \& Hutchins, 2022}).
 
 \hypertarget{data-availabilty}{%
 \section{Data availabilty}\label{data-availabilty}}
