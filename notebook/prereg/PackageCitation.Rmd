@@ -8,7 +8,10 @@ bibliography: "packages_refs.bib"
 ```{r pcks, include=TRUE}
 pcks <- grateful::scan_packages(cite.tidyverse = FALSE, dependencies = TRUE)
 
-additionalVec <- c("osfr", "move", "ctmm", "ctmcmove", "adehabitatHS", "amt")
+additionalVec <- c("osfr",
+                   "move", "ctmm", "ctmcmove", "adehabitatHS", "amt", 
+                   "abmAnimalMovement")
+# "NLMR" is in the main references manually because of non unicode characters
 additionalPcks <- data.frame("pkg" = additionalVec,
                              "version" = unlist(lapply(additionalVec, function(x){as.character(packageVersion(x))})))
 

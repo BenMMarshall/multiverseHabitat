@@ -132,11 +132,12 @@ Given the success of meta-analyses to overcome short-comings in the publication 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to detect identify the amount of variation from different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Causal Forests @bryan_replicator_2019].
 
-Here, using a multiverse approach, we explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
+Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
 
-<!-- Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020]; and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach. -->
+Here we describe the initial plan to undertake a multiverse approach to explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
+We describe the simulated scenarios we plan to base the study upon and a preliminary multiverse branching path consisting of three analysis approaches, as well as several broad hypotheses.
 
-<!-- The initial step will be to develop an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type). -->
+<!-- The initial step is run an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type). -->
 <!-- The goal of the multiverse will be to run a multitude of sampling/data processing/analysis approaches on that simulated animal movement data, to determine which pathway or series of decisions gets closest to the predefined parameter used to simulate the data initially. -->
 <!-- If a sufficiently diverse set of scenarios can be explored in the multiverse, the third step will be applying the now know uncertainty from particular choices to explore whether different choices would have changed conclusions in real-world datasets. -->
 
@@ -146,14 +147,14 @@ Here, using a multiverse approach, we explore how decisions concerning the desig
 
 <!-- Three scenarios - three species - three landscapes -->
 We simulated three scenarios/species, comprising of different animals and landscapes.
-We simulated the landscapes using NLMR, and the animal movement using abmAnimalMovement.
+We simulated the landscapes using the *NLMR* `r paste0("v.", packageVersion("NLMR"))` package [@NLMR], and the animal movement using *abmAnimalMovement* `r paste0("v.", packageVersion("abmAnimalMovement"))` [@abmAnimalMovement].
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-The full details of how the scenarios were parametrised can be found in [CITE], and also in the abmAnimalMovement github repository [LINK].
+The full details of how the scenarios were parametrised can be found in [@abmAnimalMovement], and also in the abmAnimalMovement github repository ([abmAnimalMovement Github](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
 
 In brief:
-- Species 1, Badger: 
-- Species 2, Vulture: 
-- Species 3, King cobra: 
+- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts
+- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts
+- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle
 
 <!-- How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world. -->
 Using these setting we simulated a population individuals of each species.
@@ -171,8 +172,12 @@ Broadly, we created: core resource areas (e.g., forests) with higher foraging qu
 
 <!-- figure here of landscapes -->
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
-Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis.
+Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
 <!-- figure here of landscapes turned into categories -->
+
+```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
+knitr::include_graphics(here::here("notebook", "prereg", "figures", "landscapeExample.png"))
+```
 
 ## Sampling and Analysis Options
 
@@ -257,7 +262,7 @@ We will use a range of methods are build areas from the recorded locations of th
 Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use.
 Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal [@silva_reptiles_2020].
-To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses [@crane_lots_2020] <!--more refs for other groups?-->: the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
+To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses [@crane_lots_2020]: the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
 
 The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation [@silva_reptiles_2020], which better account for the non-independence and autocorrelative structures within animal movement data [@Noonan2018].
 We use two of these methods to define availability.

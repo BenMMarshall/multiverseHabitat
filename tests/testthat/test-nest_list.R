@@ -12,7 +12,7 @@ testthat::test_that("nest_list object within match", {
   list1 <- vec_to_list(vector1)
   list2 <- vec_to_list(vector2)
   nestedList <- nest_list(parentList = list1, toNest = list2, pasteSep = "_")
-  testthat::expect_equal(nestedList$a$a_e, "e")
+  testthat::expect_equal(nestedList$a$a_e, "a_e")
 })
 testthat::test_that("nest_list list name match", {
   vector1 <- c("a", "b", "c")

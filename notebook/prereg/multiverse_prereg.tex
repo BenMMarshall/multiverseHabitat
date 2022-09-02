@@ -211,7 +211,10 @@ Given the success of meta-analyses to overcome short-comings in the publication 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}) --the ``average'' result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a ``known truth'', i.e., using a simulated dataset (\protect\hyperlink{ref-bastiaansen_time_2020}{Bastiaansen et al., 2020}), we may be able to detect identify the amount of variation from different sources {[}e.g, biological variation vs study design variation; Breznau et al. (\protect\hyperlink{ref-breznau_observing_2021}{2021}){]}, and potentially the systematic biases stemming from specific choices (potentially via Bayesian Causal Forests \protect\hyperlink{ref-bryan_replicator_2019}{Bryan, Yeager \& O'Brien, 2019}).
 
-Here, using a multiverse approach, we explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
+Use of simulated data is an established way to explore the robustness of methodologies (\protect\hyperlink{ref-minchin_simulation_1987}{Minchin, 1987}; \protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}); and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
+
+Here we describe the initial plan to undertake a multiverse approach to explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
+We describe the simulated scenarios we plan to base the study upon and a preliminary multiverse branching path consisting of three analysis approaches, as well as several broad hypotheses.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -220,14 +223,14 @@ Here, using a multiverse approach, we explore how decisions concerning the desig
 \subsection{Simulating the Scenarios}\label{simulating-the-scenarios}}
 
 We simulated three scenarios/species, comprising of different animals and landscapes.
-We simulated the landscapes using NLMR, and the animal movement using abmAnimalMovement.
+We simulated the landscapes using the \emph{NLMR} v.1.1 package (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using \emph{abmAnimalMovement} v.0.0.3.9000 (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-The full details of how the scenarios were parametrised can be found in {[}CITE{]}, and also in the abmAnimalMovement github repository {[}LINK{]}.
+The full details of how the scenarios were parametrised can be found in (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}), and also in the abmAnimalMovement github repository (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github}).
 
 In brief:
-- Species 1, Badger:
-- Species 2, Vulture:
-- Species 3, King cobra:
+- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts
+- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts
+- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle
 
 Using these setting we simulated a population individuals of each species.
 Each simulation contained sufficient time steps (i.e., movement choices made by the animal) to provide data for model generation and validation.
@@ -241,6 +244,10 @@ Broadly, we created: core resource areas (e.g., forests) with higher foraging qu
 
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
 Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis.
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{figures/landscapeExample} \caption{...}\label{fig:landscapeExample}
+\end{figure}
 
 \hypertarget{sampling-and-analysis-options}{%
 \subsection{Sampling and Analysis Options}\label{sampling-and-analysis-options}}
@@ -277,19 +284,23 @@ Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
+\begin{figure}
+\includegraphics[width=1\linewidth]{figures/preregDecisionTrees} \caption{...}\label{fig:decisionTrees}
+\end{figure}
+
 \hypertarget{analysis}{%
 \subsubsection{Analysis}\label{analysis}}
 
 For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
 R presents the number one tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
-Specifically, we will explore the decisions made during the workflows using adeHabaitatHS, amt, and ctmcmove R packages.
+Specifically, we will explore the decisions made during the workflows using adehabaitatHS (\protect\hyperlink{ref-adehabitatHS}{Calenge, 2006}), amt (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}), and ctmcmove (\protect\hyperlink{ref-ctmcmove}{Hanks, 2018}) R packages.
 Combined the packages offer many options for habitat analysis, we will focus on six.
-Three from the adeHabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
+Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (compana), Eigenanalysis of Selection Ratios (eisera).
 Two from the amt package: resource selection function (RSF), step selection function (SSF); and one from the ctmcmove package using a continuous time Markov chain (CTMC) framework.
 Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection
 
-The methods from the adeHabitatHS package all require similar choices to be made.
+The methods from the adehabitatHS package all require similar choices to be made.
 First is whether to approach the habitat selection analysis as a type II or III design (we are ignoring type I as we are aiming to estimate individuals' habitat selection).
 Type II is the habitat selection of an individual animal in relation to the available habitats on a population or landscape scale.
 The type II designs compares individual usage, to a universal availability.
@@ -302,20 +313,19 @@ We will use a range of methods are build areas from the recorded locations of th
 Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use.
 Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}).
-To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses (\protect\hyperlink{ref-crane_lots_2020}{Crane et al., 2020}) : the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
+To account for the variation potentially introduced from smoothing factor choice, we will included two bandwidth selection processes commonly used in home range analyses (\protect\hyperlink{ref-crane_lots_2020}{Crane et al., 2020}): the reference bandwidth (href), and Least Squares Cross Validation (LSCV).
 
-The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}), which better account for the non-independence and autocorrelative structures within animal movement data.
+The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}), which better account for the non-independence and autocorrelative structures within animal movement data (\protect\hyperlink{ref-Noonan2018}{Noonan et al., 2019}).
 We use two of these methods to define availability.
 
-First is the Autocorrelated Kernel Density Estimations (AKDEs) from the ctmm package (\protect\hyperlink{ref-Fleming2015}{Fleming et al., 2015}; \protect\hyperlink{ref-Fleming2017}{Fleming \& Calabrese, 2017}).
+First is the Autocorrelated Kernel Density Estimations (AKDEs) (\protect\hyperlink{ref-Fleming2015}{Fleming et al., 2015}; \protect\hyperlink{ref-Fleming2017}{Fleming \& Calabrese, 2017}) from the ctmm package (\protect\hyperlink{ref-Calabrese2016}{Calabrese, Fleming \& Gurarie, 2016}; \protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2021}).
 The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
 The movement models (Ornstein-Uhlenbeck, Ornstein--Uhlenbeck Foraging, and Independent Identically Distributed) include different levels of autocorrelative structure.
 The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
 Therefore, we will use the guidance from (\protect\hyperlink{ref-silva_autocorrelationinformed_2022}{Silva et al., 2022}) to generate weighted AKDEs using PHREML, and select the best performing by AICc for inclusion in further analysis.
 
-The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs), that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
-DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated.
-Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used.
+The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs) (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}) from the move package (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2022}), that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
+DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}).
 As window and margin are defined by data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency.
 As our most infrequent tracking is 168 hours (1 week), we will set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
 The broader window and margin sizes will help reduce computational costs.
@@ -334,8 +344,8 @@ We will explore the impact of using a 90, 95, and 99\% contour for all the metho
 Once we have a defined availability area, we will run a number of variations for how many random points will be used to estimate the relative availability of different habitats.
 
 The first method from the amt package we will use is a resource selection function (RSF).
-Like the adeHabitatHS methods, RSFs require a definition of what is available.
-We will use the same decision steps as for the adeHabitatHS method, including area definition methods (including the landscape level definition), contour decisions, and number of random points.
+Like the adehabitatHS methods, RSFs require a definition of what is available.
+We will use the same decision steps as for the adehabitatHS method, including area definition methods (including the landscape level definition), contour decisions, and number of random points.
 The RSF method will have an additional decision node that will alter the weighting of the unused points compared to the used points.
 
 The second amt method does not use an area to define availability.
@@ -419,6 +429,12 @@ Breznau N, Rinke EM, Wuttke A, Adem M, Adriaans J, Alvarez-Benjumea A, Andersen 
 \leavevmode\vadjust pre{\hypertarget{ref-bryan_replicator_2019}{}}%
 Bryan CJ, Yeager DS, O'Brien JM. 2019. Replicator degrees of freedom allow publication of misleading failures to replicate. \emph{Proceedings of the National Academy of Sciences} 116:25535--25545. DOI: \href{https://doi.org/10.1073/pnas.1910951116}{10.1073/pnas.1910951116}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-Calabrese2016}{}}%
+Calabrese JM, Fleming CH, Gurarie E. 2016. Ctmm: An {R} {Package} for {Analyzing} {Animal} {Relocation} {Data} {As} a {Continuous}-{Time} {Stochastic} {Process}. \emph{Methods in Ecology and Evolution} 7:1124--1132. DOI: \href{https://doi.org/10.1111/2041-210X.12559}{10.1111/2041-210X.12559}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-adehabitatHS}{}}%
+Calenge C. 2006. The package adehabitat for the r software: Tool for the analysis of space and habitat use by animals. \emph{Ecological Modelling} 197:1035.
+
 \leavevmode\vadjust pre{\hypertarget{ref-cassey_survey_2004}{}}%
 Cassey P, Ewen JG, Blackburn TM, Møller AP. 2004. A survey of publication bias within evolutionary ecology. \emph{Proceedings of the Royal Society of London. Series B: Biological Sciences} 271. DOI: \href{https://doi.org/10.1098/rsbl.2004.0218}{10.1098/rsbl.2004.0218}.
 
@@ -449,6 +465,9 @@ Fanelli D. 2012. Negative results are disappearing from most disciplines and cou
 \leavevmode\vadjust pre{\hypertarget{ref-Fleming2017}{}}%
 Fleming CH, Calabrese JM. 2017. A new kernel density estimator for accurate home-range and species-range area estimation. \emph{Methods in Ecology and Evolution} 8:571--579. DOI: \href{https://doi.org/10.1111/2041-210X.12673}{10.1111/2041-210X.12673}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-ctmm}{}}%
+Fleming CH, Calabrese JM. 2021. \emph{\href{https://CRAN.R-project.org/package=ctmm}{Ctmm: Continuous-time movement modeling}}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Fleming2015}{}}%
 Fleming CH, Fagan WF, Mueller T, Olson KA, Leimgruber P, Calabrese JM. 2015. Rigorous home range estimation with movement data: {A} new autocorrelated kernel density estimator. \emph{Ecology} 96:1182--1188.
 
@@ -472,6 +491,9 @@ Gelman A, Loken E. 2013. \href{http://www.stat.columbia.edu/~gelman/research/unp
 
 \leavevmode\vadjust pre{\hypertarget{ref-grainger_evidence_2019}{}}%
 Grainger M, Bolam FC, stewart G, Nilsen EB. 2019. Evidence synthesis for tackling research waste. \emph{EcoEvoRxiv}. DOI: \href{https://doi.org/10.32942/osf.io/42fkh}{10.32942/osf.io/42fkh}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ctmcmove}{}}%
+Hanks E. 2018. \emph{\href{https://CRAN.R-project.org/package=ctmcmove}{Ctmcmove: Modeling animal movement with continuous-time discrete-space markov chains}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-head_extent_2015}{}}%
 Head ML, Holman L, Lanfear R, Kahn AT, Jennions MD. 2015. The {Extent} and {Consequences} of {P}-{Hacking} in {Science}. \emph{PLOS Biology} 13:e1002106. DOI: \href{https://doi.org/10.1371/journal.pbio.1002106}{10.1371/journal.pbio.1002106}.
@@ -500,6 +522,12 @@ Kaplan RM, Irvin VL. 2015. Likelihood of {Null} {Effects} of {Large} {NHLBI} {Cl
 \leavevmode\vadjust pre{\hypertarget{ref-kelly_rate_2019}{}}%
 Kelly CD. 2019. Rate and success of study replication in ecology and evolution. \emph{PeerJ} 7:e7654. DOI: \href{https://doi.org/10.7717/peerj.7654}{10.7717/peerj.7654}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-Kranstauber2012}{}}%
+Kranstauber B, Kays R, Lapoint SD, Wikelski M, Safi K. 2012. A dynamic {Brownian} bridge movement model to estimate utilization distributions for heterogeneous animal movement. \emph{Journal of Animal Ecology} 81:738--746. DOI: \href{https://doi.org/10.1111/j.1365-2656.2012.01955.x}{10.1111/j.1365-2656.2012.01955.x}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-move}{}}%
+Kranstauber B, Smolla M, Scharf AK. 2022. \emph{\href{https://CRAN.R-project.org/package=move}{Move: Visualizing and analyzing animal track data}}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-lakens_justify_2018}{}}%
 Lakens D, Adolfi FG, Albers CJ, Anvari F, Apps MAJ, Argamon SE, Baguley T, Becker RB, Benning SD, Bradford DE, Buchanan EM, Caldwell AR, Van Calster B, Carlsson R, Chen S-C, Chung B, Colling LJ, Collins GS, Crook Z, Cross ES, Daniels S, Danielsson H, DeBruine L, Dunleavy DJ, Earp BD, Feist MI, Ferrell JD, Field JG, Fox NW, Friesen A, Gomes C, Gonzalez-Marquez M, Grange JA, Grieve AP, Guggenberger R, Grist J, Harmelen A-L van, Hasselman F, Hochard KD, Hoffarth MR, Holmes NP, Ingre M, Isager PM, Isotalus HK, Johansson C, Juszczyk K, Kenny DA, Khalil AA, Konat B, Lao J, Larsen EG, Lodder GMA, Lukavský J, Madan CR, Manheim D, Martin SR, Martin AE, Mayo DG, McCarthy RJ, McConway K, McFarland C, Nio AQX, Nilsonne G, Oliveira CL de, Xivry J-JO de, Parsons S, Pfuhl G, Quinn KA, Sakon JJ, Saribay SA, Schneider IK, Selvaraju M, Sjoerds Z, Smith SG, Smits T, Spies JR, Sreekumar V, Steltenpohl CN, Stenhouse N, Świątkowski W, Vadillo MA, Van Assen MALM, Williams MN, Williams SE, Williams DR, Yarkoni T, Ziano I, Zwaan RA. 2018. Justify your alpha. \emph{Nature Human Behaviour} 2:168--171. DOI: \href{https://doi.org/10.1038/s41562-018-0311-x}{10.1038/s41562-018-0311-x}.
 
@@ -512,11 +540,20 @@ Levins R, Lewontin R. 1985. \emph{The dialectical biologist}. Harvard University
 \leavevmode\vadjust pre{\hypertarget{ref-liu_paths_2020}{}}%
 Liu Y, Althoff T, Heer J. 2020. Paths {Explored}, {Paths} {Omitted}, {Paths} {Obscured}: {Decision} {Points} \& {Selective} {Reporting} in {End}-to-{End} {Data} {Analysis}. In: \emph{Proceedings of the 2020 {CHI} {Conference} on {Human} {Factors} in {Computing} {Systems}}. Honolulu HI USA: ACM, 1--14. DOI: \href{https://doi.org/10.1145/3313831.3376533}{10.1145/3313831.3376533}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-abmAnimalMovement}{}}%
+Marshall BM, Duthie AB. 2022. \href{https://0}{abmAnimalMovement: An r package for simulating animal movement using an agent-based model}. \emph{F1000} 0:0.
+
+\leavevmode\vadjust pre{\hypertarget{ref-minchin_simulation_1987}{}}%
+Minchin PR. 1987. Simulation of multidimensional community patterns: Towards a comprehensive model. \emph{Vegetatio} 71:145--156.
+
 \leavevmode\vadjust pre{\hypertarget{ref-miyakawa_no_2020}{}}%
 Miyakawa T. 2020. No raw data, no science: Another possible source of the reproducibility crisis. \emph{Molecular Brain} 13:24, s13041-020-0552-2. DOI: \href{https://doi.org/10.1186/s13041-020-0552-2}{10.1186/s13041-020-0552-2}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-nakagawa_replicating_2015}{}}%
 Nakagawa S, Parker TH. 2015. Replicating research in ecology and evolution: Feasibility, incentives, and the cost-benefit conundrum. \emph{BMC Biology} 13:88. DOI: \href{https://doi.org/10.1186/s12915-015-0196-3}{10.1186/s12915-015-0196-3}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Noonan2018}{}}%
+Noonan MJ, Tucker MA, Fleming CH, Akre T, Alberts SC, Ali AH, Altmann J, Antunes PC, Belant JL, Beyer D, Blaum N, Böhning-Gaese K, Cullen L, Paula RC de, Dekker J, Drescher-Lehman J, Farwig N, Fichtel C, Fischer C, Ford A, Goheen JR, Janssen R, Jeltsch F, Kauffman M, Kappeler PM, Koch F, LaPoint S, Catherine Markham A, Medici EP, Morato RG, Nathan R, Oliveira-Santos LGR, Olson KA, Patterson BD, Paviolo A, Ramalho EE, Roesner S, Schabo D, Selva N, Sergiel A, Xavier da Silva M, Spiegel O, Thompson P, Ullmann W, Zieba F, Zwijacz-Kozica T, Fagan WF, Mueller T, Calabrese JM. 2019. A comprehensive analysis of autocorrelation and bias in home range estimation. \emph{Ecological Monographs}. DOI: \href{https://doi.org/10.1002/ecm.1344}{10.1002/ecm.1344}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-nuijten_verify_2018}{}}%
 Nuijten MB, Bakker M, Maassen E, Wicherts JM. 2018. Verify original results through reanalysis before replicating. \emph{Behavioral and Brain Sciences} 41:e143. DOI: \href{https://doi.org/10.1017/S0140525X18000791}{10.1017/S0140525X18000791}.
@@ -565,6 +602,12 @@ Scheel AM, Schijen MRMJ, Lakens D. 2021. An {Excess} of {Positive} {Results}: {C
 
 \leavevmode\vadjust pre{\hypertarget{ref-schnitzer_would_2016}{}}%
 Schnitzer SA, Carson WP. 2016. Would {Ecology} {Fail} the {Repeatability} {Test}? \emph{BioScience} 66:98--99. DOI: \href{https://doi.org/10.1093/biosci/biv176}{10.1093/biosci/biv176}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-NLMR}{}}%
+Sciaini M, Fritsch M, Scherer C, Simpkins CE. 2018. \href{https://doi.org/10.1111/2041-210X.13076}{NLMR and landscapetools: An integrated environment for simulating and modifying neutral landscape models in r}. \emph{Methods in Ecololgy and Evolution} 00:1--9.
+
+\leavevmode\vadjust pre{\hypertarget{ref-amt}{}}%
+Signer J, Fieberg J, Avgar T. 2019. \href{https://doi.org/10.1002/ece3.4823}{Animal movement tools (amt): R package for managing tracking data and conducting habitat selection analyses}. \emph{Ecology and Evolution} 9:880--890.
 
 \leavevmode\vadjust pre{\hypertarget{ref-silberzahn_many_2018}{}}%
 Silberzahn R, Uhlmann EL, Martin DP, Anselmi P, Aust F, Awtrey E, Bahník Š, Bai F, Bannard C, Bonnier E, Carlsson R, Cheung F, Christensen G, Clay R, Craig MA, Dalla Rosa A, Dam L, Evans MH, Flores Cervantes I, Fong N, Gamez-Djokic M, Glenz A, Gordon-McKeon S, Heaton TJ, Hederos K, Heene M, Hofelich Mohr AJ, Högden F, Hui K, Johannesson M, Kalodimos J, Kaszubowski E, Kennedy DM, Lei R, Lindsay TA, Liverani S, Madan CR, Molden D, Molleman E, Morey RD, Mulder LB, Nijstad BR, Pope NG, Pope B, Prenoveau JM, Rink F, Robusto E, Roderique H, Sandberg A, Schlüter E, Schönbrodt FD, Sherman MF, Sommer SA, Sotak K, Spain S, Spörlein C, Stafford T, Stefanutti L, Tauber S, Ullrich J, Vianello M, Wagenmakers E-J, Witkowiak M, Yoon S, Nosek BA. 2018. Many {Analysts}, {One} {Data} {Set}: {Making} {Transparent} {How} {Variations} in {Analytic} {Choices} {Affect} {Results}. \emph{Advances in Methods and Practices in Psychological Science} 1:337--356. DOI: \href{https://doi.org/10.1177/2515245917747646}{10.1177/2515245917747646}.

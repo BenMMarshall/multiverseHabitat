@@ -20,7 +20,7 @@ testthat::test_that("build_nested_list object within match", {
   nestedList <- build_nested_list(list1,
                                   list2,
                                   list3, pasteSep = "__")
-  testthat::expect_equal(nestedList$a$a__e$a__e__i, "i")
+  testthat::expect_equal(nestedList$a$a__e$a__e__i, "a__e__i")
 })
 testthat::test_that("build_nested_list list name match", {
   vector1 <- c("a", "b", "c")
