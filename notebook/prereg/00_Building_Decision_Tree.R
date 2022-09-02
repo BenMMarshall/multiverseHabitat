@@ -140,6 +140,8 @@ ctm_03_it <- paste0("it.", c("24o60", "24o30", "24", "1"))
 ctm_04_pm <- c("pm.c1", "pm.c2")
 # intrepre method, "LinearInterp", "ShortestPath"
 ctm_05_im <- c("im.li", "im.sp")
+# directions
+ctm_06_di <- c("di.ro", "di.ki")
 
 ctmList <- lapply(ls(pattern = "ctm"), function(x){
   tempList <- vec_to_list(get(x))
@@ -153,6 +155,7 @@ ctm_List <- build_nested_list(ctm_01_hm_list,
                               ctm_03_it_list,
                               ctm_04_pm_list,
                               ctm_05_im_list,
+                              ctm_06_di_list,
                               pasteSep = "__")
 # add to main analysis list at the method node
 analysis_List$ctm.ctm <- ctm_List$ctm.ctm
