@@ -74,6 +74,8 @@ classLandscapeList <- list(
                         nrow = row,
                         ncol = col))
 
+save(classLandscapeList, file = here("notebook", "prereg", "landscapePrelim.RData"))
+
 plot_landscapeLayersList <- function(targetList){
 
   combinedLayers <- do.call(rbind, lapply(names(targetList), function(x){
