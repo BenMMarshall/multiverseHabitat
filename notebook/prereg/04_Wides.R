@@ -14,7 +14,8 @@ classRaster <- raster(classLandscapeList$classified, crs = sp::CRS(SRS_string = 
 
 out <- build_available_area(movementData = movementData,
                      method = "dBBMM",
-                     contour = 90)
+                     contour = 90,
+                     dBBMMsettings = c(25, 5))
 sp::plot(out)
 
 ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???

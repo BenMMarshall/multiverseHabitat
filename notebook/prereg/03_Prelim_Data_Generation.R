@@ -98,36 +98,46 @@ Default_behaveMatrix <- rbind(b0, b1, b2)
 colnames(Default_behaveMatrix) <- c("b0", "b1", "b2")
 BADGER_behaveMatrix <- Default_behaveMatrix
 
-startLocation <- sample(900:1100, 2, replace = TRUE)
-
 simSteps <- 24*60 *120
 
-simRes <- abm_simulate(
-  start = startLocation,
-  timesteps = simSteps,
-  des_options = 10,
-  options = 12,
-  shelterLocations = BADGER_shelterLocs,
-  shelterSize = BADGER_shelterSize,
-  avoidPoints = BADGER_avoidLocs,
-  destinationRange = BADGER_destinationRange,
-  destinationDirection = BADGER_destinationDirection,
-  destinationTransformation = BADGER_destinationTransformation,
-  destinationModifier = BADGER_destinationModifier,
-  avoidTransformation = BADGER_avoidTransformation,
-  avoidModifier = BADGER_avoidModifier,
-  k_step = BADGER_k_step,
-  s_step = BADGER_s_step,
-  mu_angle = BADGER_mu_angle,
-  k_angle = BADGER_k_angle,
-  rescale_step2cell = BADGER_rescale,
-  behave_Tmat = BADGER_behaveMatrix,
-  rest_Cycle = BADGER_rest_Cycle,
-  additional_Cycles = BADGER_additional_Cycles,
-  shelteringMatrix = landscapeLayersList$shelter,
-  foragingMatrix = landscapeLayersList$forage,
-  movementMatrix = landscapeLayersList$movement)
+individuals <- paste0("i", sprintf("%03d", 1:200))
+species <- c("sp.B")
 
-write.csv(simRes$locations,
-          file = here("notebook", "prereg", "prelimData.csv"),
-          row.names = FALSE)
+for(sp in species){
+  for(indi in individuals[1]){
+
+    startLocation <- sample(900:1100, 2, replace = TRUE)
+
+    simRes <- abm_simulate(
+      start = startLocation,
+      timesteps = simSteps,
+      des_options = 10,
+      options = 12,
+      shelterLocations = BADGER_shelterLocs,
+      shelterSize = BADGER_shelterSize,
+      avoidPoints = BADGER_avoidLocs,
+      destinationRange = BADGER_destinationRange,
+      destinationDirection = BADGER_destinationDirection,
+      destinationTransformation = BADGER_destinationTransformation,
+      destinationModifier = BADGER_destinationModifier,
+      avoidTransformation = BADGER_avoidTransformation,
+      avoidModifier = BADGER_avoidModifier,
+      k_step = BADGER_k_step,
+      s_step = BADGER_s_step,
+      mu_angle = BADGER_mu_angle,
+      k_angle = BADGER_k_angle,
+      rescale_step2cell = BADGER_rescale,
+      behave_Tmat = BADGER_behaveMatrix,
+      rest_Cycle = BADGER_rest_Cycle,
+      additional_Cycles = BADGER_additional_Cycles,
+      shelteringMatrix = landscapeLayersList$shelter,
+      foragingMatrix = landscapeLayersList$forage,
+      movementMatrix = landscapeLayersList$movement)
+
+    write.csv(simRes$locations,
+              file = here("notebook", "prereg", "prelimMultiData",
+                          paste0(sp, "__", indi, "__prelimData.csv")),
+              row.names = FALSE)
+
+  }
+}

@@ -4,7 +4,7 @@
 #' @description A
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param method "MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"
-#' @param contour Numeric, > 0 and < 100.
+#' @param contour Numeric, > 0 and < 100. Can be a vector.
 #' @param SRS_string = "EPSG:32601"
 #' @return A spatialpolygondataframe
 #'
@@ -12,14 +12,21 @@
 build_available_area <- function(movementData,
                                  method = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"),
                                  contour,
-                                 SRS_string = "EPSG:32601"){
+                                 SRS_string = "EPSG:32601",
+                                 dBBMMsettings = NULL){
 
 
   if(method == "MCP"){
 
     spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
-    poly_OUT <- adehabitatHR::mcp(spPoints, percent = contour, unin = "m",
-                                  unout = "m2")
+    # poly_OUT <- adehabitatHR::mcp(spPoints, percent = contour, unin = "m",
+    #                               unout = "m2")
+
+    poly_List <- lapply(contour, function(x){
+      poly_OUT <- adehabitatHR::mcp(spPoints, percent = x, unin = "m",
+                                    unout = "m2")
+      return(poly_OUT)
+    })
 
   } else if(method == "KDE_LSCV"){
 
@@ -27,14 +34,17 @@ build_available_area <- function(movementData,
 
     kdeLSCV_UD <- adehabitatHR::kernelUD(spPoints,
                                          h = "LSCV",
-                                         grid = 120,
+                                         grid = 240,
                                          same4all = FALSE,
                                          hlim = c(0.001, 2000), # might need to play with the limits to help convergence
                                          kern = "bivnorm",
-                                         extent = 2,
+                                         extent = 4,
                                          boundary = NULL)
 
-    poly_OUT <- adehabitatHR::getverticeshr(kdeLSCV_UD, contour)
+    poly_List <- lapply(contour, function(x){
+      poly_OUT <- adehabitatHR::getverticeshr(kdeLSCV_UD, x)
+      return(poly_OUT)
+    })
 
   } else if(method == "KDE_href"){
 
@@ -42,14 +52,17 @@ build_available_area <- function(movementData,
 
     kdehref_UD <- adehabitatHR::kernelUD(spPoints,
                                          h = "href",
-                                         grid = 120, # needs to be large enough to be smooth-ish
+                                         grid = 240, # needs to be large enough to be smooth-ish
                                          same4all = FALSE,
                                          hlim = c(0.1, 1.5),
                                          kern = "bivnorm",
-                                         extent = 2,
+                                         extent = 4,
                                          boundary = NULL)
 
-    poly_OUT <- adehabitatHR::getverticeshr(kdehref_UD, contour)
+    poly_List <- lapply(contour, function(x){
+      poly_OUT <- adehabitatHR::getverticeshr(kdehref_UD, x)
+      return(poly_OUT)
+    })
 
   } else if(method == "AKDE"){
 
@@ -74,23 +87,31 @@ build_available_area <- function(movementData,
                           weights = TRUE)
 
     ## as.sf() might be a better way of doing this???
-    akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(akdeRes, level.UD = contour/100)
-    poly_OUT <- akdePoly[akdePoly$name == akdePoly$name[2],] # just get the point estimate
+    poly_List <- lapply(contour, function(x){
+      akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(akdeRes, level.UD = x/100)
+      poly_OUT <- akdePoly[akdePoly$name == akdePoly$name[2],] # just get the point estimate
+      return(poly_OUT)
+    })
+
 
   } else if(method == "dBBMM"){
+
+    if(is.null(dBBMMsettings)){
+      stop("dBBMMsettings required for dBBMM running, 2 length vector of ws and mrg")
+    }
 
     moveObj <- move::move(x = movementData$x, y = movementData$y,
                     time = movementData$datetime,
                     proj = sp::CRS(SRS_string = "EPSG:32601"))
 
-    ws <- 25
-    mrg <- 5
-    set_grid.ext <- 2
+    # ws <- 25
+    # mrg <- 5
+    set_grid.ext <- 4
     set_dimsize <- 400
     dbbmm <- move::brownian.bridge.dyn(object = moveObj,
                                  location.error = 5,
-                                 margin = mrg,
-                                 window.size = ws,
+                                 window.size = dBBMMsettings[1],
+                                 margin = dBBMMsettings[2],
                                  ext = set_grid.ext,
                                  dimSize = set_dimsize,
                                  verbose = FALSE)
@@ -101,10 +122,14 @@ build_available_area <- function(movementData,
     dbbmmSP_UD@vol = FALSE
     dbbmmSP_UD@h$meth = "dBBMM"
     dbbmm_UD <- adehabitatHR::getvolumeUD(dbbmmSP_UD, standardize = TRUE)
-    poly_OUT <- adehabitatHR::getverticeshr(dbbmm_UD, percent = 95)
+
+    poly_List <- lapply(contour, function(x){
+      poly_OUT <- adehabitatHR::getverticeshr(dbbmm_UD, percent = x)
+      return(poly_OUT)
+    })
 
   }
-  return(poly_OUT)
+  return(poly_List)
 
 }
 

@@ -8,7 +8,8 @@ build_available_area(
   movementData,
   method = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"),
   contour,
-  SRS_string = "EPSG:32601"
+  SRS_string = "EPSG:32601",
+  dBBMMsettings = NULL
 )
 }
 \arguments{
@@ -16,7 +17,7 @@ build_available_area(
 
 \item{method}{"MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"}
 
-\item{contour}{Numeric, > 0 and < 100.}
+\item{contour}{Numeric, > 0 and < 100. Can be a vector.}
 
 \item{SRS_string}{= "EPSG:32601"}
 }
