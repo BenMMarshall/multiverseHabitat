@@ -1,4 +1,5 @@
 library(here)
+library(multiverseHabitat)
 
 dir.create(here("notebook", "prereg", "prelimMultiData", "polyData"))
 fileNames <- list.files(here("notebook", "prereg", "prelimMultiData", "dataSubset"),
@@ -18,9 +19,22 @@ fileNames <- list.files(here("notebook", "prereg", "prelimMultiData", "dataSubse
 
 contours <- c(90, 95, 99)
 
+# library(foreach)
+# library(doParallel)
+# # setup parallel backend
+# cores <- detectCores()
+# cl <- makeCluster(cores[1]-1)
+# registerDoParallel(cl)
+# foreach(file = fileNames) %dopar% {
+#   # inner bits of the loop here
+# }
+# # stop cluster
+# stopCluster(cl)
+### NEED TO ADD LIBRARY CALLS INSIDE LOOP FOR PARALLEL
+
 for(file in fileNames){
   print(file)
-  # file <- fileNames[8]
+  # file <- fileNames[1]
   tfRaw <- strsplit(file, "__", fixed = TRUE)[[1]][3]
   tfNum <- as.numeric(sub("tf.", "", tfRaw))
 
@@ -64,25 +78,40 @@ for(file in fileNames){
                   "__", mthdTreeName,
                   "__ac.", contours, ".RData"))
 
+      # if already complete and the file date are newer than the simdata files, skip
       if(all(file.exists(saveLocations))){
+        if(all(
+          file.info(saveLocations[grep("ac.90", saveLocations)])$ctime >
+          file.info(here("notebook", "prereg", "prelimMultiData", "dataSubset",
+                         file))$ctime,
+          file.info(saveLocations[grep("ac.95", saveLocations)])$ctime >
+          file.info(here("notebook", "prereg", "prelimMultiData", "dataSubset",
+                         file))$ctime,
+          file.info(saveLocations[grep("ac.99", saveLocations)])$ctime >
+          file.info(here("notebook", "prereg", "prelimMultiData", "dataSubset",
+                         file))$ctime)){
+        }
+        print("Not updated ---")
         {next}
+      } else {
+        # generate or overwrite the areas
+        polyOut <- build_available_area(movementData,
+                                        contour = contours,
+                                        method = mthd,
+                                        dBBMMsettings = c(wsDP, mrgDP))
+
+        p90 <- polyOut[[1]]
+        p95 <- polyOut[[2]]
+        p99 <- polyOut[[3]]
+
+        save(p90, file = saveLocations[grep("ac.90", saveLocations)])
+        save(p95, file = saveLocations[grep("ac.95", saveLocations)])
+        save(p99, file = saveLocations[grep("ac.99", saveLocations)])
       }
-
-      polyOut <- build_available_area(movementData,
-                                      contour = contours,
-                                      method = mthd,
-                                      dBBMMsettings = c(wsDP, mrgDP))
-
-      p90 <- polyOut[[1]]
-      p95 <- polyOut[[2]]
-      p99 <- polyOut[[3]]
-
-      save(p90, file = saveLocations[grep("ac.90", saveLocations)])
-      save(p95, file = saveLocations[grep("ac.95", saveLocations)])
-      save(p99, file = saveLocations[grep("ac.99", saveLocations)])
 
   }
 }
 
 # load(here("notebook", "prereg", "prelimMultiData", "polyData",
 #      "sp.B__i001__tf.0.5__td.007__aa.mp__ac.95.RData"))
+

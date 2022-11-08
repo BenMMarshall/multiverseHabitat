@@ -25,3 +25,31 @@
 ## Subsampling is more a convenience for later summaries and makes things nicely
 ## clear for running analysis functions, it won't save much time besides not
 ## needing to load in the largest tracking dataset files.
+
+### To do
+
+# - draft individual preference methods
+#   - wides - in progress
+#   - ssf
+#   - rsf
+#   - ctmc
+# - function-ise individual preference methods
+#   - wides
+#   - ssf
+#   - rsf
+#   - ctmc
+# - draft population preference methods
+#   - compana
+#   - eisera
+#   - pop-ssf via INLA
+#   - ??? rsf w/ random effect
+# - function-ise population preference methods
+#   - compana
+#   - eisera
+#   - pop-ssf via INLA
+#   - ??? rsf w/ random effect
+
+# - formally construct Targets tree(s)
+
+# - create stable data objects that contain the species sim data
+#   - include landscape sim values in data object

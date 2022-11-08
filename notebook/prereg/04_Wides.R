@@ -1,22 +1,30 @@
 library(here)
 library(multiverseHabitat)
 
-movementData <- read.csv(here("notebook", "prereg", "prelimData.csv"))
-movementData <- movementData[seq(0, 100000, by = 100),]
-movementData$datetime <- as.POSIXct(movementData$timestep * 60,
-           origin = "2022-01-01")
+
+# Load movement data ------------------------------------------------------
+
+# species
+sam_01_sp <- c("sp.B", "sp.V", "sp.K")
+# tracking frequency hours
+sam_02_tf <- c("tf.0.5", "tf.01", "tf.02", "tf.06", "tf.12", "tf.24", "tf.48", "tf.168")
+# tracking duration days
+sam_03_td <- c("td.007", "td.015", "td.030", "td.060", "td.120", "td.240", "td.365")
+
+dataLocation <- list.files(here("notebook", "prereg", "prelimMultiData", "dataSubset"),
+                           full.names = TRUE)[1]
+
+movementData <- read.csv(dataLocation)
+
+# Load landscape ----------------------------------------------------------
 
 library(raster)
-load(file = here("notebook", "prereg", "landscapePrelim.RData"))
+load(file = here("notebook", "prereg", "sp.B_landscapePrelim.RData"))
 classRaster <- raster(classLandscapeList$classified, crs = sp::CRS(SRS_string = "EPSG:32601"),
                       xmn = 0, xmx = ncol(classLandscapeList$classified),
                       ymn = 0, ymx = nrow(classLandscapeList$classified))
 
-out <- build_available_area(movementData = movementData,
-                     method = "dBBMM",
-                     contour = 90,
-                     dBBMMsettings = c(25, 5))
-sp::plot(out)
+# Load polygon data -------------------------------------------------------
 
 ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
 availPoints <- spsample(out, n = 1000, type = "random")
