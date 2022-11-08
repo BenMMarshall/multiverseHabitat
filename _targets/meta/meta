@@ -1,0 +1,26 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+apply_to_leaves|function|b1d46ba8693c70e2|||||||||||||||
+build_available_area|function|0ed8625e34608127|||||||||||||||
+build_nested_list|function|a5128199400f298e|||||||||||||||
+landscape|pattern|eeacb9491af88b25|d2e744d39f4948fa||-2110618882||||208|rds|local|vector||landscape_5f53925d*landscape_e9338d13*landscape_6daa4637|0||
+landscape_5f53925d|branch|3a4678999848330a|d2e744d39f4948fa|30a50cc0a8bd455d|2063060854||t19300.4445393492s|425d385953b3c542|67|rds|local|vector|landscape||0||
+landscape_6daa4637|branch|fa0e05013b1fc9ba|d2e744d39f4948fa|0dcf7c4c28480f56|1458252077||t19300.4445401588s|c6fbfb9abe15abfd|72|rds|local|vector|landscape||0||
+landscape_badger|stem|4a4b9a3ed5a52d0d|3ffca88fcf2700e8|3bbf3c678d05c382|647952155||t19300.4509136637s|425d385953b3c542|67|rds|local|vector|||3.8|package raster was built under R version 4.2.1|
+landscape_e9338d13|branch|1cc2ac670095f6c2|d2e744d39f4948fa|82dc54c9f376ad74|800679195||t19300.4445400099s|991ef619886270ed|69|rds|local|vector|landscape||0||
+landscape_king.cobra|stem|3a786596dc21bdbb|6202adc9e82e8586|3bbf3c678d05c382|-988132422||t19300.4509141711s|c6fbfb9abe15abfd|72|rds|local|vector|||0||
+landscape_vulture|stem|34699cb34390f679|aa38d05472bbd842|3bbf3c678d05c382|492631208||t19300.4509144254s|991ef619886270ed|69|rds|local|vector|||0||
+nest_list|function|0a17c0164b424038|||||||||||||||
+prefix_all|function|29fdba172e3ba648|||||||||||||||
+simdata|pattern|cc508ab6e74e96b5|6480e2f20cd17858||-1244512493||||291|rds|local|vector||simdata_5f53925d*simdata_e9338d13*simdata_6daa4637|0||
+simdata_5f53925d|branch|36518b5845a6402f|6480e2f20cd17858|7fb84ec2341f73da|-632264076||t19300.4445404s|41200f7f0df0ebd3|96|rds|local|vector|simdata||0||
+simdata_6daa4637|branch|961ba24152dc56d3|6480e2f20cd17858|86fd6b053a994f88|2145132753||t19300.4445406885s|2005da2f14a67e22|98|rds|local|vector|simdata||0||
+simdata_badger|stem|e47b89668701fc6b|943545d4307879db|5d3d3cecc9a283ca|381082585||t19300.4509145635s|36500b95d6893aee|74|rds|local|vector|||0||
+simdata_e9338d13|branch|f25b4c127d578d39|6480e2f20cd17858|2c36821a5d8a3042|-1746142822||t19300.44454055s|f0d5811415b6b792|97|rds|local|vector|simdata||0||
+simdata_king.cobra|stem|3c6284b59fac010f|71e3d49ea8c6ce2f|96f5f4d7f22d62bf|-67309017||t19300.4509147026s|c852eab37a726e04|78|rds|local|vector|||0||
+simdata_vulture|stem|fa979adf5a945861|a8bf460941a72536|64f3578cb5893ec5|-1814776182||t19300.450914829s|ff026697d66e9a9f|75|rds|local|vector|||0||
+species|stem|8295961c22a36dba|ee22ad8873de3f12|8fb75deda0f036e8|-954574027||t19300.4406126555s|b3654bf3682c79ca|86|rds|local|vector||species_0d6141c6*species_ed850b89*species_2623d9da|3.71|package raster was built under R version 4.2.1|
+subset_duration|function|23d51a061493df33|||||||||||||||
+subset_frequency|function|1ed10fbc2ef3c0f5|||||||||||||||
+subsetdata|stem||0b3e38dfe33fc0a7|0c2c3991df8b1353|-1341221548||t19300.4406144116s||0|rds|local|vector|||0.03||replacement has 0 rows, data has 9
+values|object|11a318b56f3bc5b2|||||||||||||||
+vec_to_list|function|403d24b77382889a|||||||||||||||
