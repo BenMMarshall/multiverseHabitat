@@ -26,8 +26,11 @@ classRaster <- raster(classLandscapeList$classified, crs = sp::CRS(SRS_string = 
 
 # Load polygon data -------------------------------------------------------
 
+load(paste0(here("notebook", "prereg", "prelimMultiData", "polyData"),
+            "/sp.B__i001__tf.0.5__td.007__aa.ak__ac.90.RData"))
+
 ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-availPoints <- spsample(out, n = 1000, type = "random")
+availPoints <- spsample(p90, n = 1000, type = "random")
 
 availValues <- raster::extract(classRaster, availPoints)
 availValues_DF <- data.frame(rbind(table(availValues)))
@@ -38,10 +41,14 @@ names(availVector) <- c("c0", "c1", "c2")
 
 library(adehabitatHS)
 
-usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
-                                                             sp::CRS(SRS_string = "EPSG:32601")))
-usedValues <- data.frame(rbind(table(usedValues)))
-names(usedValues) <- c("c0", "c1", "c2")
+usedValues <- raster::extract(classRaster,
+                              sp::SpatialPoints(movementData[,c("x", "y")],
+                                                sp::CRS(SRS_string = "EPSG:32601")))
+usedValues_DF <- data.frame(rbind(table(usedValues)))
+names(usedValues_DF) <- c("c0", "c1", "c2")
+
+usedVector <- as.vector(table(usedValues))
+names(usedVector) <- c("c0", "c1", "c2")
 
 # for widesI and widesII, a vector with named elements describing the sample or
 # the proportion of available resource units. For widesIII a matrix or a data
@@ -51,9 +58,20 @@ names(usedValues) <- c("c0", "c1", "c2")
 # so because the
 # difference is use the available, we can do III design with the II set up just
 # with different availabilities
-wiOUT <- widesIII(u = usedValues, a = availValues_DF)
+wiOUT <- widesIII(u = usedValues_DF, a = availValues_DF)
+
+widesII(u = usedVector, a = availVector)
 
 wiOUT$wi[3]
+
+library(multiverseHabitat)
+
+method_indi_wides(
+  movementData = movementData,
+  landscape = classRaster,
+  availableArea = p90,
+  availabelPoints = 1000
+)
 
 # adehabitatHS::compana(used = usedValues, avail = availValues_DF)
 #
@@ -89,3 +107,4 @@ wiOUT$wi[3]
 #
 # ## Eigenanalysis of selection ratios
 # ii <- eisera(us, av, scannf = FALSE)
+
