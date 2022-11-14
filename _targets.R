@@ -45,7 +45,7 @@ values5 <- tidyr::expand_grid(
 )
 
 methodsValues <- tidyr::expand_grid( # Use all possible combinations of input settings.
-  method_function = rlang::syms(c("ade.wid", "amt.rsf"))
+  method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf"))
 )
 
 list(
