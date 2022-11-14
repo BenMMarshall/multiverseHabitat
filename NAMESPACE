@@ -3,6 +3,8 @@
 export(apply_to_leaves)
 export(build_available_area)
 export(build_nested_list)
+export(method_indi_rsf)
+export(method_indi_ssf)
 export(method_indi_wides)
 export(nest_list)
 export(prefix_all)

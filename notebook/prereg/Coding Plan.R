@@ -11,6 +11,8 @@
 # computationally intensive bit we can run 90,95,99 contours or each method for
 # each data file. store all outputs
 
+# Note - do we need to explore buffers on each area method? see amt vignette
+
 # Individual analyses - run SSF RSF and Wides designs
 
 # Population analyses - summarise SSF RSF and WIDES to pop level, then introduce
@@ -29,7 +31,7 @@
 ### To do
 
 # - draft individual preference methods
-#   - wides - in progress
+#   - wides - draft done
 #   - ssf
 #   - rsf
 #   - ctmc

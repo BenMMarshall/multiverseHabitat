@@ -1,44 +1,55 @@
-#' Run wides based analyses
+#' Run RSF based analyses
 #'
-#' @name method_indi_wides
+#' @name method_indi_rsf
 #' @description A
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param landscape
 #' @param availableArea
 #' @param availablePoints
+#' @param weighting
 #' @return a
 #'
 #' @export
-method_indi_wides <- function(
+method_indi_rsf <- function(
     # first two can be for individuals, as they will be provided by previous nodes
   movementData,
   landscape,
   # below can all be programmed as single values as the
   # targets workflow will be used to feed multiple values
   # in
-  #### designType, # design type not needed cos typeII is more pop-level analysis?
-  # could be swapped for random/systematic point selection
   availableArea,
-  availablePoints){
+  availablePoints,
+  weighting){
 
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
   availPoints <- spsample(availableArea, n = availablePoints, type = "random")
   # extract the habitat types each point is located within
   availValues <- raster::extract(landscape, availPoints)
-  # convert to dataframe for easier use in WIDES
-  availValues_DF <- data.frame(rbind(table(availValues)))
-  names(availValues_DF) <- c("c0", "c1", "c2")
+
+  availValues_DF <- as.data.frame(availPoints@coords)
+  availValues_DF$values <- as.factor(availValues)
+  # case_ == false cos not used
+  availValues_DF$case_ <- FALSE
+  # assign the weighting
+  availValues_DF$weights <- weighting
 
   usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                                sp::CRS(SRS_string = "EPSG:32601")))
-  usedValues_DF <- data.frame(rbind(table(usedValues)))
-  names(usedValues_DF) <- c("c0", "c1", "c2")
+  movementData$values <- as.factor(usedValues)
+  modelData <- movementData[,c("x", "y", "values")]
+  # used gets case_ == TRUE, and weights == 1
+  modelData$case_ <- TRUE
+  modelData$weights <- 1
 
-  # so because the difference is use the available, we can do III design with
-  # the II set up just with different availabilities
-  wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+  modelData <- rbind(modelData, availValues_DF)
 
-  return(wiOUT)
+  # fit the model using base R glm()
+  rsfOUT <- glm(case_ ~ values,
+                family = binomial(),
+                data = modelData,
+                weights = weights)
+
+  return(rsfOUT)
 
 }
