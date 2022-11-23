@@ -4,10 +4,7 @@
 \alias{simulate_landscape}
 \title{Simulate landscapes}
 \usage{
-simulate_landscape()
-}
-\arguments{
-\item{movementData}{must have a x and y column for locations, and a datetime column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
+simulate_landscape(species, seed)
 }
 \value{
 a
