@@ -32,13 +32,13 @@
 
 # - draft individual preference methods
 #   - wides - draft done
-#   - ssf
-#   - rsf
+#   - ssf - draft done
+#   - rsf - draft done - need to add new ctmm implementation
 #   - ctmc
 # - function-ise individual preference methods
-#   - wides
-#   - ssf
-#   - rsf
+#   - wides - done, pending documentation
+#   - ssf - done, pending documentation
+#   - rsf - done, pending documentation
 #   - ctmc
 # - draft population preference methods
 #   - compana
@@ -53,5 +53,5 @@
 
 # - formally construct Targets tree(s)
 
-# - create stable data objects that contain the species sim data
-#   - include landscape sim values in data object
+# - create stable data objects that contain the species sim data - done
+#   - include landscape sim values in data object - done

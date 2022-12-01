@@ -24,70 +24,96 @@ tar_source()
 # source("other_functions.R") # Source other scripts as needed. # nolint
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
-values <- tibble(
+values_SimSpecies <- tibble(
   species = c("badger", "vulture", "king cobra")
 )
-values2 <- tibble(
-  td = c("td1", "td2")
+values_SampDuration <- tibble(
+  td = c(7, 15)
+  # td = c(7, 15, 30, 60, 120, 240, 365)
 )
-values3 <- tibble(
-  tf = c("td0.1", "td0.2")
+values_SampFrequency <- tibble(
+  tf = c(0.5, 1)
+  # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
 )
-values4 <- tibble(
-  areaMethod = c("dBBMM", "AKDE")
+values_MethodArea <- tidyr::expand_grid(
+  areaMethod = c("dBBMM", "AKDE"),
+  # areaMethod = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM")
+  areaContour = c(90)
+  # areaContour = c(90, 95, 99)
 )
-# values5 <- tibble(
-#   ssfMethod = c("mf.is", "mf.ss")
-# )
-values5 <- tidyr::expand_grid(
-  ssfMethodmf = c("mf.is", "mf.ss"),
-  ssfMethodce = c("ce.st", "ce.mi", "ce.ed"),
+values_MethodSSF <- tidyr::expand_grid(
+  MethodSSF_mf = c("mf.is", "mf.ss"),
+  MethodSSF_ce = c("ce.st", "ce.mi", "ce.ed"),
+  # MethodSSF_as = round(exp(seq(log(1), log(500), length.out = 5)), digits = 1)
+  MethodSSF_as = 1
 )
 
-methodsValues <- tidyr::expand_grid( # Use all possible combinations of input settings.
-  method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf"))
+values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of input settings.
+  Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
+  # Method_ap = round(exp(seq(log(1), log(1000), length.out = 4)), digits = 1)
+  Method_ap = 1
+)
+
+values_MethodCTM <- tidyr::expand_grid(
+  # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
+  # Methodctm_it = c(24/60, 24/30, 24, 1),
+  # Methodctm_pm = c("pm.c1", "pm.c2"),
+  # Methodctm_im = c("im.li", "im.sp"),
+  # Methodctm_di = c("di.ro", "di.ki")
+  Methodctm_ks = 1,
+  Methodctm_it = 24/60,
+  Methodctm_pm = "pm.c1",
+  Methodctm_im = "im.li",
+  Methodctm_di = "di.ro"
 )
 
 list(
+  ## SPECIES + LANDSCAPE SIMULATION
   tar_map(
-    values = values,
+    values = values_SimSpecies,
     # in the final sim function wrapper make sure there is an if statement to
     # get all the values per species, easier there than here, can have extra
-    # landscape target that is indepedent?
-    tar_target(landscape, paste0("l_", species)),
-    tar_target(simdata, paste0("d_", species, "__", landscape)),
+    # landscape target that is independent
+    tar_target(landscape, paste0("l_", species)), # FUNCTION simulate_landscape
+    tar_target(simdata, paste0("d_", species, "__", landscape)), # FUNCTION simulate_individual
     # tar_target(sampdata, paste0(simdata, "_-_samp_", td))
+    ## DURATION MAP
     tar_map(
-      values = values2,
-      tar_target(sampdata, paste0(simdata, "_-_samp_", td)),
+      values = values_SampDuration,
+      tar_target(sampdata, paste0(simdata, "_-_samp_", td)), # FUNCTION subset_duration
+      ## FREQUENCY MAP
       tar_map(
-        values = values3,
-        tar_target(sampdata2, paste0(sampdata, "_-_samp2_", tf)),
-        tar_target(outputctmc, paste0(sampdata2, "_-_ctmc")), # quick to output function cos doesnt need areas
-        # tar_target(outputssf, paste0(sampdata2, "_-_ssf")), # quick to output function cos doesnt need areas
-        ## can we swap the above for tar_maps can create sub trees for these
-        ## routes? do we need to? or do we bake the method nodes into the
-        ## functions. If not we need "values" for every node in teh targets.R
-        ## file here
-        ## area based branching
+        values = values_SampFrequency,
+        tar_target(sampdata2, paste0(sampdata, "_-_samp2_", tf)), # FUNCTION subset_frequency
+        ## AREA + CONTOUR MAP
         tar_map(
-          values = values4,
-          tar_target(area, paste0(sampdata2, "_-_area_", areaMethod)),
+          values = values_MethodArea,
+          tar_target(area, paste0(sampdata2, "_-_area_",
+                                  areaMethod, areaContour)), # FUNCTION build_available_area
+          ## AREA-BASED METHODS MAP
           tar_map(
-            values = methodsValues,
+            values = values_MethodMethod,
             # names = "tNames", # Select columns from `values` for target names.
-            tar_target(output, method_function(sampdata2, area))
+            tar_target(output, Method_function(sampdata2, area, Method_ap)) # FUNCTION "method_indi_wides", "method_indi_rsf"
             # next level goes here using tar_map() again
-          )),
-        ## ssf branching
+          ) # area methods map
+        ), # area creation map
+        ## SSF MAP
         tar_map(
-          values = values5,
-          tar_target(ssf1, paste0(sampdata2, "_-_ssf1_", ssfMethodmf,
-                                  "_ssf2_", ssfMethodce))
-        )
-      )
-    )
-  )
+          values = values_MethodSSF,
+          tar_target(ssf1, paste0(sampdata2, "_-_ssf1_", MethodSSF_mf,
+                                  "_ssf2_", MethodSSF_ce)) # FUNCTION method_ssf
+        ), # ssf map
+        ## CTMC MAP
+        tar_map(
+          values = values_MethodCTM,
+          tar_target(ssf1, paste0(sampdata2, "_-_ctm1_", Methodctm_ks,
+                                  Methodctm_it, Methodctm_pm,
+                                  Methodctm_im, Methodctm_di))
+        ) # ctmc map
+      ) # frequency map
+    ) # duration map
+  ) # species map
 )
 
 # preview one species
