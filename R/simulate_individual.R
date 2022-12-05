@@ -2,7 +2,8 @@
 #'
 #' @name simulate_individual
 #' @description A
-#' @param species c("BADGER", "VULTURE", "KINGCOBRA")
+#' @param individualNum number for the repeats of a given sim style
+#' @param species c("BADGER", "VULTURE", "KINGCOBRA"), add other sim styles here
 #' @param simSteps = 24\*60 \*365
 #' @param desOptions = 10
 #' @param options = 12
@@ -12,6 +13,7 @@
 #'
 #' @export
 simulate_individual <- function(
+    individualNum,
     species,
     simSteps = 24*60 *365,
     desOptions = 10,
@@ -29,6 +31,11 @@ simulate_individual <- function(
   if(any(missing)){
     stop(paste0(pcks[missing], " not installed"))
   }
+
+  # # example of where branch sim approach could be added, maybe or better approach would be new tree
+  # if(species == "RSF_SIM"){
+  #   # atm RSF simulation approach here, but still needs a SPECIES connection to get the same landscape
+  # }
 
   ## SPECIES INPUTS
 
@@ -168,6 +175,15 @@ simulate_individual <- function(
     foragingMatrix = landscapeList$forage,
     movementMatrix = landscapeList$movement
   )
+
+  simResults$locations$datetime <- as.POSIXct(simResults$locations$timestep * 60,
+                                      origin = "2022-01-01")
+
+  simResults$locations$hour <- as.numeric(substr(simResults$locations$datetime, 12, 13))
+  simResults$locations$minute <- as.numeric(substr(simResults$locations$datetime, 15, 16))
+  simResults$locations$yday <- as.numeric(format(simResults$locations$datetime,"%j"))
+
+  simResults$locations$id <- paste0(species, "_", sprintf("%03d", individualNum))
 
   return(simResults)
 

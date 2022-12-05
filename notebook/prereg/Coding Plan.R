@@ -51,7 +51,7 @@
 #   - pop-ssf via INLA
 #   - ??? rsf w/ random effect
 
-# - formally construct Targets tree(s)
+# - formally construct Targets tree(s) - mostly done bar ctmc, but needs testing
 
 # - create stable data objects that contain the species sim data - done
 #   - include landscape sim values in data object - done

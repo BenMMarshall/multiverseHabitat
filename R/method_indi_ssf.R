@@ -22,18 +22,32 @@ method_indi_ssf <- function(
   covExtract,
   availableSteps){
 
+  if(!require(amt)){
+    stop("amt not installed")
+  }
+
   movementData$t <- as.POSIXct(movementData$datetime)
-  movementTrack <- make_track(tbl = movementData, .x = x, .y = y, .t = t, crs = 32601)
-  movementSteps <- steps(movementTrack)
+  movementTrack <- amt::make_track(tbl = movementData, .x = x, .y = y, .t = t, crs = 32601)
+  movementSteps <- amt::steps(movementTrack)
 
   set.seed(2022)
-  modelData <- random_steps(movementSteps,
-                            n_control = availableSteps,
-                            sl_distr = fit_distr(movementSteps$sl_, "gamma"),
-                            ta_distr = fit_distr(movementSteps$ta_, "vonmises"))
+  modelData <- amt::random_steps(movementSteps,
+                                 n_control = availableSteps,
+                                 sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
+                                 ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
+
+  classRaster <- raster(nrows = nrow(landscape$classified),
+                        ncols = ncol(landscape$classified),
+                        xmn = 0, xmx = nrow(landscape$classified),
+                        ymn = 0, ymx = ncol(landscape$classified),
+                        crs = CRS(SRS_string = "EPSG:32601"),
+                        # need to transpose cos matrix and raster deal with rows and col differently
+                        vals = t(landscape$classified))
+  # and flip to full match the raster with the matrix used in the sims
+  classRaster <- raster::flip(classRaster)
 
   modelData <- amt::extract_covariates(modelData,
-                                       landscape,
+                                       classRaster,
                                        where = covExtract)
 
   modelData$values <- factor(modelData$layer)

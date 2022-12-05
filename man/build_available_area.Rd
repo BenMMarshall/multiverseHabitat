@@ -20,6 +20,8 @@ build_available_area(
 \item{contour}{Numeric, > 0 and < 100. Can be a vector.}
 
 \item{SRS_string}{= "EPSG:32601"}
+
+\item{dBBMMsettings}{time duration of window and margin in hours, function translate duration to datapoints}
 }
 \value{
 A spatialpolygondataframe

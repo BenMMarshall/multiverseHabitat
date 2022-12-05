@@ -72,7 +72,10 @@ simulate_landscape <- function(
     "movement" = matrix(data = raster::getValues(moveQual),
                         nrow = row,
                         ncol = col))
-
+  # landscapeLayersList <- list(
+  #   "shelter" = raster::as.matrix(shelterQual),
+  #   "forage" = raster::as.matrix(forageQual),
+  #   "movement" = raster::as.matrix(moveQual))
 
 
   if(species == "VULTURE"){
