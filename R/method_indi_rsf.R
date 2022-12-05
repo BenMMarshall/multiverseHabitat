@@ -21,11 +21,24 @@ method_indi_rsf <- function(
   availablePoints,
   weighting){
 
+  print(availableArea[[1]])
+  print(availablePoints)
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- spsample(availableArea, n = availablePoints, type = "random")
+  availPoints <- sp::spsample(availableArea[[1]], n = availablePoints, type = "random")
+
+  classRaster <- raster(nrows = nrow(landscape$classified),
+                        ncols = ncol(landscape$classified),
+                        xmn = 0, xmx = nrow(landscape$classified),
+                        ymn = 0, ymx = ncol(landscape$classified),
+                        crs = CRS(SRS_string = "EPSG:32601"),
+                        # need to transpose cos matrix and raster deal with rows and col differently
+                        vals = t(landscape$classified))
+  # and flip to full match the raster with the matrix used in the sims
+  classRaster <- raster::flip(classRaster)
+
   # extract the habitat types each point is located within
-  availValues <- raster::extract(landscape, availPoints)
+  availValues <- raster::extract(classRaster, availPoints)
 
   availValues_DF <- as.data.frame(availPoints@coords)
   availValues_DF$values <- as.factor(availValues)

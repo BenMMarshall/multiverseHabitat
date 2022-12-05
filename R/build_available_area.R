@@ -6,6 +6,7 @@
 #' @param method "MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"
 #' @param contour Numeric, > 0 and < 100. Can be a vector.
 #' @param SRS_string = "EPSG:32601"
+#' @param dBBMMsettings time duration of window and margin in hours, function translate duration to datapoints
 #' @return A spatialpolygondataframe
 #'
 #' @export
@@ -97,7 +98,20 @@ build_available_area <- function(movementData,
   } else if(method == "dBBMM"){
 
     if(is.null(dBBMMsettings)){
-      stop("dBBMMsettings required for dBBMM running, 2 length vector of ws and mrg")
+      stop("dBBMMsettings required for dBBMM running, 2 length vector of time duration of ws and mrg (in hours)")
+    }
+
+    # As our most infrequent tracking is 168 hours (1 week), we will set the
+    # window to the number of data points collected over 168 hours, and a margin
+    # of 48 hours.
+    windowSize <- nrow(movementData[movementData$timestep <= dBBMMsettings[1]*60,])
+    if(windowSize %% 2 == 0){
+      windowSize <- windowSize - 1
+    }
+
+    marginSize <- nrow(movementData[movementData$timestep <= dBBMMsettings[2]*60,])
+    if(marginSize %% 2 == 0){
+      marginSize <- marginSize - 1
     }
 
     moveObj <- move::move(x = movementData$x, y = movementData$y,
@@ -110,8 +124,8 @@ build_available_area <- function(movementData,
     set_dimsize <- 400
     dbbmm <- move::brownian.bridge.dyn(object = moveObj,
                                  location.error = 5,
-                                 window.size = dBBMMsettings[1],
-                                 margin = dBBMMsettings[2],
+                                 window.size = windowSize,
+                                 margin = marginSize,
                                  ext = set_grid.ext,
                                  dimSize = set_dimsize,
                                  verbose = FALSE)

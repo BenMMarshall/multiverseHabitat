@@ -281,7 +281,6 @@ DBBMMs require a window and margin size that defines the number of data points o
 As window and margin are defined by a number of data points, to keep the time they represent the same between different tracking frequencies we need to change the value for each tracking frequency. 
 As our most infrequent tracking is 168 hours (1 week), we will set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
 The broader window and margin sizes will help reduce computational costs.
-In a few cases the shorter tracking durations combined with the lower tracking frequencies will preclude calculation of available areas due to having too few locations.
 In these instances we will report an NA as a final result.
 
 Type II designs require the availability to the same for all animals.
