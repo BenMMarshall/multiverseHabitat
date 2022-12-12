@@ -13,7 +13,7 @@ tar_option_set(
   packages = c("here", "raster", "NLMR", "tibble",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
-  format = "rds" # default storage format
+  format = "qs" # storage format
   # Set other options as needed.
 )
 
@@ -37,24 +37,36 @@ values_SimSpecies <- tibble(
   species = c("badger")
 )
 values_SimIndi <- tibble(
+  individual = 1
+  # individual = 1:4
   # individual = seq_len(200)
-  individual = 1:4
 )
 
 values_SampDuration <- tibble(
-  td = c(7, 15)
+  td = c(7)
+  # td = c(7, 15)
   # td = c(7, 15, 30, 60, 120, 240, 365)
 )
 values_SampFrequency <- tibble(
-  tf = c(0.5, 1)
+  tf = c(0.5)
+  # tf = c(0.5, 1)
   # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
 )
-values_MethodArea <- tidyr::expand_grid(
+# values_MethodArea <- tidyr::expand_grid(
+#   areaMethod = c("MCP", "dBBMM"),
+#   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
+#   # areaContour = c(90)
+#   areaContour = c(90, 95, 99)
+# )
+values_MethodArea <- tibble(
   areaMethod = c("MCP", "dBBMM"),
   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
-  areaContour = c(90)
-  # areaContour = c(90, 95, 99)
 )
+values_MethodContour <- tidyr::expand_grid(
+  # areaContour = c(90)
+  areaContour = c(90, 95, 99)
+)
+
 values_MethodSSF <- tidyr::expand_grid(
   MethodSSF_mf = c("mf.is", "mf.ss"),
   # MethodSSF_ce = c("start", "end"),
@@ -120,20 +132,27 @@ list(
             tar_target(area,
                        build_available_area(movementData = sampDuraFreqData,
                                             method = areaMethod,
-                                            contour = areaContour,
                                             SRS_string = "EPSG:32601",
                                             dBBMMsettings = c(168, 48))), # FUNCTION build_available_area
-            ## AREA-BASED METHODS MAP
             tar_map(
-              values = values_MethodMethod,
-              # names = "tNames", # Select columns from `values` for target names.
-              tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
-                                                  landscape = landscape,
-                                                  availableArea = area,
-                                                  availablePoints = Method_ap,
-                                                  weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
-              # next level goes here using tar_map() again
-            ) # area methods map
+              values = values_MethodContour,
+              tar_target(polygon,
+                         build_available_poly(areaResource = area,
+                                              method = areaMethod,
+                                              contour = areaContour,
+                                              SRS_string = "EPSG:32601")), # FUNCTION build_available_area
+              ## AREA-BASED METHODS MAP
+              tar_map(
+                values = values_MethodMethod,
+                # names = "tNames", # Select columns from `values` for target names.
+                tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
+                                                    landscape = landscape,
+                                                    availableArea = polygon,
+                                                    availablePoints = Method_ap,
+                                                    weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
+                # next level goes here using tar_map() again
+              ) # area methods map
+            ) # contour map
           ), # area creation map
           ## SSF MAP
           tar_map(

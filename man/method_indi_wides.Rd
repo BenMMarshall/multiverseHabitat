@@ -4,7 +4,7 @@
 \alias{method_indi_wides}
 \title{Run wides based analyses}
 \usage{
-method_indi_wides(movementData, landscape, availableArea, availablePoints)
+method_indi_wides(movementData, landscape, availableArea, availablePoints, ...)
 }
 \arguments{
 \item{movementData}{must have a x and y column for locations, and a datetime column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
