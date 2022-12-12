@@ -28,15 +28,13 @@ method_indi_wides <- function(
     stop("sp not installed")
   }
 
-  print(availableArea[[1]])
-  print(availablePoints)
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- sp::spsample(x = availableArea[[1]],
+  availPoints <- sp::spsample(x = availableArea[[2]],
                               n = availablePoints,
                               type = "random")
 
-  classRaster <- raster(nrows = nrow(landscape$classified),
+  classRaster <- raster::raster(nrows = nrow(landscape$classified),
                         ncols = ncol(landscape$classified),
                         xmn = 0, xmx = nrow(landscape$classified),
                         ymn = 0, ymx = ncol(landscape$classified),
@@ -76,9 +74,34 @@ method_indi_wides <- function(
   }
   usedValues_DF <- usedValues_DF[,allClasses]
 
-  # so because the difference is use the available, we can do III design with
-  # the II set up just with different availabilities
-  wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+  # However, if both used and avail have zeroes in the same colunm wides breaks,
+  # so we check for that here and if true we remove both the check, goes column
+  # wise for zeroes in both dataframes, combines them, then checks for columns
+  # that have two instances of zeroes
+  columnsWithBothZeroes <- apply(rbind(
+    apply(availValues_DF, 2, function(x){all(x == 0)}),
+    apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
+      all(x)
+    })
+
+  if(any(columnsWithBothZeroes)){
+    # have to remove instances where both avail and used are zeroes as that causes errors
+    availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
+      all(x == 0)
+    })]
+    usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
+      all(x == 0)
+    })]
+  }
+
+  # so because the difference is use the available, we can do III design with the
+  # II set up just with different availabilities. Is in a try() function because
+  # of the instances where habitats are used, but not available bceause of the
+  # random sampling of available points
+  wiOUT <- try(
+    adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+  )
+  # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 
   return(wiOUT)
 

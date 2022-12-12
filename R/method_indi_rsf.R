@@ -21,13 +21,11 @@ method_indi_rsf <- function(
   availablePoints,
   weighting){
 
-  print(availableArea[[1]])
-  print(availablePoints)
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- sp::spsample(availableArea[[1]], n = availablePoints, type = "random")
+  availPoints <- sp::spsample(availableArea[[2]], n = availablePoints, type = "random")
 
-  classRaster <- raster(nrows = nrow(landscape$classified),
+  classRaster <- raster::raster(nrows = nrow(landscape$classified),
                         ncols = ncol(landscape$classified),
                         xmn = 0, xmx = nrow(landscape$classified),
                         ymn = 0, ymx = ncol(landscape$classified),

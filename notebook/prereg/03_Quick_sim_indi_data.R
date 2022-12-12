@@ -25,34 +25,39 @@ testData <- multiverseHabitat::simulate_individual(
 #   marginSize <- marginSize - 1
 # }
 
+
 sampDuraData <- multiverseHabitat::subset_duration(movementData = testData$locations,
                                                    daysDuration = 15)
 sampDuraFreqData <- multiverseHabitat::subset_frequency(movementData = sampDuraData,
                                                         freqPreset = 0.5)
 
+# akdeOUT <- multiverseHabitat::build_available_area(movementData = sampDuraFreqData,
+#                                         "AKDE", 95)
 
 targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_1_7_3_badger")
-targets::tar_load("area_MCP_90_1_7_3_badger")
+targets::tar_load("sampDuraFreqData_0.5_15_3_badger")
+targets::tar_load("area_dBBMM_90_0.5_15_3_badger")
 
-movementData <- sampDuraFreqData_1_7_3_badger
-availableArea <- area_MCP_90_1_7_3_badger
+movementData <- sampDuraFreqData_0.5_15_3_badger
+availableArea <- area_dBBMM_90_0.5_15_3_badger
 landscape <- landscape_badger
-availablePoints = 10
+availablePoints <- 10
 
-plot(area_MCP_90_1_7_3_badger[[1]])
+plot(area_dBBMM_90_0.5_15_3_badger[[1]])
 
 multiverseHabitat::method_indi_wides(
-  sampDuraFreqData_1_7_3_badger,
+  movementData,
   landscape_badger,
-  area_MCP_90_1_7_3_badger,
+  availableArea,
   availablePoints
 )
 # wides ---------------------------------------------------------------
 
-availPoints <- sp::spsample(x = availableArea[[1]], n = availablePoints, type = "random")
+availPoints <- sp::spsample(x = availableArea[[1]],
+                            n = availablePoints,
+                            type = "random")
 
-classRaster <- raster(nrows = nrow(landscape$classified),
+classRaster <- raster::raster(nrows = nrow(landscape$classified),
                       ncols = ncol(landscape$classified),
                       xmn = 0, xmx = nrow(landscape$classified),
                       ymn = 0, ymx = ncol(landscape$classified),
@@ -70,7 +75,7 @@ allClasses <- c("c0", "c1", "c2")
 availValues_DF <- data.frame(rbind(table(availValues)))
 
 names(availValues_DF) <- sub("X", "c", names(availValues_DF))
-
+# need to run a check in case not all classes appear in the avail or used
 missingClass <- allClasses[!allClasses %in% names(availValues_DF)]
 if(length(missingClass) >= 1){
   toAdd <- data.frame(0)
@@ -92,10 +97,34 @@ if(length(missingClass) >= 1){
 }
 usedValues_DF <- usedValues_DF[,allClasses]
 
-# so because the difference is use the available, we can do III design with
-# the II set up just with different availabilities
-wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+# However, if both used and avail have zeroes in the same colunm wides breaks,
+# so we check for that here and if true we remove both the check, goes column
+# wise for zeroes in both dataframes, combines them, then checks for columns
+# that have two instances of zeroes
+columnsWithBothZeroes <- apply(rbind(
+  apply(availValues_DF, 2, function(x){all(x == 0)}),
+  apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
+    all(x)
+  })
 
+if(any(columnsWithBothZeroes)){
+  # have to remove instances where both avail and used are zeroes as that causes errors
+  availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
+    all(x == 0)
+  })]
+  usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
+    all(x == 0)
+  })]
+}
+
+# so because the difference is use the available, we can do III design with the
+# II set up just with different availabilities. Is in a try() function because
+# of the instances where habitats are used, but not available bceause of the
+# random sampling of available points
+wiOUT <- try(
+  adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+)
+# wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 
 # rsf ---------------------------------------------------------------------
 

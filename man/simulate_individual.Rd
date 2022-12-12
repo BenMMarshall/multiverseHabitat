@@ -5,6 +5,7 @@
 \title{Simulate individual}
 \usage{
 simulate_individual(
+  individualNum,
   species,
   simSteps = 24 * 60 * 365,
   desOptions = 10,
@@ -14,7 +15,9 @@ simulate_individual(
 )
 }
 \arguments{
-\item{species}{c("BADGER", "VULTURE", "KINGCOBRA")}
+\item{individualNum}{number for the repeats of a given sim style}
+
+\item{species}{c("BADGER", "VULTURE", "KINGCOBRA"), add other sim styles here}
 
 \item{simSteps}{= 24\*60 \*365}
 

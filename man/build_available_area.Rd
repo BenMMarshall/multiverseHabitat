@@ -13,7 +13,8 @@ build_available_area(
 )
 }
 \arguments{
-\item{movementData}{must have a x and y column for locations, and a datetime column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
+\item{movementData}{must have a x and y column for locations, and a datetime
+column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
 
 \item{method}{"MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"}
 
@@ -21,10 +22,13 @@ build_available_area(
 
 \item{SRS_string}{= "EPSG:32601"}
 
-\item{dBBMMsettings}{time duration of window and margin in hours, function translate duration to datapoints}
+\item{dBBMMsettings}{time duration of window and margin in hours, function
+translate duration to datapoints}
 }
 \value{
-A spatialpolygondataframe
+A list, where the first items is the fit or UD that the polygon is
+extracted from, and the second item is the polygon ready for further
+analysis
 }
 \description{
 A
