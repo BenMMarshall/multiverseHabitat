@@ -35,15 +35,17 @@ sampDuraFreqData <- multiverseHabitat::subset_frequency(movementData = sampDuraD
 #                                         "AKDE", 95)
 
 targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_0.5_15_3_badger")
-targets::tar_load("area_dBBMM_90_0.5_15_3_badger")
+targets::tar_load("sampDuraFreqData_0.5_7_1_badger")
+targets::tar_load("polygon_95_MCP_0.5_7_1_badger")
 
-movementData <- sampDuraFreqData_0.5_15_3_badger
-availableArea <- area_dBBMM_90_0.5_15_3_badger
+# methOUT_method_indi_wides_10_1_95_MCP_0.5_7_1_badger
+# Last error: 'names' attribute [2] must be the same length as the vector [1]
+movementData <- sampDuraFreqData_0.5_7_1_badger
+availableArea <- polygon_95_MCP_0.5_7_1_badger
 landscape <- landscape_badger
 availablePoints <- 10
 
-plot(area_dBBMM_90_0.5_15_3_badger[[1]])
+sp::plot(polygon_95_MCP_0.5_7_1_badger)
 
 multiverseHabitat::method_indi_wides(
   movementData,
@@ -53,69 +55,86 @@ multiverseHabitat::method_indi_wides(
 )
 # wides ---------------------------------------------------------------
 
-availPoints <- sp::spsample(x = availableArea[[1]],
+availPoints <- sp::spsample(x = availableArea,
                             n = availablePoints,
                             type = "random")
 
 classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                      ncols = ncol(landscape$classified),
-                      xmn = 0, xmx = nrow(landscape$classified),
-                      ymn = 0, ymx = ncol(landscape$classified),
-                      crs = CRS(SRS_string = "EPSG:32601"),
-                      # need to transpose cos matrix and raster deal with rows and col differently
-                      vals = t(landscape$classified))
+                              ncols = ncol(landscape$classified),
+                              xmn = 0, xmx = nrow(landscape$classified),
+                              ymn = 0, ymx = ncol(landscape$classified),
+                              crs = CRS(SRS_string = "EPSG:32601"),
+                              # need to transpose cos matrix and raster deal with rows and col differently
+                              vals = t(landscape$classified))
 # and flip to full match the raster with the matrix used in the sims
 classRaster <- raster::flip(classRaster)
 
 # extract the habitat types each point is located within
 availValues <- raster::extract(classRaster, availPoints)
 
-allClasses <- c("c0", "c1", "c2")
-# convert to dataframe for easier use in WIDES
 availValues_DF <- data.frame(rbind(table(availValues)))
-
 names(availValues_DF) <- sub("X", "c", names(availValues_DF))
-# need to run a check in case not all classes appear in the avail or used
-missingClass <- allClasses[!allClasses %in% names(availValues_DF)]
-if(length(missingClass) >= 1){
-  toAdd <- data.frame(0)
-  names(toAdd) <- missingClass
-  availValues_DF <- cbind(availValues_DF, toAdd)
-}
-availValues_DF <- availValues_DF[,allClasses]
 
 usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                              sp::CRS(SRS_string = "EPSG:32601")))
 usedValues_DF <- data.frame(rbind(table(usedValues)))
 names(usedValues_DF) <- sub("X", "c", names(usedValues_DF))
 
-missingClass <- allClasses[!allClasses %in% names(usedValues_DF)]
-if(length(missingClass) >= 1){
+aClass <- names(usedValues_DF)
+uClass <- names(usedValues_DF)
+
+if(length(aClass) > length(uClass)){
+
   toAdd <- data.frame(0)
-  names(toAdd) <- missingClass
+  names(toAdd) <- aClass[!aClass %in% uClass]
   usedValues_DF <- cbind(usedValues_DF, toAdd)
-}
-usedValues_DF <- usedValues_DF[,allClasses]
 
-# However, if both used and avail have zeroes in the same colunm wides breaks,
-# so we check for that here and if true we remove both the check, goes column
-# wise for zeroes in both dataframes, combines them, then checks for columns
-# that have two instances of zeroes
-columnsWithBothZeroes <- apply(rbind(
-  apply(availValues_DF, 2, function(x){all(x == 0)}),
-  apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
-    all(x)
-  })
+} else if(length(uClass) > length(aClass)){
 
-if(any(columnsWithBothZeroes)){
-  # have to remove instances where both avail and used are zeroes as that causes errors
-  availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
-    all(x == 0)
-  })]
-  usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
-    all(x == 0)
-  })]
+  toAdd <- data.frame(0)
+  names(toAdd) <- uClass[!uClass %in% aClass]
+  availValues_DF <- cbind(availValues_DF, toAdd)
+
 }
+
+# allClasses <- c("c0", "c1", "c2")
+# # convert to dataframe for easier use in WIDES
+# # need to run a check in case not all classes appear in the avail or used
+# missingClass <- allClasses[!allClasses %in% names(availValues_DF)]
+# if(length(missingClass) >= 1){
+#   toAdd <- data.frame(0)
+#   names(toAdd) <- missingClass
+#   availValues_DF <- cbind(availValues_DF, toAdd)
+# }
+# availValues_DF <- availValues_DF[,allClasses]
+#
+# missingClass <- allClasses[!allClasses %in% names(usedValues_DF)]
+# if(length(missingClass) >= 1){
+#   toAdd <- data.frame(0)
+#   names(toAdd) <- missingClass
+#   usedValues_DF <- cbind(usedValues_DF, toAdd)
+# }
+# usedValues_DF <- usedValues_DF[,allClasses]
+#
+# # However, if both used and avail have zeroes in the same colunm wides breaks,
+# # so we check for that here and if true we remove both the check, goes column
+# # wise for zeroes in both dataframes, combines them, then checks for columns
+# # that have two instances of zeroes
+# columnsWithBothZeroes <- apply(rbind(
+#   apply(availValues_DF, 2, function(x){all(x == 0)}),
+#   apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
+#     all(x)
+#   })
+#
+# if(any(columnsWithBothZeroes)){
+#   # have to remove instances where both avail and used are zeroes as that causes errors
+#   availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
+#     all(x == 0)
+#   })]
+#   usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
+#     all(x == 0)
+#   })]
+# }
 
 # so because the difference is use the available, we can do III design with the
 # II set up just with different availabilities. Is in a try() function because
@@ -178,10 +197,10 @@ method_indi_rsf(sampDuraFreqData_0.5_7_2_badger,
 
 
 modout <- multiverseHabitat::method_indi_ssf(movementData = sampDuraFreqData,
-                                   landscape = testLand,
-                                   methodForm = "mf.is",
-                                   covExtract = "end",
-                                   availableSteps = 10)
+                                             landscape = testLand,
+                                             methodForm = "mf.is",
+                                             covExtract = "end",
+                                             availableSteps = 10)
 
 summary(modout)
 
@@ -195,7 +214,7 @@ modelData <- amt::random_steps(movementSteps,
                                sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
                                ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
 
-classRaster <- raster(nrows = 2000, ncols = 2000,
+classRaster <- raster::raster(nrows = 2000, ncols = 2000,
                       xmn = 0, xmx = 2000, ymn = 0, ymx = 2000,
                       crs = CRS(SRS_string = "EPSG:32601"),
                       # need to transpose cos matrix and raster deal with rows and col differently
@@ -277,7 +296,7 @@ ggplot(layerDF) +
 classRaster <- raster(nrows = 2000, ncols = 2000,
                       xmn = 0, xmx = 2000, ymn = 0, ymx = 2000,
                       crs = CRS(SRS_string = "EPSG:32601"),
-# need to transpose cos matrix and raster deal with rows and col differently
+                      # need to transpose cos matrix and raster deal with rows and col differently
                       vals = t(testLand$classified))
 
 r <- raster(testLand$classified,

@@ -21,12 +21,14 @@ simulate_individual <- function(
     landscapeList,
     seed
 ){
-
-  pcks <- c("abmAnimalMovement", "raster")
-  missing <- !unlist(lapply(
-    pcks,
-    require,
-    character.only = TRUE))
+  # suppressWarning about raster version
+  suppressWarnings({
+    pcks <- c("abmAnimalMovement", "raster")
+    missing <- !unlist(lapply(
+      pcks,
+      require,
+      character.only = TRUE))
+  })
 
   if(any(missing)){
     stop(paste0(pcks[missing], " not installed"))
@@ -177,7 +179,7 @@ simulate_individual <- function(
   )
 
   simResults$locations$datetime <- as.POSIXct(simResults$locations$timestep * 60,
-                                      origin = "2022-01-01")
+                                              origin = "2022-01-01")
 
   simResults$locations$hour <- as.numeric(substr(simResults$locations$datetime, 12, 13))
   simResults$locations$minute <- as.numeric(substr(simResults$locations$datetime, 15, 16))

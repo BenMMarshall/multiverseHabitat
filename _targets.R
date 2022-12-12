@@ -13,7 +13,8 @@ tar_option_set(
   packages = c("here", "raster", "NLMR", "tibble",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
-  format = "qs" # storage format
+  format = "qs", # storage format
+  debug = "methOUT_method_indi_wides_10_1_95_MCP_0.5_7_1_badger"
   # Set other options as needed.
 )
 
@@ -63,8 +64,8 @@ values_MethodArea <- tibble(
   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
 )
 values_MethodContour <- tidyr::expand_grid(
-  # areaContour = c(90)
-  areaContour = c(90, 95, 99)
+  areaContour = c(90)
+  # areaContour = c(90, 95, 99)
 )
 
 values_MethodSSF <- tidyr::expand_grid(
@@ -137,7 +138,7 @@ list(
             tar_map(
               values = values_MethodContour,
               tar_target(polygon,
-                         build_available_poly(areaResource = area,
+                         build_available_polygon(areaResource = area,
                                               method = areaMethod,
                                               contour = areaContour,
                                               SRS_string = "EPSG:32601")), # FUNCTION build_available_area

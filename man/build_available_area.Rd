@@ -26,9 +26,8 @@ column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
 translate duration to datapoints}
 }
 \value{
-A list, where the first items is the fit or UD that the polygon is
-extracted from, and the second item is the polygon ready for further
-analysis
+An item that is the fit or UD that the a polygon can be
+extracted from using build_available_polygon
 }
 \description{
 A

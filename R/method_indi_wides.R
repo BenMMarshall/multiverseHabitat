@@ -30,7 +30,7 @@ method_indi_wides <- function(
 
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- sp::spsample(x = availableArea[[2]],
+  availPoints <- sp::spsample(x = availableArea,
                               n = availablePoints,
                               type = "random")
 
@@ -47,51 +47,29 @@ method_indi_wides <- function(
   # extract the habitat types each point is located within
   availValues <- raster::extract(classRaster, availPoints)
 
-  allClasses <- c("c0", "c1", "c2")
-  # convert to dataframe for easier use in WIDES
   availValues_DF <- data.frame(rbind(table(availValues)))
-
   names(availValues_DF) <- sub("X", "c", names(availValues_DF))
-  # need to run a check in case not all classes appear in the avail or used
-  missingClass <- allClasses[!allClasses %in% names(availValues_DF)]
-  if(length(missingClass) >= 1){
-    toAdd <- data.frame(0)
-    names(toAdd) <- missingClass
-    availValues_DF <- cbind(availValues_DF, toAdd)
-  }
-  availValues_DF <- availValues_DF[,allClasses]
 
   usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                                sp::CRS(SRS_string = "EPSG:32601")))
   usedValues_DF <- data.frame(rbind(table(usedValues)))
   names(usedValues_DF) <- sub("X", "c", names(usedValues_DF))
 
-  missingClass <- allClasses[!allClasses %in% names(usedValues_DF)]
-  if(length(missingClass) >= 1){
+  aClass <- names(usedValues_DF)
+  uClass <- names(usedValues_DF)
+
+  if(length(aClass) > length(uClass)){
+
     toAdd <- data.frame(0)
-    names(toAdd) <- missingClass
+    names(toAdd) <- aClass[!aClass %in% uClass]
     usedValues_DF <- cbind(usedValues_DF, toAdd)
-  }
-  usedValues_DF <- usedValues_DF[,allClasses]
 
-  # However, if both used and avail have zeroes in the same colunm wides breaks,
-  # so we check for that here and if true we remove both the check, goes column
-  # wise for zeroes in both dataframes, combines them, then checks for columns
-  # that have two instances of zeroes
-  columnsWithBothZeroes <- apply(rbind(
-    apply(availValues_DF, 2, function(x){all(x == 0)}),
-    apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
-      all(x)
-    })
+  } else if(length(uClass) > length(aClass)){
 
-  if(any(columnsWithBothZeroes)){
-    # have to remove instances where both avail and used are zeroes as that causes errors
-    availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
-      all(x == 0)
-    })]
-    usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
-      all(x == 0)
-    })]
+    toAdd <- data.frame(0)
+    names(toAdd) <- uClass[!uClass %in% aClass]
+    availValues_DF <- cbind(availValues_DF, toAdd)
+
   }
 
   # so because the difference is use the available, we can do III design with the
