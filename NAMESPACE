@@ -2,6 +2,7 @@
 
 export(apply_to_leaves)
 export(build_available_area)
+export(build_available_polygon)
 export(build_nested_list)
 export(method_indi_rsf)
 export(method_indi_ssf)

@@ -1,4 +1,4 @@
-#' Generate a polygon for use as an available area
+#' Generate the prerequisite for building a polygon for use as an available area
 #'
 #' @name build_available_area
 #' @description A
@@ -9,9 +9,8 @@
 #' @param SRS_string = "EPSG:32601"
 #' @param dBBMMsettings time duration of window and margin in hours, function
 #'   translate duration to datapoints
-#' @return A list, where the first items is the fit or UD that the polygon is
-#'   extracted from, and the second item is the polygon ready for further
-#'   analysis
+#' @return An item that is the fit or UD that the a polygon can be
+#'   extracted from using build_available_polygon
 #'
 #' @export
 build_available_area <- function(movementData,
@@ -23,59 +22,41 @@ build_available_area <- function(movementData,
 
   if(method == "MCP"){
 
-    spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
-
-    poly_OUT <- vector("list", 2)
-    poly_OUT[[1]] <- "MCP"
-    poly_OUT[[2]] <- adehabitatHR::mcp(spPoints, percent = contour, unin = "m",
-                                       unout = "m2")
-
-    # poly_List <- lapply(contour, function(x){
-    #   poly_OUT <- adehabitatHR::mcp(spPoints, percent = x, unin = "m",
-    #                                 unout = "m2")
-    return(poly_OUT)
-    # })
+    area_OUT <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
 
   } else if(method == "KDE_LSCV"){
 
     spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
 
-    poly_OUT <- vector("list", 2)
-    kdeLSCV_UD <- adehabitatHR::kernelUD(spPoints,
-                                         h = "LSCV",
-                                         grid = 240,
-                                         same4all = FALSE,
-                                         hlim = c(0.001, 2000), # might need to play with the limits to help convergence
-                                         kern = "bivnorm",
-                                         extent = 4,
-                                         boundary = NULL)
-    poly_OUT[[1]] <- kdeLSCV_UD
-    poly_OUT[[2]] <- adehabitatHR::getverticeshr(kdeLSCV_UD, contour)
+    area_OUT <- vector("list", 2)
 
-    # poly_List <- lapply(contour, function(x){
-    #   poly_OUT <- adehabitatHR::getverticeshr(kdeLSCV_UD, x)
-    return(poly_OUT)
-    # })
+    suppressWarnings({
+      kdeLSCV_UD <- adehabitatHR::kernelUD(spPoints,
+                                           h = "LSCV",
+                                           grid = 240,
+                                           same4all = FALSE,
+                                           hlim = c(0.001, 2000), # might need to play with the limits to help convergence
+                                           kern = "bivnorm",
+                                           extent = 4,
+                                           boundary = NULL)
+    })
+    area_OUT <- kdeLSCV_UD
 
   } else if(method == "KDE_href"){
 
     spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
-    poly_OUT <- vector("list", 2)
-    kdehref_UD <- adehabitatHR::kernelUD(spPoints,
-                                         h = "href",
-                                         grid = 240, # needs to be large enough to be smooth-ish
-                                         same4all = FALSE,
-                                         hlim = c(0.1, 1.5),
-                                         kern = "bivnorm",
-                                         extent = 4,
-                                         boundary = NULL)
-    poly_OUT[[1]] <- kdehref_UD
-    poly_OUT[[2]] <- adehabitatHR::getverticeshr(kdehref_UD, contour)
-
-    # poly_List <- lapply(contour, function(x){
-    #   poly_OUT <- adehabitatHR::getverticeshr(kdehref_UD, x)
-    return(poly_OUT)
-    # })
+    area_OUT <- vector("list", 2)
+    suppressWarnings({
+      kdehref_UD <- adehabitatHR::kernelUD(spPoints,
+                                           h = "href",
+                                           grid = 240, # needs to be large enough to be smooth-ish
+                                           same4all = FALSE,
+                                           hlim = c(0.1, 1.5),
+                                           kern = "bivnorm",
+                                           extent = 4,
+                                           boundary = NULL)
+    })
+    area_OUT <- kdehref_UD
 
   } else if(method == "AKDE"){
 
@@ -84,7 +65,7 @@ build_available_area <- function(movementData,
     movementData$lon <- spLL@coords[,1]
     movementData$lat <- spLL@coords[,2]
 
-    poly_OUT <- vector("list", 2)
+    area_OUT <- vector("list", 2)
 
     teleObj <- ctmm::as.telemetry(movementData,
                                   timeformat = "%Y-%m-%d %H:%M:%S",
@@ -101,18 +82,7 @@ build_available_area <- function(movementData,
     akdeRes <- ctmm::akde(teleObj, fits[[1]],
                           weights = TRUE)
 
-    poly_OUT[[1]] <- akdeRes
-
-    akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(akdeRes, level.UD = contour/100)
-    poly_OUT[[2]] <- akdePoly[akdePoly$name == akdePoly$name[2],] # just get the point estimate
-
-    ## as.sf() might be a better way of doing this???
-    # poly_List <- lapply(contour, function(x){
-    #   akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(akdeRes, level.UD = x/100)
-    #   poly_OUT <- akdePoly[akdePoly$name == akdePoly$name[2],] # just get the point estimate
-    return(poly_OUT)
-    # })
-
+    area_OUT <- akdeRes
 
   } else if(method == "dBBMM"){
 
@@ -133,41 +103,27 @@ build_available_area <- function(movementData,
       marginSize <- marginSize - 1
     }
 
-    poly_OUT <- vector("list", 2)
+    area_OUT <- vector("list", 2)
 
     moveObj <- move::move(x = movementData$x, y = movementData$y,
                           time = movementData$datetime,
                           proj = sp::CRS(SRS_string = "EPSG:32601"))
 
-    # ws <- 25
-    # mrg <- 5
     set_grid.ext <- 4
     set_dimsize <- 400
-    dbbmm <- move::brownian.bridge.dyn(object = moveObj,
-                                       location.error = 5,
-                                       window.size = windowSize,
-                                       margin = marginSize,
-                                       ext = set_grid.ext,
-                                       dimSize = set_dimsize,
-                                       verbose = FALSE)
-
-    poly_OUT[[1]] <- dbbmm
-    # library(rgeos)
-
-    dbbmmSP <- as(dbbmm, "SpatialPixelsDataFrame")
-    dbbmmSP_UD <- new(getClass("estUD", where = "adehabitatHR"), dbbmmSP)
-    dbbmmSP_UD@vol = FALSE
-    dbbmmSP_UD@h$meth = "dBBMM"
-    dbbmm_UD <- adehabitatHR::getvolumeUD(dbbmmSP_UD, standardize = TRUE)
-
-    poly_OUT[[2]] <- adehabitatHR::getverticeshr(dbbmm_UD, percent = contour)
-    # poly_List <- lapply(contour, function(x){
-    # poly_OUT <- adehabitatHR::getverticeshr(dbbmm_UD, percent = x)
-    return(poly_OUT)
-    # })
+    suppressWarnings({
+      dbbmm <- move::brownian.bridge.dyn(object = moveObj,
+                                         location.error = 5,
+                                         window.size = windowSize,
+                                         margin = marginSize,
+                                         ext = set_grid.ext,
+                                         dimSize = set_dimsize,
+                                         verbose = FALSE)
+    })
+    area_OUT <- dbbmm
 
   }
-  return(poly_List)
+  return(area_OUT)
 
 }
 
