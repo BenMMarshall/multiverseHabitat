@@ -36,13 +36,13 @@ method_indi_ssf <- function(
                                  sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
                                  ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
 
-  classRaster <- raster(nrows = nrow(landscape$classified),
-                        ncols = ncol(landscape$classified),
-                        xmn = 0, xmx = nrow(landscape$classified),
-                        ymn = 0, ymx = ncol(landscape$classified),
-                        crs = CRS(SRS_string = "EPSG:32601"),
-                        # need to transpose cos matrix and raster deal with rows and col differently
-                        vals = t(landscape$classified))
+  classRaster <- raster::raster(nrows = nrow(landscape$classified),
+                                ncols = ncol(landscape$classified),
+                                xmn = 0, xmx = nrow(landscape$classified),
+                                ymn = 0, ymx = ncol(landscape$classified),
+                                crs = CRS(SRS_string = "EPSG:32601"),
+                                # need to transpose cos matrix and raster deal with rows and col differently
+                                vals = t(landscape$classified))
   # and flip to full match the raster with the matrix used in the sims
   classRaster <- raster::flip(classRaster)
 
@@ -50,7 +50,8 @@ method_indi_ssf <- function(
                                        classRaster,
                                        where = covExtract)
 
-  modelData$values <- factor(modelData$layer)
+  modelData$values <- paste0("c", modelData$layer)
+  modelData$values <- factor(modelData$values)
 
   if(methodForm == "mf.is"){
     mFormFull <- case_ ~

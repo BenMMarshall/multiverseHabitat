@@ -36,13 +36,15 @@ build_available_polygon <- function(areaResource,
 
   } else if(method == "dBBMM"){
 
-    dbbmmSP <- as(areaResource, "SpatialPixelsDataFrame")
-    dbbmmSP_UD <- new(getClass("estUD", where = "adehabitatHR"), dbbmmSP)
-    dbbmmSP_UD@vol = FALSE
-    dbbmmSP_UD@h$meth = "dBBMM"
-    dbbmm_UD <- adehabitatHR::getvolumeUD(dbbmmSP_UD, standardize = TRUE)
+    suppressWarnings({
+      dbbmmSP <- as(areaResource, "SpatialPixelsDataFrame")
+      dbbmmSP_UD <- new(getClass("estUD", where = "adehabitatHR"), dbbmmSP)
+      dbbmmSP_UD@vol = FALSE
+      dbbmmSP_UD@h$meth = "dBBMM"
+      dbbmm_UD <- adehabitatHR::getvolumeUD(dbbmmSP_UD, standardize = TRUE)
 
-    poly_OUT <- adehabitatHR::getverticeshr(dbbmm_UD, percent = contour)
+      poly_OUT <- adehabitatHR::getverticeshr(dbbmm_UD, percent = contour)
+    })
 
   }
 

@@ -38,19 +38,19 @@ values_SimSpecies <- tibble(
   species = c("badger")
 )
 values_SimIndi <- tibble(
-  individual = 1
-  # individual = 1:4
+  # individual = 1
+  individual = 1:4
   # individual = seq_len(200)
 )
 
 values_SampDuration <- tibble(
-  td = c(7)
-  # td = c(7, 15)
+  # td = c(7)
+  td = c(7, 15)
   # td = c(7, 15, 30, 60, 120, 240, 365)
 )
 values_SampFrequency <- tibble(
-  tf = c(0.5)
-  # tf = c(0.5, 1)
+  # tf = c(0.5)
+  tf = c(0.5, 1)
   # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
 )
 # values_MethodArea <- tidyr::expand_grid(
@@ -71,16 +71,17 @@ values_MethodContour <- tidyr::expand_grid(
 values_MethodSSF <- tidyr::expand_grid(
   MethodSSF_mf = c("mf.is", "mf.ss"),
   # MethodSSF_ce = c("start", "end"),
-  MethodSSF_ce = c("start"),
-  # MethodSSF_as = round(exp(seq(log(5), log(500), length.out = 5)), digits = 1)
-  MethodSSF_as = 10
+  MethodSSF_ce = c("end"),
+  # MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
+  MethodSSF_as = c(5, 50)
 )
 
 values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of input settings.
   Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
-  # Method_ap = round(exp(seq(log(10), log(1000), length.out = 3)), digits = 1)
-  Method_ap = 10,
-  # Method_we = exp(seq(log(1), log(10000), length.out = 5))
+  # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 5)), digits = 1)),
+  Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
+  # Method_ap = 100,
+  # Method_we = exp(seq(log(100), log(10000000), length.out = 6))
   Method_we = 1
 )
 
@@ -97,7 +98,7 @@ values_MethodCTM <- tidyr::expand_grid(
   Methodctm_di = "di.ro"
 )
 
-list(
+targetsList <- list(
   ## LANDSCAPE SIMULATION
   tar_map(
     values = values_SimSpecies,
@@ -150,7 +151,9 @@ list(
                                                     landscape = landscape,
                                                     availableArea = polygon,
                                                     availablePoints = Method_ap,
-                                                    weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
+                                                    weighting = Method_we)), # FUNCTION "method_indi_wides", "method_indi_rsf"
+                tar_target(methEstimate, extract_estimate(methOUT))
+
                 # next level goes here using tar_map() again
               ) # area methods map
             ) # contour map
@@ -162,7 +165,8 @@ list(
                                                landscape = landscape,
                                                methodForm = MethodSSF_mf,
                                                covExtract = MethodSSF_ce,
-                                               availableSteps = MethodSSF_as)) # FUNCTION method_ssf
+                                               availableSteps = MethodSSF_as)), # FUNCTION method_ssf
+            tar_target(ssfEstimate, extract_estimate(ssfOUT))
           ) # ssf map
           # ## CTMC MAP
           # tar_map(
@@ -177,9 +181,23 @@ list(
   ) # species map
 )
 
+# tar_combine(
+#   name = resultsList,
+#   methOUT,
+#   values_MethodSSF,
+#   command = list(!!!.x)
+# )
+
+# targetsList[[1]][grep("OUT", names(targetsList[[1]]))]
+resultsCompiled <- tar_combine(
+  combinedResults,
+  targetsList[[1]][grep("Estimate", names(targetsList[[1]]))],
+  # command = list(!!!.x)
+  command = rbind(!!!.x)
+)
+list(targetsList, resultsCompiled)
 # preview one species
 # targets::tar_visnetwork(allow = contains("badger"))
 # targets::tar_visnetwork()
-
 # targets::tar_load("area_dBBMM_90_0.5_7_2_badger")
 # targets::tar_load("area_MCP_90_0.5_7_2_badger")

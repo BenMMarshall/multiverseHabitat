@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_available_area.R
 \name{build_available_area}
 \alias{build_available_area}
-\title{Generate a polygon for use as an available area}
+\title{Generate the prerequisite for building a polygon for use as an available area}
 \usage{
 build_available_area(
   movementData,

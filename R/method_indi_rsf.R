@@ -5,7 +5,7 @@
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param landscape
 #' @param availableArea
-#' @param availablePoints
+#' @param availablePointsPer
 #' @param weighting
 #' @return a
 #'
@@ -18,20 +18,24 @@ method_indi_rsf <- function(
   # targets workflow will be used to feed multiple values
   # in
   availableArea,
-  availablePoints,
+  availablePointsPer,
   weighting){
 
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- sp::spsample(availableArea, n = availablePoints, type = "random")
+  suppressWarnings({
+    availPoints <- sp::spsample(availableArea,
+                                n = nrow(movementData) * availablePointsPer,
+                                type = "random")
+  })
 
   classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                        ncols = ncol(landscape$classified),
-                        xmn = 0, xmx = nrow(landscape$classified),
-                        ymn = 0, ymx = ncol(landscape$classified),
-                        crs = CRS(SRS_string = "EPSG:32601"),
-                        # need to transpose cos matrix and raster deal with rows and col differently
-                        vals = t(landscape$classified))
+                                ncols = ncol(landscape$classified),
+                                xmn = 0, xmx = nrow(landscape$classified),
+                                ymn = 0, ymx = ncol(landscape$classified),
+                                crs = CRS(SRS_string = "EPSG:32601"),
+                                # need to transpose cos matrix and raster deal with rows and col differently
+                                vals = t(landscape$classified))
   # and flip to full match the raster with the matrix used in the sims
   classRaster <- raster::flip(classRaster)
 
@@ -45,8 +49,10 @@ method_indi_rsf <- function(
   # assign the weighting
   availValues_DF$weights <- weighting
 
-  usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
-                                                               sp::CRS(SRS_string = "EPSG:32601")))
+  suppressWarnings({
+    usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                                 sp::CRS(SRS_string = "EPSG:32601")))
+  })
   movementData$values <- as.factor(usedValues)
   modelData <- movementData[,c("x", "y", "values")]
   # used gets case_ == TRUE, and weights == 1
@@ -54,6 +60,7 @@ method_indi_rsf <- function(
   modelData$weights <- 1
 
   modelData <- rbind(modelData, availValues_DF)
+  modelData$values <- paste0("c", modelData$values)
 
   # fit the model using base R glm()
   rsfOUT <- glm(case_ ~ values,
