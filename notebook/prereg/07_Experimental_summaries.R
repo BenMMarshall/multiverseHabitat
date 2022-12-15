@@ -66,10 +66,14 @@ combinedResults$sigColour
 library(ggplot2)
 
 ggplot(combinedResults) +
-  geom_segment(aes(x = Estimate - SE, xend = Estimate + SE,
-                   y = branches, yend = branches, colour = sigColour)) +
+  # geom_segment(aes(x = Estimate - SE, xend = Estimate + SE,
+  #                  y = branches, yend = branches, colour = sigColour)) +
   geom_point(aes(x = Estimate, y = branches, colour = sigColour)) +
   facet_wrap(.~analysis, ncol = 1, scales = "free") +
-  scale_colour_manual(values = c("red", "grey25", "blue"), na.value = "black")
+  scale_colour_manual(values = c("red", "grey25", "blue"), na.value = "black") +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid = element_blank())
 
 order(combinedResults$branches, combinedResults$indi)

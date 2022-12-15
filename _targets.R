@@ -10,11 +10,11 @@ library(tibble)
 
 # Set target options:
 tar_option_set(
-  packages = c("here", "raster", "NLMR", "tibble",
+  packages = c("qs", "here", "raster", "NLMR", "tibble",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
   format = "qs", # storage format
-  debug = "methOUT_method_indi_wides_10_1_95_MCP_0.5_7_1_badger"
+  memory = "transient" # might avoid ram issues
   # Set other options as needed.
 )
 
@@ -26,13 +26,6 @@ tar_source()
 # source("other_functions.R") # Source other scripts as needed. # nolint
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
-# values_SimSpecies <- tibble(
-#   # species = c("badger", "vulture", "king cobra")
-#   species = c("badger"),
-#   # individual = seq_len(200)
-#   individual = 1
-# )
-
 values_SimSpecies <- tibble(
   # species = c("badger", "vulture", "king cobra")
   species = c("badger")
@@ -45,12 +38,12 @@ values_SimIndi <- tibble(
 
 values_SampDuration <- tibble(
   # td = c(7)
-  td = c(7, 15)
+  td = c(7, 15, 30, 60)
   # td = c(7, 15, 30, 60, 120, 240, 365)
 )
 values_SampFrequency <- tibble(
   # tf = c(0.5)
-  tf = c(0.5, 1)
+  tf = c(0.5, 1, 2, 6)
   # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
 )
 # values_MethodArea <- tidyr::expand_grid(
@@ -196,6 +189,8 @@ resultsCompiled <- tar_combine(
   command = rbind(!!!.x)
 )
 list(targetsList, resultsCompiled)
+
+# targets::tar_make_clustermq(workers = 16) # watch out too many workers can hit ram limits
 # preview one species
 # targets::tar_visnetwork(allow = contains("badger"))
 # targets::tar_visnetwork()
