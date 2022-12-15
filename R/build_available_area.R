@@ -105,9 +105,11 @@ build_available_area <- function(movementData,
 
     area_OUT <- vector("list", 2)
 
+    suppressWarnings({
     moveObj <- move::move(x = movementData$x, y = movementData$y,
                           time = movementData$datetime,
                           proj = sp::CRS(SRS_string = "EPSG:32601"))
+    })
 
     set_grid.ext <- 4
     set_dimsize <- 400

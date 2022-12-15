@@ -33,31 +33,39 @@ sampDuraFreqData <- multiverseHabitat::subset_frequency(movementData = sampDuraD
 
 # akdeOUT <- multiverseHabitat::build_available_area(movementData = sampDuraFreqData,
 #                                         "AKDE", 95)
-
+# methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_4_badger
 targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_0.5_7_1_badger")
-targets::tar_load("polygon_95_MCP_0.5_7_1_badger")
+targets::tar_load("sampDuraFreqData_0.5_15_1_badger")
+targets::tar_load("polygon_90_MCP_0.5_15_1_badger")
 
 # methOUT_method_indi_wides_10_1_95_MCP_0.5_7_1_badger
 # Last error: 'names' attribute [2] must be the same length as the vector [1]
-movementData <- sampDuraFreqData_0.5_7_1_badger
-availableArea <- polygon_95_MCP_0.5_7_1_badger
 landscape <- landscape_badger
-availablePoints <- 10
+movementData <- sampDuraFreqData_0.5_15_1_badger
+availableArea <- polygon_90_MCP_0.5_15_1_badger
+availablePointsPer <- 1
 
-sp::plot(polygon_95_MCP_0.5_7_1_badger)
+sp::plot(availableArea)
 
+# wides ---------------------------------------------------------------
 multiverseHabitat::method_indi_wides(
   movementData,
   landscape_badger,
   availableArea,
-  availablePoints
+  availablePointsPer
 )
-# wides ---------------------------------------------------------------
 
-availPoints <- sp::spsample(x = availableArea,
-                            n = availablePoints,
-                            type = "random")
+if(!require(sp)){
+  stop("sp not installed")
+}
+
+# generate points based on the availableArea and the number of points
+### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
+suppressWarnings({
+  availPoints <- sp::spsample(x = availableArea,
+                              n = nrow(movementData) * availablePointsPer,
+                              type = "random")
+})
 
 classRaster <- raster::raster(nrows = nrow(landscape$classified),
                               ncols = ncol(landscape$classified),
@@ -75,12 +83,14 @@ availValues <- raster::extract(classRaster, availPoints)
 availValues_DF <- data.frame(rbind(table(availValues)))
 names(availValues_DF) <- sub("X", "c", names(availValues_DF))
 
-usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
-                                                             sp::CRS(SRS_string = "EPSG:32601")))
+suppressWarnings({
+  usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                               sp::CRS(SRS_string = "EPSG:32601")))
+})
 usedValues_DF <- data.frame(rbind(table(usedValues)))
 names(usedValues_DF) <- sub("X", "c", names(usedValues_DF))
 
-aClass <- names(usedValues_DF)
+aClass <- names(availValues_DF)
 uClass <- names(usedValues_DF)
 
 if(length(aClass) > length(uClass)){
@@ -97,45 +107,8 @@ if(length(aClass) > length(uClass)){
 
 }
 
-# allClasses <- c("c0", "c1", "c2")
-# # convert to dataframe for easier use in WIDES
-# # need to run a check in case not all classes appear in the avail or used
-# missingClass <- allClasses[!allClasses %in% names(availValues_DF)]
-# if(length(missingClass) >= 1){
-#   toAdd <- data.frame(0)
-#   names(toAdd) <- missingClass
-#   availValues_DF <- cbind(availValues_DF, toAdd)
-# }
-# availValues_DF <- availValues_DF[,allClasses]
-#
-# missingClass <- allClasses[!allClasses %in% names(usedValues_DF)]
-# if(length(missingClass) >= 1){
-#   toAdd <- data.frame(0)
-#   names(toAdd) <- missingClass
-#   usedValues_DF <- cbind(usedValues_DF, toAdd)
-# }
-# usedValues_DF <- usedValues_DF[,allClasses]
-#
-# # However, if both used and avail have zeroes in the same colunm wides breaks,
-# # so we check for that here and if true we remove both the check, goes column
-# # wise for zeroes in both dataframes, combines them, then checks for columns
-# # that have two instances of zeroes
-# columnsWithBothZeroes <- apply(rbind(
-#   apply(availValues_DF, 2, function(x){all(x == 0)}),
-#   apply(usedValues_DF, 2, function(x){all(x == 0)})), 2, function(x){
-#     all(x)
-#   })
-#
-# if(any(columnsWithBothZeroes)){
-#   # have to remove instances where both avail and used are zeroes as that causes errors
-#   availValues_DF <- availValues_DF[,!apply(availValues_DF, 2, function(x){
-#     all(x == 0)
-#   })]
-#   usedValues_DF <- usedValues_DF[,!apply(usedValues_DF, 2, function(x){
-#     all(x == 0)
-#   })]
-# }
-
+usedValues_DF <- usedValues_DF[,sort(names(usedValues_DF))]
+availValues_DF <- availValues_DF[,sort(names(availValues_DF))]
 # so because the difference is use the available, we can do III design with the
 # II set up just with different availabilities. Is in a try() function because
 # of the instances where habitats are used, but not available bceause of the
@@ -143,11 +116,13 @@ if(length(aClass) > length(uClass)){
 wiOUT <- try(
   adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 )
+if(class(wiOUT)[1] == "try-error"){
+  wiOUT <- wiOUT[1]
+}
 # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+wiOUT
 
 # rsf ---------------------------------------------------------------------
-
-
 
 availPoints <- sp::spsample(availableArea[[1]], n = 10, type = "random")
 plot(availPoints)
@@ -194,55 +169,67 @@ method_indi_rsf(sampDuraFreqData_0.5_7_2_badger,
 
 # ssf testing -------------------------------------------------------------
 
+targets::tar_load("landscape_badger")
+targets::tar_load("sampDuraFreqData_1_15_4_badger")
+landscape <- landscape_badger
+movementData <- sampDuraFreqData_1_15_4_badger
+availableSteps <- 10
+covExtract <- "end"
 
-
-modout <- multiverseHabitat::method_indi_ssf(movementData = sampDuraFreqData,
-                                             landscape = testLand,
-                                             methodForm = "mf.is",
+modout <- multiverseHabitat::method_indi_ssf(movementData = movementData,
+                                             landscape = landscape_badger,
+                                             methodForm = "mf.ss",
                                              covExtract = "end",
                                              availableSteps = 10)
 
-summary(modout)
+targets::tar_load("ssfOUT_mf.is_end_10_0.5_7_2_badger")
+summary(ssfOUT_mf.is_end_10_0.5_7_2_badger)$coef
+summary(modout)$coef
 
-sampDuraFreqData$t <- as.POSIXct(sampDuraFreqData$datetime)
-movementTrack <- amt::make_track(tbl = sampDuraFreqData, .x = x, .y = y, .t = t, crs = 32601)
+movementData$t <- as.POSIXct(movementData$datetime)
+movementTrack <- amt::make_track(tbl = movementData, .x = x, .y = y, .t = t, crs = 32601)
 movementSteps <- amt::steps(movementTrack)
 
 set.seed(2022)
 modelData <- amt::random_steps(movementSteps,
-                               n_control = 12,
+                               n_control = availableSteps,
                                sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
                                ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
 
-classRaster <- raster::raster(nrows = 2000, ncols = 2000,
-                      xmn = 0, xmx = 2000, ymn = 0, ymx = 2000,
+classRaster <- raster(nrows = nrow(landscape$classified),
+                      ncols = ncol(landscape$classified),
+                      xmn = 0, xmx = nrow(landscape$classified),
+                      ymn = 0, ymx = ncol(landscape$classified),
                       crs = CRS(SRS_string = "EPSG:32601"),
                       # need to transpose cos matrix and raster deal with rows and col differently
-                      vals = t(testLand$classified))
+                      vals = t(landscape$classified))
 # and flip to full match the raster with the matrix used in the sims
 classRaster <- raster::flip(classRaster)
+
 modelData <- amt::extract_covariates(modelData,
                                      classRaster,
-                                     where = "start")
+                                     where = covExtract)
 
-modelData$values <- factor(modelData$layer)
+modelData$values <- paste0("c", modelData$layer)
+modelData$values <- factor(modelData$values)
 
 if(methodForm == "mf.is"){
   mFormFull <- case_ ~
     values +
     sl_ + log(sl_) + cos(ta_) +
-    amt::strata(step_id_)
+    strata(step_id_)
 
 } else if(methodForm == "mf.ss"){
   mFormFull <- case_ ~
     values +
-    amt::strata(step_id_)
+    strata(step_id_)
 
 }
 
 ssfOUT <- amt::fit_issf(data = modelData,
                         formula = mFormFull,
                         model = TRUE)
+ssfOUT
 
 
 

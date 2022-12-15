@@ -5,7 +5,7 @@
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param landscape
 #' @param availableArea
-#' @param availablePoints
+#' @param availablePointsPer
 #' @return a
 #'
 #' @export
@@ -19,7 +19,7 @@ method_indi_wides <- function(
   #### designType, # design type not needed cos typeII is more pop-level analysis?
   # could be swapped for random/systematic point selection
   availableArea,
-  availablePoints,
+  availablePointsPer,
   # ... is needed so this function can work alongside RSF without throwing
   # unused argument error for the inclusion of weighting in RSF function
   ...){
@@ -30,17 +30,19 @@ method_indi_wides <- function(
 
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
-  availPoints <- sp::spsample(x = availableArea,
-                              n = availablePoints,
-                              type = "random")
+  suppressWarnings({
+    availPoints <- sp::spsample(x = availableArea,
+                                n = nrow(movementData) * availablePointsPer,
+                                type = "random")
+  })
 
   classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                        ncols = ncol(landscape$classified),
-                        xmn = 0, xmx = nrow(landscape$classified),
-                        ymn = 0, ymx = ncol(landscape$classified),
-                        crs = CRS(SRS_string = "EPSG:32601"),
-                        # need to transpose cos matrix and raster deal with rows and col differently
-                        vals = t(landscape$classified))
+                                ncols = ncol(landscape$classified),
+                                xmn = 0, xmx = nrow(landscape$classified),
+                                ymn = 0, ymx = ncol(landscape$classified),
+                                crs = CRS(SRS_string = "EPSG:32601"),
+                                # need to transpose cos matrix and raster deal with rows and col differently
+                                vals = t(landscape$classified))
   # and flip to full match the raster with the matrix used in the sims
   classRaster <- raster::flip(classRaster)
 
@@ -50,12 +52,14 @@ method_indi_wides <- function(
   availValues_DF <- data.frame(rbind(table(availValues)))
   names(availValues_DF) <- sub("X", "c", names(availValues_DF))
 
-  usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
-                                                               sp::CRS(SRS_string = "EPSG:32601")))
+  suppressWarnings({
+    usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                                 sp::CRS(SRS_string = "EPSG:32601")))
+  })
   usedValues_DF <- data.frame(rbind(table(usedValues)))
   names(usedValues_DF) <- sub("X", "c", names(usedValues_DF))
 
-  aClass <- names(usedValues_DF)
+  aClass <- names(availValues_DF)
   uClass <- names(usedValues_DF)
 
   if(length(aClass) > length(uClass)){
@@ -72,6 +76,8 @@ method_indi_wides <- function(
 
   }
 
+  usedValues_DF <- usedValues_DF[,sort(names(usedValues_DF))]
+  availValues_DF <- availValues_DF[,sort(names(availValues_DF))]
   # so because the difference is use the available, we can do III design with the
   # II set up just with different availabilities. Is in a try() function because
   # of the instances where habitats are used, but not available bceause of the
@@ -79,6 +85,9 @@ method_indi_wides <- function(
   wiOUT <- try(
     adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
   )
+  if(class(wiOUT)[1] == "try-error"){
+    wiOUT <- wiOUT[1]
+  }
   # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 
   return(wiOUT)
