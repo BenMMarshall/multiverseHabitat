@@ -70,5 +70,9 @@ method_indi_ssf <- function(
                           formula = mFormFull,
                           model = TRUE)
 
-  return(ssfOUT)
+  ssfDF <- as.data.frame(summary(ssfOUT)$coef)
+  method <- rep("ssf", nrow(ssfDF))
+  ssfDF <- cbind(ssfDF, method)
+
+  return(extract_estimate(ssfDF))
 }

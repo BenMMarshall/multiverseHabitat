@@ -31,8 +31,16 @@ targets::tar_delete("methOUT_method_indi_wides_1_1_90_MCP_1_15_1_badger")
 # summary plots draft -----------------------------------------------------
 
 targets::tar_load(combinedResults)
-
 combinedResults
+sum(unlist(lapply(combinedResults, function(x){
+  class(x)
+})) == "data.frame")
+
+combinedResults[
+  unlist(lapply(combinedResults, function(x){
+    !all(names(x) %in% c("Estimate", "SE"))
+  }))
+]
 
 combinedResults$branches <- rownames(combinedResults)
 
