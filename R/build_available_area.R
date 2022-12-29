@@ -77,7 +77,7 @@ build_available_area <- function(movementData,
     varioDataVar <- ctmm::variogram(teleObj, fast = TRUE)
     guess <- ctmm::ctmm.guess(teleObj, interactive = FALSE)
     # need to specify more cores???
-    fits <- ctmm::ctmm.select(teleObj, guess, verbose = TRUE, cores = 2, method = "pHREML")
+    fits <- ctmm::ctmm.select(teleObj, guess, verbose = TRUE, cores = 1, method = "pHREML")
 
     akdeRes <- ctmm::akde(teleObj, fits[[1]],
                           weights = TRUE)
@@ -112,10 +112,10 @@ build_available_area <- function(movementData,
     })
 
     set_grid.ext <- 4
-    set_dimsize <- 400
+    set_dimsize <- 640
     suppressWarnings({
       dbbmm <- move::brownian.bridge.dyn(object = moveObj,
-                                         location.error = 5,
+                                         location.error = 0.1,
                                          window.size = windowSize,
                                          margin = marginSize,
                                          ext = set_grid.ext,

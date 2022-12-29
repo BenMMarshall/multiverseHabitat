@@ -64,12 +64,13 @@ method_indi_wides <- function(
 
   if(length(aClass) > length(uClass)){
 
-    toAdd <- data.frame(0)
+    toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(aClass[!aClass %in% uClass])))
     names(toAdd) <- aClass[!aClass %in% uClass]
     usedValues_DF <- cbind(usedValues_DF, toAdd)
 
   } else if(length(uClass) > length(aClass)){
 
+    toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(uClass[!uClass %in% aClass])))
     toAdd <- data.frame(0)
     names(toAdd) <- uClass[!uClass %in% aClass]
     availValues_DF <- cbind(availValues_DF, toAdd)
@@ -90,6 +91,6 @@ method_indi_wides <- function(
   }
   # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 
-  return(wiOUT)
+  return(extract_estimate(wiOUT))
 
 }
