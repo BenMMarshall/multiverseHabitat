@@ -26,8 +26,8 @@ coefDF[rownames(coefDF) == "valuesc2",][1]
 # se
 coefDF[rownames(coefDF) == "valuesc2",][3]
 
-targets::tar_load("methOUT_method_indi_wides_10_1_90_dBBMM_1_7_4_badger")
-targets::tar_delete("methOUT_method_indi_wides_1_1_90_MCP_1_15_1_badger")
+# targets::tar_load("methOUT_method_indi_wides_10_1_90_dBBMM_1_7_4_badger")
+# targets::tar_delete("methOUT_method_indi_wides_1_1_90_MCP_1_15_1_badger")
 # summary plots draft -----------------------------------------------------
 
 targets::tar_load(combinedResults)
@@ -106,7 +106,7 @@ combinedResults %>%
            analysis == "rsf" ~ "Resource Selection Function",
            analysis == "ssf" ~ "(Integrated) Step Selection Function",
            TRUE ~ analysis)
-         ) %>%
+  ) %>%
   ggplot(aes(y = reorder(choices, Estimate, FUN = mean, na.rm = TRUE))) +
   geom_segment(aes(x = minEst, xend = maxEst, yend = choices),
                alpha = 0.1) +
@@ -130,3 +130,123 @@ combinedResults %>%
     panel.grid = element_blank())
 
 
+
+# spec curve adaptation ---------------------------------------------------
+# https://hal.inria.fr/hal-03558950/document has great ideas
+
+rsfResults <- combinedResults %>%
+  filter(analysis == "rsf")
+
+areaMethod <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
+  x[length(x) -4]
+})
+areaContour <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
+  x[length(x) -5]
+})
+weighting <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
+  x[length(x) -6] # think it is weighting
+})
+availablePointsPer <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
+  x[length(x) -7]
+})
+
+rsfResults$areaMethod <- areaMethod
+rsfResults$areaContour <- areaContour
+rsfResults$weighting <- weighting
+rsfResults$availablePointsPer <- availablePointsPer
+
+library(reshape2)
+library(patchwork)
+
+(splitSpecCurve <- rsfResults %>%
+    select(Estimate, indi, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
+    # select(Estimate, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
+    melt(c("Estimate", "indi")) %>%
+    # melt("Estimate") %>%
+    mutate(
+      variable = case_when(
+        variable == "td" ~ "Tracking Duration (days)",
+        variable == "tf" ~ "Tracking Frequency (points/hour)",
+        variable == "areaMethod" ~ "Available Area Method",
+        variable == "areaContour" ~ "Available Area Contour (%)",
+        variable == "availablePointsPer" ~ "Available Points Multipiler",
+        variable == "weighting" ~ "Weighting of Used Points"
+      )
+    ) %>%
+    ggplot() +
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
+               linetype = 2) +
+    geom_point(aes(x = Estimate, y = value, colour = indi)) +
+    facet_wrap(.~variable, ncol = 1, scales = "free_y", strip.position = "left") +
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      strip.text.y.left = element_text(angle = 0, margin = margin(0,5,0,0)),
+      axis.text.y.left = element_text(margin = margin(0,-144,0,100)), # 2nd value needed to alligns with facet, 50 gives space left
+      axis.ticks.y.left = element_blank(),
+      panel.grid = element_blank())
+)
+
+(overallSpecCurve <- rsfResults %>%
+    arrange(Estimate) %>%
+    mutate(index = row_number()) %>%
+    ggplot() +
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
+               linetype = 2) +
+    geom_point(aes(x = Estimate, y = index, colour = indi))+
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 0),
+      panel.grid = element_blank())
+)
+
+overallSpecCurve / splitSpecCurve +
+  plot_layout(heights = c(1, 3))
+
+
+# BCF maybe? --------------------------------------------------------------
+
+library(dbarts)
+library(bcf)
+
+covars <- rsfResults %>%
+  select(indi, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
+  mutate(td = as.numeric(td),
+         tf = as.numeric(tf))
+
+modelMat <- dbarts::makeModelMatrixFromDataFrame(covars)
+
+propMat <- modelMat
+propMat[,] <- 1
+
+bcffit <- bcf(
+  y = rsfResults$Estimate,
+  z = sample(0:1, length(rsfResults$Estimate), replace = TRUE),
+  x_control = modelMat,
+  x_moderate = modelMat,
+  pihat = propMat, # Length n estimates of propensity score
+  nburn = 200,
+  nsim = 100
+)
+
+summary(bcffit)
+
+plot(bcffit$coda_chains)
+
+bcffit$tau
+tau_post <- bcffit$tau
+tauhat <- colMeans(tau_post)
+
+# inDataDf <- as.data.frame(modelMat)
+# inDataDf$tauhat <- tauhat
+# inDataDf$value <- rsfResults$Estimate
+#
+# ggplot(inDataDf,
+#        aes(y = tauhat, x = value)) +
+#   geom_point()
