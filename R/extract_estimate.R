@@ -17,14 +17,16 @@ extract_estimate <- function(OUT){
 
   if(class(OUT)[1] == "character"){
     OUTDF <- data.frame("Estimate" = NA,
-                 "SE" = NA)
+                 "SE" = NA,
+                 "Method" = NA)
     return(OUTDF)
   }
 
   if(class(OUT)[1] == "wiIII"){
 
     OUTDF <- data.frame("Estimate" = OUT$wi["c2"],
-                        "SE" = OUT$se.wi["c2"])
+                        "SE" = OUT$se.wi["c2"],
+                        "Method" = "wides")
     return(OUTDF)
 
   } else if(class(OUT)[1] == "data.frame"){
@@ -33,8 +35,9 @@ extract_estimate <- function(OUT){
       # coefDF <- summary(OUT)$coefficients
       coefDF <- OUT
       OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
-                          coefDF[rownames(coefDF) == "valuesc2",][2])
-      names(OUTDF) <- c("Estimate", "SE")
+                          coefDF[rownames(coefDF) == "valuesc2",][2],
+                          "rsf")
+      names(OUTDF) <- c("Estimate", "SE", "Method")
       return(OUTDF)
 
     } else if(OUT$method[1] == "ssf"){
@@ -44,8 +47,9 @@ extract_estimate <- function(OUT){
       # coefDF <- summary(OUT)$coefficients
       coefDF <- OUT
       OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
-                          coefDF[rownames(coefDF) == "valuesc2",][3])
-      names(OUTDF) <- c("Estimate", "SE")
+                          coefDF[rownames(coefDF) == "valuesc2",][3],
+                          "ssf")
+      names(OUTDF) <- c("Estimate", "SE", "Method")
       return(OUTDF)
 
     }

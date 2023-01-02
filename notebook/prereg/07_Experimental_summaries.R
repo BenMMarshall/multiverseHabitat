@@ -32,15 +32,6 @@ targets::tar_delete("methOUT_method_indi_wides_1_1_90_MCP_1_15_1_badger")
 
 targets::tar_load(combinedResults)
 combinedResults
-sum(unlist(lapply(combinedResults, function(x){
-  class(x)
-})) == "data.frame")
-
-combinedResults[
-  unlist(lapply(combinedResults, function(x){
-    !all(names(x) %in% c("Estimate", "SE"))
-  }))
-]
 
 combinedResults$branches <- rownames(combinedResults)
 
@@ -117,11 +108,11 @@ combinedResults %>%
          ) %>%
   ggplot(aes(y = reorder(choices, Estimate, FUN = mean, na.rm = TRUE))) +
   geom_segment(aes(x = minEst, xend = maxEst, yend = choices),
-               alpha = 0.1) +
+               alpha = 0.1, linewidth = 0.25) +
   geom_point(aes(x = Estimate, colour = sigColour),
              position = position_jitter(height = 0.01, width = 0),
              size = 0.75) +
-  geom_point(aes(x = meanEst,)) +
+  geom_point(aes(x = meanEst)) +
   geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
              linetype = 2) +
   facet_wrap(.~analysis, ncol = 1, scales = "free") +
