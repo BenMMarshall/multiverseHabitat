@@ -13,8 +13,11 @@ tar_option_set(
   packages = c("qs", "here", "raster", "NLMR", "tibble",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
+  garbage_collection = TRUE,
   format = "qs", # storage format
-  memory = "transient" # might avoid ram issues
+  storage = "worker",
+  retrieval = "worker",
+  memory = "transient" # avoid ram issues
   # Set other options as needed.
 )
 
@@ -33,19 +36,27 @@ values_SimSpecies <- tibble(
 values_SimIndi <- tibble(
   # individual = 1
   individual = 1:4
-  # individual = seq_len(200)
+  # individual = seq_len(30)
 )
 
-values_SampDuration <- tibble(
-  # td = c(7)
-  td = c(7, 15, 30, 60)
-  # td = c(7, 15, 30, 60, 120, 240, 365)
-)
-values_SampFrequency <- tibble(
-  # tf = c(0.5)
+# values_SampDuration <- tibble(
+#   # td = c(7)
+#   td = c(7, 15, 30, 60)
+#   # td = c(7, 15, 30, 60, 120, 240, 365)
+# )
+# values_SampFrequency <- tibble(
+#   # tf = c(0.5)
+#   tf = c(0.5, 1, 2, 6)
+# )
+values_Sampling <- tidyr::expand_grid(
+  td = c(7, 15, 30, 60),
   tf = c(0.5, 1, 2, 6)
-  # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
+  # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0),
+  # td = c(7, 15, 30, 60, 120, 240, 365)
+  # td = c(7, 15),
+  # tf = c(0.5, 1)
 )
+
 # values_MethodArea <- tidyr::expand_grid(
 #   areaMethod = c("MCP", "dBBMM"),
 #   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
@@ -53,12 +64,12 @@ values_SampFrequency <- tibble(
 #   areaContour = c(90, 95, 99)
 # )
 values_MethodArea <- tibble(
-  areaMethod = c("MCP", "dBBMM"),
-  # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
+  # areaMethod = c("MCP", "dBBMM"),
+  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
 )
 values_MethodContour <- tidyr::expand_grid(
-  areaContour = c(90)
-  # areaContour = c(90, 95, 99)
+  # areaContour = c(90)
+  areaContour = c(90, 95, 99)
 )
 
 values_MethodSSF <- tidyr::expand_grid(
@@ -71,12 +82,17 @@ values_MethodSSF <- tidyr::expand_grid(
 
 values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of input settings.
   Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
-  # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 5)), digits = 1)),
-  Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
+  Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
+  # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
   # Method_ap = 100,
-  # Method_we = exp(seq(log(100), log(10000000), length.out = 6))
+  # Method_we = exp(seq(log(100), log(10000000), length.out = 3))
   Method_we = 1
 )
+# trim out the wieghting variation for when it is wides as that doesn't apply
+values_MethodMethod <- values_MethodMethod[
+  values_MethodMethod$Method_function == "method_indi_rsf" |
+    (values_MethodMethod$Method_function == "method_indi_wides" &
+       values_MethodMethod$Method_we == 1),]
 
 values_MethodCTM <- tidyr::expand_grid(
   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
@@ -111,64 +127,66 @@ targetsList <- list(
 
       ## DURATION MAP
       tar_map(
-        values = values_SampDuration,
-        tar_target(sampDuraData,
-                   subset_duration(movementData = simData$locations,
-                                   daysDuration = td)), # FUNCTION subset_duration
+        values = values_Sampling,
+        tar_target(sampDuraFreqData,
+                   subset_duration(
+                     movementData = subset_frequency(movementData = simData$locations,
+                                                     freqPreset = tf),
+                     daysDuration = td)), # FUNCTION subset_duration
         ## FREQUENCY MAP
+        # tar_map(
+        #   values = values_SampFrequency,
+        #   tar_target(sampDuraFreqData,
+        #              subset_frequency(movementData = sampDuraData,
+        #                               freqPreset = tf)), # FUNCTION subset_frequency
+        ## AREA + CONTOUR MAP
         tar_map(
-          values = values_SampFrequency,
-          tar_target(sampDuraFreqData,
-                     subset_frequency(movementData = sampDuraData,
-                                      freqPreset = tf)), # FUNCTION subset_frequency
-          ## AREA + CONTOUR MAP
+          values = values_MethodArea,
+          tar_target(area,
+                     build_available_area(movementData = sampDuraFreqData,
+                                          method = areaMethod,
+                                          SRS_string = "EPSG:32601",
+                                          dBBMMsettings = c(168, 48))), # FUNCTION build_available_area
           tar_map(
-            values = values_MethodArea,
-            tar_target(area,
-                       build_available_area(movementData = sampDuraFreqData,
-                                            method = areaMethod,
-                                            SRS_string = "EPSG:32601",
-                                            dBBMMsettings = c(168, 48))), # FUNCTION build_available_area
+            values = values_MethodContour,
+            tar_target(polygon,
+                       build_available_polygon(areaResource = area,
+                                               method = areaMethod,
+                                               contour = areaContour,
+                                               SRS_string = "EPSG:32601")), # FUNCTION build_available_area
+            ## AREA-BASED METHODS MAP
             tar_map(
-              values = values_MethodContour,
-              tar_target(polygon,
-                         build_available_polygon(areaResource = area,
-                                              method = areaMethod,
-                                              contour = areaContour,
-                                              SRS_string = "EPSG:32601")), # FUNCTION build_available_area
-              ## AREA-BASED METHODS MAP
-              tar_map(
-                values = values_MethodMethod,
-                # names = "tNames", # Select columns from `values` for target names.
-                tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
-                                                    landscape = landscape,
-                                                    availableArea = polygon,
-                                                    availablePoints = Method_ap,
-                                                    weighting = Method_we)), # FUNCTION "method_indi_wides", "method_indi_rsf"
-                tar_target(methEstimate, extract_estimate(methOUT))
+              values = values_MethodMethod,
+              # names = "tNames", # Select columns from `values` for target names.
+              tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
+                                                  landscape = landscape,
+                                                  availableArea = polygon,
+                                                  availablePoints = Method_ap,
+                                                  weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
+              # tar_target(methEstimate, extract_estimate(methOUT))
 
-                # next level goes here using tar_map() again
-              ) # area methods map
-            ) # contour map
-          ), # area creation map
-          ## SSF MAP
-          tar_map(
-            values = values_MethodSSF,
-            tar_target(ssfOUT, method_indi_ssf(movementData = sampDuraFreqData,
-                                               landscape = landscape,
-                                               methodForm = MethodSSF_mf,
-                                               covExtract = MethodSSF_ce,
-                                               availableSteps = MethodSSF_as)), # FUNCTION method_ssf
-            tar_target(ssfEstimate, extract_estimate(ssfOUT))
-          ) # ssf map
-          # ## CTMC MAP
-          # tar_map(
-          #   values = values_MethodCTM,
-          #   tar_target(ctmcOUT, paste0(sampDuraFreqData, "_-_ctm1_", Methodctm_ks,
-          #                           Methodctm_it, Methodctm_pm,
-          #                           Methodctm_im, Methodctm_di))
-          # ) # ctmc map
-        ) # frequency map
+              # next level goes here using tar_map() again
+            ) # area methods map
+          ) # contour map
+        ), # area creation map
+        ## SSF MAP
+        tar_map(
+          values = values_MethodSSF,
+          tar_target(ssfOUT, method_indi_ssf(movementData = sampDuraFreqData,
+                                             landscape = landscape,
+                                             methodForm = MethodSSF_mf,
+                                             covExtract = MethodSSF_ce,
+                                             availableSteps = MethodSSF_as)) # FUNCTION method_ssf
+          # tar_target(ssfEstimate, extract_estimate(ssfOUT))
+        ) # ssf map
+        # ## CTMC MAP
+        # tar_map(
+        #   values = values_MethodCTM,
+        #   tar_target(ctmcOUT, paste0(sampDuraFreqData, "_-_ctm1_", Methodctm_ks,
+        #                           Methodctm_it, Methodctm_pm,
+        #                           Methodctm_im, Methodctm_di))
+        # ) # ctmc map
+        # ) # frequency map
       ) # duration map
     ) # individual map
   ) # species map
@@ -184,15 +202,22 @@ targetsList <- list(
 # targetsList[[1]][grep("OUT", names(targetsList[[1]]))]
 resultsCompiled <- tar_combine(
   combinedResults,
-  targetsList[[1]][grep("Estimate", names(targetsList[[1]]))],
+  targetsList[[1]][grep("OUT", names(targetsList[[1]]))],
   # command = list(!!!.x)
   command = rbind(!!!.x)
 )
 list(targetsList, resultsCompiled)
 
-# targets::tar_make_clustermq(workers = 16) # watch out too many workers can hit ram limits
+# Launch the app in a background process.
+# tar_watch(seconds = 60, outdated = FALSE, targets_only = TRUE)
+
 # preview one species
 # targets::tar_visnetwork(allow = contains("badger"))
 # targets::tar_visnetwork()
 # targets::tar_load("area_dBBMM_90_0.5_7_2_badger")
 # targets::tar_load("area_MCP_90_0.5_7_2_badger")
+# targets::tar_manifest()
+# targets::tar_make()
+# targets::tar_make_clustermq(workers = 12) # watch out too many workers can hit ram limits
+
+# endPointsAndNodes <- targets::tar_network(targets_only = TRUE)

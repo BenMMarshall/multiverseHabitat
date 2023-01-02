@@ -11,7 +11,7 @@
 #'
 #' @export
 build_available_polygon <- function(areaResource,
-                                    method = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"),
+                                    method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
                                     contour,
                                     SRS_string = "EPSG:32601"){
 
@@ -21,11 +21,11 @@ build_available_polygon <- function(areaResource,
     poly_OUT <- adehabitatHR::mcp(areaResource, percent = contour, unin = "m",
                                   unout = "m2")
 
-  } else if(method == "KDE_LSCV"){
+  } else if(method == "KDElscv"){
 
     poly_OUT <- adehabitatHR::getverticeshr(areaResource, contour)
 
-  } else if(method == "KDE_href"){
+  } else if(method == "KDEhref"){
 
     poly_OUT <- adehabitatHR::getverticeshr(areaResource, contour)
 

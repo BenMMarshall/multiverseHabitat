@@ -33,20 +33,22 @@ sampDuraFreqData <- multiverseHabitat::subset_frequency(movementData = sampDuraD
 
 # akdeOUT <- multiverseHabitat::build_available_area(movementData = sampDuraFreqData,
 #                                         "AKDE", 95)
-# methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_4_badger
+# methOUT_method_indi_rsf_4_1_90_AKDE_2_30_3_badger
 targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_0.5_15_1_badger")
-targets::tar_load("polygon_90_MCP_0.5_15_1_badger")
+targets::tar_load("sampDuraFreqData_6_7_2_badger")
+targets::tar_load("polygon_99_KDE_href_6_7_2_badger")
 
-# methOUT_method_indi_wides_10_1_95_MCP_0.5_7_1_badger
+# methEstimate_method_indi_wides_2_1_95_dBBMM_0.5_30_4_badger
+# methOUT_method_indi_wides_2_1_95_dBBMM_0.5_30_4_badger
 # Last error: 'names' attribute [2] must be the same length as the vector [1]
 landscape <- landscape_badger
-movementData <- sampDuraFreqData_0.5_15_1_badger
-availableArea <- polygon_90_MCP_0.5_15_1_badger
-availablePointsPer <- 1
+movementData <- sampDuraFreqData_6_7_2_badger
+availableArea <- polygon_99_KDE_href_6_7_2_badger
+availablePointsPer <- 4
+weighting <- 1
 
 sp::plot(availableArea)
-
+#
 # wides ---------------------------------------------------------------
 multiverseHabitat::method_indi_wides(
   movementData,
@@ -54,10 +56,6 @@ multiverseHabitat::method_indi_wides(
   availableArea,
   availablePointsPer
 )
-
-if(!require(sp)){
-  stop("sp not installed")
-}
 
 # generate points based on the availableArea and the number of points
 ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
@@ -95,12 +93,13 @@ uClass <- names(usedValues_DF)
 
 if(length(aClass) > length(uClass)){
 
-  toAdd <- data.frame(0)
+  toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(aClass[!aClass %in% uClass])))
   names(toAdd) <- aClass[!aClass %in% uClass]
   usedValues_DF <- cbind(usedValues_DF, toAdd)
 
 } else if(length(uClass) > length(aClass)){
 
+  toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(uClass[!uClass %in% aClass])))
   toAdd <- data.frame(0)
   names(toAdd) <- uClass[!uClass %in% aClass]
   availValues_DF <- cbind(availValues_DF, toAdd)
@@ -120,13 +119,28 @@ if(class(wiOUT)[1] == "try-error"){
   wiOUT <- wiOUT[1]
 }
 # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
-wiOUT
+
 
 # rsf ---------------------------------------------------------------------
 
-availPoints <- sp::spsample(availableArea[[1]], n = 10, type = "random")
+rsfOUT <- method_indi_rsf(sampDuraFreqData_6_7_2_badger,
+                          landscape_badger,
+                          polygon_99_KDE_href_6_7_2_badger,
+                          availablePointsPer = availablePointsPer,
+                          weighting = weighting)
+
+# rsfDF <- as.data.frame(summary(rsfOUT)$coef)
+# method <- rep("rsf", nrow(rsfDF))
+# rsfDF <- cbind(rsfDF, method)
+#
+# rsfDF[,"method"][1] == "rsf"
+# class(rsfDF)
+
+extract_estimate(rsfDF)
+
+availPoints <- sp::spsample(availableArea, n = 10, type = "random")
 plot(availPoints)
-classRaster <- raster(nrows = nrow(landscape$classified),
+classRaster <- raster::raster(nrows = nrow(landscape$classified),
                       ncols = ncol(landscape$classified),
                       xmn = 0, xmx = nrow(landscape$classified),
                       ymn = 0, ymx = ncol(landscape$classified),
@@ -159,13 +173,6 @@ rsfOUT <- glm(case_ ~ values,
               data = modelData,
               weights = weights)
 
-method_indi_rsf(sampDuraFreqData_0.5_7_2_badger,
-                landscape_badger,
-                area_MCP_90_0.5_7_2_badger,
-                availablePoints = 10,
-                weighting = 1)
-
-
 
 # ssf testing -------------------------------------------------------------
 
@@ -176,11 +183,12 @@ movementData <- sampDuraFreqData_1_15_4_badger
 availableSteps <- 10
 covExtract <- "end"
 
-modout <- multiverseHabitat::method_indi_ssf(movementData = movementData,
+modout <- multiverseHabitat::method_indi_ssf(movementData = sampDuraFreqData_6_7_2_badger,
                                              landscape = landscape_badger,
                                              methodForm = "mf.ss",
                                              covExtract = "end",
                                              availableSteps = 10)
+extract_estimate(modout)
 
 targets::tar_load("ssfOUT_mf.is_end_10_0.5_7_2_badger")
 summary(ssfOUT_mf.is_end_10_0.5_7_2_badger)$coef

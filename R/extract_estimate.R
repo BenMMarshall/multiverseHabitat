@@ -16,35 +16,43 @@ extract_estimate <- function(OUT){
   }
 
   if(class(OUT)[1] == "character"){
-    return(
-      data.frame("Estimate" = NA,
-                 "SE" = NA)
-    )
+    OUTDF <- data.frame("Estimate" = NA,
+                 "SE" = NA,
+                 "Method" = NA)
+    return(OUTDF)
   }
 
   if(class(OUT)[1] == "wiIII"){
 
-    return(
-      data.frame("Estimate" = OUT$wi["c2"],
-                 "SE" = OUT$se.wi["c2"])
-    )
+    OUTDF <- data.frame("Estimate" = OUT$wi["c2"],
+                        "SE" = OUT$se.wi["c2"],
+                        "Method" = "wides")
+    return(OUTDF)
 
-  } else if(class(OUT)[1] == "glm"){
+  } else if(class(OUT)[1] == "data.frame"){
 
-    coefDF <- summary(OUT)$coefficients
-    return(
-      data.frame("Estimate" = coefDF[rownames(coefDF) == "valuesc2",][1],
-                 "SE" = coefDF[rownames(coefDF) == "valuesc2",][2])
-    )
+    if(OUT$method[1] == "rsf"){
+      # coefDF <- summary(OUT)$coefficients
+      coefDF <- OUT
+      OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
+                          coefDF[rownames(coefDF) == "valuesc2",][2],
+                          "rsf")
+      names(OUTDF) <- c("Estimate", "SE", "Method")
+      return(OUTDF)
 
-  } else if(class(OUT)[1] == "fit_clogit"){
+    } else if(OUT$method[1] == "ssf"){
 
-    coefDF <- summary(OUT)$coefficients
+      # } else if(class(OUT)[1] == "fit_clogit"){
 
-    return(
-      data.frame("Estimate" = coefDF[rownames(coefDF) == "valuesc2",][1],
-                 "SE" = coefDF[rownames(coefDF) == "valuesc2",][3])
-    )
+      # coefDF <- summary(OUT)$coefficients
+      coefDF <- OUT
+      OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
+                          coefDF[rownames(coefDF) == "valuesc2",][3],
+                          "ssf")
+      names(OUTDF) <- c("Estimate", "SE", "Method")
+      return(OUTDF)
+
+    }
 
   } # if end
 } # func end
