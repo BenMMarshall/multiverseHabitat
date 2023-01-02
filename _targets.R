@@ -15,9 +15,9 @@ tar_option_set(
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
-  memory = "transient", # might avoid ram issues
   storage = "worker",
-  retrieval = "worker"
+  retrieval = "worker",
+  memory = "transient" # avoid ram issues
   # Set other options as needed.
 )
 
@@ -65,7 +65,7 @@ values_Sampling <- tidyr::expand_grid(
 # )
 values_MethodArea <- tibble(
   # areaMethod = c("MCP", "dBBMM"),
-  areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
+  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
 )
 values_MethodContour <- tidyr::expand_grid(
   # areaContour = c(90)
@@ -88,6 +88,11 @@ values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of in
   # Method_we = exp(seq(log(100), log(10000000), length.out = 3))
   Method_we = 1
 )
+# trim out the wieghting variation for when it is wides as that doesn't apply
+values_MethodMethod <- values_MethodMethod[
+  values_MethodMethod$Method_function == "method_indi_rsf" |
+    (values_MethodMethod$Method_function == "method_indi_wides" &
+       values_MethodMethod$Method_we == 1),]
 
 values_MethodCTM <- tidyr::expand_grid(
   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
@@ -198,8 +203,8 @@ targetsList <- list(
 resultsCompiled <- tar_combine(
   combinedResults,
   targetsList[[1]][grep("OUT", names(targetsList[[1]]))],
-  command = list(!!!.x)
-  # command = rbind(!!!.x)
+  # command = list(!!!.x)
+  command = rbind(!!!.x)
 )
 list(targetsList, resultsCompiled)
 
