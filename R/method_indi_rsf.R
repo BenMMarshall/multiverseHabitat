@@ -68,6 +68,10 @@ method_indi_rsf <- function(
                 data = modelData,
                 weights = weights)
 
-  return(rsfOUT)
+  rsfDF <- as.data.frame(summary(rsfOUT)$coef)
+  method <- rep("rsf", nrow(rsfDF))
+  rsfDF <- cbind(rsfDF, method)
+
+  return(extract_estimate(rsfDF))
 
 }

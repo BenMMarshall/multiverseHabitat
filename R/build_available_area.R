@@ -14,7 +14,7 @@
 #'
 #' @export
 build_available_area <- function(movementData,
-                                 method = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"),
+                                 method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
                                  contour,
                                  SRS_string = "EPSG:32601",
                                  dBBMMsettings = NULL){
@@ -24,7 +24,7 @@ build_available_area <- function(movementData,
 
     area_OUT <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
 
-  } else if(method == "KDE_LSCV"){
+  } else if(method == "KDElscv"){
 
     spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
 
@@ -42,7 +42,7 @@ build_available_area <- function(movementData,
     })
     area_OUT <- kdeLSCV_UD
 
-  } else if(method == "KDE_href"){
+  } else if(method == "KDEhref"){
 
     spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
     area_OUT <- vector("list", 2)
@@ -77,7 +77,7 @@ build_available_area <- function(movementData,
     varioDataVar <- ctmm::variogram(teleObj, fast = TRUE)
     guess <- ctmm::ctmm.guess(teleObj, interactive = FALSE)
     # need to specify more cores???
-    fits <- ctmm::ctmm.select(teleObj, guess, verbose = TRUE, cores = 2, method = "pHREML")
+    fits <- ctmm::ctmm.select(teleObj, guess, verbose = TRUE, cores = 1, method = "pHREML")
 
     akdeRes <- ctmm::akde(teleObj, fits[[1]],
                           weights = TRUE)
@@ -112,10 +112,10 @@ build_available_area <- function(movementData,
     })
 
     set_grid.ext <- 4
-    set_dimsize <- 400
+    set_dimsize <- 640
     suppressWarnings({
       dbbmm <- move::brownian.bridge.dyn(object = moveObj,
-                                         location.error = 5,
+                                         location.error = 0.1,
                                          window.size = windowSize,
                                          margin = marginSize,
                                          ext = set_grid.ext,

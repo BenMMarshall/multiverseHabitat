@@ -31,7 +31,6 @@ coefDF[rownames(coefDF) == "valuesc2",][3]
 # summary plots draft -----------------------------------------------------
 
 targets::tar_load(combinedResults)
-
 combinedResults
 
 combinedResults$branches <- rownames(combinedResults)
@@ -109,11 +108,11 @@ combinedResults %>%
   ) %>%
   ggplot(aes(y = reorder(choices, Estimate, FUN = mean, na.rm = TRUE))) +
   geom_segment(aes(x = minEst, xend = maxEst, yend = choices),
-               alpha = 0.1) +
+               alpha = 0.1, linewidth = 0.25) +
   geom_point(aes(x = Estimate, colour = sigColour),
              position = position_jitter(height = 0.01, width = 0),
              size = 0.75) +
-  geom_point(aes(x = meanEst,)) +
+  geom_point(aes(x = meanEst)) +
   geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
              linetype = 2) +
   facet_wrap(.~analysis, ncol = 1, scales = "free") +
