@@ -1,33 +1,4 @@
 
-targets::tar_load("methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_1_badger")
-
-class(methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_1_badger)[1]
-methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_1_badger$wi["c2"]
-methOUT_method_indi_wides_10_1_90_dBBMM_0.5_7_1_badger$se.wi["c2"]
-
-targets::tar_load("methOUT_method_indi_rsf_10_1_90_MCP_0.5_7_1_badger")
-
-class(methOUT_method_indi_rsf_10_1_90_MCP_0.5_7_1_badger)[1]
-coefDF <- summary(methOUT_method_indi_rsf_10_1_90_MCP_0.5_7_1_badger)$coefficients
-
-# point est
-coefDF[rownames(coefDF) == "valuesc2",][1]
-# se
-coefDF[rownames(coefDF) == "valuesc2",][2]
-
-
-targets::tar_load("ssfOUT_mf.is_start_10_0.5_7_1_badger")
-class(ssfOUT_mf.is_start_10_0.5_7_1_badger)[1]
-
-coefDF <- summary(ssfOUT_mf.is_start_10_0.5_7_1_badger)$coefficients
-
-# point est
-coefDF[rownames(coefDF) == "valuesc2",][1]
-# se
-coefDF[rownames(coefDF) == "valuesc2",][3]
-
-# targets::tar_load("methOUT_method_indi_wides_10_1_90_dBBMM_1_7_4_badger")
-# targets::tar_delete("methOUT_method_indi_wides_1_1_90_MCP_1_15_1_badger")
 # summary plots draft -----------------------------------------------------
 
 targets::tar_load(combinedResults)
@@ -208,44 +179,3 @@ library(patchwork)
 overallSpecCurve / splitSpecCurve +
   plot_layout(heights = c(1, 3))
 
-
-# BCF maybe? --------------------------------------------------------------
-
-library(dbarts)
-library(bcf)
-
-covars <- rsfResults %>%
-  select(indi, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
-  mutate(td = as.numeric(td),
-         tf = as.numeric(tf))
-
-modelMat <- dbarts::makeModelMatrixFromDataFrame(covars)
-
-propMat <- modelMat
-propMat[,] <- 1
-
-bcffit <- bcf(
-  y = rsfResults$Estimate,
-  z = sample(0:1, length(rsfResults$Estimate), replace = TRUE),
-  x_control = modelMat,
-  x_moderate = modelMat,
-  pihat = propMat, # Length n estimates of propensity score
-  nburn = 200,
-  nsim = 100
-)
-
-summary(bcffit)
-
-plot(bcffit$coda_chains)
-
-bcffit$tau
-tau_post <- bcffit$tau
-tauhat <- colMeans(tau_post)
-
-# inDataDf <- as.data.frame(modelMat)
-# inDataDf$tauhat <- tauhat
-# inDataDf$value <- rsfResults$Estimate
-#
-# ggplot(inDataDf,
-#        aes(y = tauhat, x = value)) +
-#   geom_point()
