@@ -8,7 +8,7 @@ method_indi_rsf(
   movementData,
   landscape,
   availableArea,
-  availablePoints,
+  availablePointsPer,
   weighting
 )
 }
