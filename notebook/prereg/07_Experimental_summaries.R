@@ -31,36 +31,37 @@ coefDF[rownames(coefDF) == "valuesc2",][3]
 # summary plots draft -----------------------------------------------------
 
 targets::tar_load(combinedResults)
-combinedResults
+# combResults <- combinedResults
+combinedResults <- multiverseHabitat::parse_combined_results(combinedResults)
 
-combinedResults$branches <- rownames(combinedResults)
-
-combinedResults$analysis <- stringr::str_extract(combinedResults$branches, "wides|rsf|ssf")
-combinedResults$species <- stringr::str_extract(combinedResults$branches, "badger|vulture|kingcobra")
-
-indi <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-  x[length(x) -1]
-})
-td <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-  x[length(x) -2]
-})
-tf <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-  x[length(x) -3]
-})
-
-combinedResults$indi <- indi
-combinedResults$td <- td
-combinedResults$tf <- tf
-
-combinedResults$upper <- combinedResults$Estimate + combinedResults$SE
-combinedResults$lower <- combinedResults$Estimate - combinedResults$SE
-
-combinedResults$sigColour <-
-  ifelse(combinedResults$upper > 0 & combinedResults$lower > 0, "preference",
-         ifelse(combinedResults$upper < 0 & combinedResults$lower < 0, "avoidance",
-                "no effect"))
-
-combinedResults$sigColour
+# combinedResults$branches <- rownames(combinedResults)
+#
+# combinedResults$analysis <- stringr::str_extract(combinedResults$branches, "wides|rsf|ssf")
+# combinedResults$species <- stringr::str_extract(combinedResults$branches, "badger|vulture|kingcobra")
+#
+# indi <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
+#   x[length(x) -1]
+# })
+# td <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
+#   x[length(x) -2]
+# })
+# tf <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
+#   x[length(x) -3]
+# })
+#
+# combinedResults$indi <- indi
+# combinedResults$td <- td
+# combinedResults$tf <- tf
+#
+# combinedResults$upper <- combinedResults$Estimate + combinedResults$SE
+# combinedResults$lower <- combinedResults$Estimate - combinedResults$SE
+#
+# combinedResults$sigColour <-
+#   ifelse(combinedResults$upper > 0 & combinedResults$lower > 0, "preference",
+#          ifelse(combinedResults$upper < 0 & combinedResults$lower < 0, "avoidance",
+#                 "no effect"))
+#
+# combinedResults$sigColour
 
 library(ggplot2)
 library(dplyr)

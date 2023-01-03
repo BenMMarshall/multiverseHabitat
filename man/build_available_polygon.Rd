@@ -6,7 +6,7 @@
 \usage{
 build_available_polygon(
   areaResource,
-  method = c("MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"),
+  method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
   contour,
   SRS_string = "EPSG:32601"
 )
