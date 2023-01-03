@@ -22,7 +22,8 @@ tar_option_set(
 )
 
 # tar_make_clustermq() configuration (okay to leave alone):
-options(clustermq.scheduler = "multiprocess")
+# options(clustermq.scheduler = "multiprocess") # recommended
+options(clustermq.scheduler = "multicore")
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -31,7 +32,7 @@ tar_source()
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
   # species = c("badger", "vulture", "king cobra")
-  species = c("badger")
+  species = c("badger", "vulture")
 )
 values_SimIndi <- tibble(
   # individual = 1
@@ -132,7 +133,8 @@ targetsList <- list(
                    subset_duration(
                      movementData = subset_frequency(movementData = simData$locations,
                                                      freqPreset = tf),
-                     daysDuration = td)), # FUNCTION subset_duration
+                     daysDuration = td),
+                   priority = 0.92), # FUNCTION subset_duration
         ## FREQUENCY MAP
         # tar_map(
         #   values = values_SampFrequency,
@@ -146,14 +148,16 @@ targetsList <- list(
                      build_available_area(movementData = sampDuraFreqData,
                                           method = areaMethod,
                                           SRS_string = "EPSG:32601",
-                                          dBBMMsettings = c(168, 48))), # FUNCTION build_available_area
+                                          dBBMMsettings = c(168, 48)),
+                     priority = 0.9), # FUNCTION build_available_area
           tar_map(
             values = values_MethodContour,
             tar_target(polygon,
                        build_available_polygon(areaResource = area,
                                                method = areaMethod,
                                                contour = areaContour,
-                                               SRS_string = "EPSG:32601")), # FUNCTION build_available_area
+                                               SRS_string = "EPSG:32601"),
+                       priority = 0.91), # FUNCTION build_available_area
             ## AREA-BASED METHODS MAP
             tar_map(
               values = values_MethodMethod,
@@ -204,7 +208,8 @@ resultsCompiled <- tar_combine(
   combinedResults,
   targetsList[[1]][grep("OUT", names(targetsList[[1]]))],
   # command = list(!!!.x)
-  command = rbind(!!!.x)
+  command = rbind(!!!.x),
+  priority = 0
 )
 list(targetsList, resultsCompiled)
 
@@ -214,10 +219,15 @@ list(targetsList, resultsCompiled)
 # preview one species
 # targets::tar_visnetwork(allow = contains("badger"))
 # targets::tar_visnetwork()
-# targets::tar_load("area_dBBMM_90_0.5_7_2_badger")
-# targets::tar_load("area_MCP_90_0.5_7_2_badger")
 # targets::tar_manifest()
 # targets::tar_make()
 # targets::tar_make_clustermq(workers = 12) # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives") # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 18)
+# targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives")
+# targets::tar_make_clustermq(workers = 20)
+# targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives")
+# targets::tar_make_clustermq(workers = 12, reporter = "summary", log_worker = TRUE)
+
 
 # endPointsAndNodes <- targets::tar_network(targets_only = TRUE)

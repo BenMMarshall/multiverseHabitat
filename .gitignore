@@ -3,9 +3,11 @@
 .RData
 .Ruserdata
 .Renviron
+*.log
 data/
 prelimMultiData/
 _targets/
 _targets/meta/
 _targets/meta/meta
 notebook/prereg/bcf examples/
+
