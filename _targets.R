@@ -31,8 +31,8 @@ tar_source()
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
-  # species = c("badger", "vulture", "king cobra")
-  species = c("badger", "vulture")
+  species = c("BADGER", "VULTURE", "KINGCOBRA")
+  # species = c("BADGER")
 )
 values_SimIndi <- tibble(
   # individual = 1
@@ -221,12 +221,12 @@ list(targetsList, resultsCompiled)
 # targets::tar_visnetwork()
 # targets::tar_manifest()
 # targets::tar_make()
-# targets::tar_make_clustermq(workers = 12) # watch out too many workers can hit ram limits
-# targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives") # watch out too many workers can hit ram limits
-# targets::tar_make_clustermq(workers = 18)
-# targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives")
-# targets::tar_make_clustermq(workers = 20)
-# targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives")
+# targets::tar_make_clustermq(workers = 12, log_worker = TRUE) # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE) # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives", log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 20, log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "summary", log_worker = TRUE)
 
 

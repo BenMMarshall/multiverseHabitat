@@ -5,35 +5,6 @@ targets::tar_load(combinedResults)
 # combResults <- combinedResults
 combinedResults <- multiverseHabitat::parse_combined_results(combinedResults)
 
-# combinedResults$branches <- rownames(combinedResults)
-#
-# combinedResults$analysis <- stringr::str_extract(combinedResults$branches, "wides|rsf|ssf")
-# combinedResults$species <- stringr::str_extract(combinedResults$branches, "badger|vulture|kingcobra")
-#
-# indi <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-#   x[length(x) -1]
-# })
-# td <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-#   x[length(x) -2]
-# })
-# tf <- sapply(stringr::str_split(combinedResults$branches, "_"), function(x){
-#   x[length(x) -3]
-# })
-#
-# combinedResults$indi <- indi
-# combinedResults$td <- td
-# combinedResults$tf <- tf
-#
-# combinedResults$upper <- combinedResults$Estimate + combinedResults$SE
-# combinedResults$lower <- combinedResults$Estimate - combinedResults$SE
-#
-# combinedResults$sigColour <-
-#   ifelse(combinedResults$upper > 0 & combinedResults$lower > 0, "preference",
-#          ifelse(combinedResults$upper < 0 & combinedResults$lower < 0, "avoidance",
-#                 "no effect"))
-#
-# combinedResults$sigColour
-
 library(ggplot2)
 library(dplyr)
 library(ggridges)
@@ -64,7 +35,7 @@ combinedResults %>%
 
 # remove the spcies and indi from the branches as they are acting as our repeats,
 # that way each branch (y axis) has species*indi points
-combinedResults$choices <- sub("badger|vulture|kingcobra", "", combinedResults$branches)
+combinedResults$choices <- sub("BADGER|VULTURE|KINGCOBRA", "", combinedResults$branches)
 combinedResults$choices <- sub(".{3}$", "", combinedResults$choices)
 
 combinedResults %>%
@@ -108,73 +79,82 @@ combinedResults %>%
 rsfResults <- combinedResults %>%
   filter(analysis == "rsf")
 
-areaMethod <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
-  x[length(x) -4]
-})
-areaContour <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
-  x[length(x) -5]
-})
-weighting <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
-  x[length(x) -6] # think it is weighting
-})
-availablePointsPer <- sapply(stringr::str_split(rsfResults$branches, "_"), function(x){
-  x[length(x) -7]
-})
-
-rsfResults$areaMethod <- areaMethod
-rsfResults$areaContour <- areaContour
-rsfResults$weighting <- weighting
-rsfResults$availablePointsPer <- availablePointsPer
-
 library(reshape2)
 library(patchwork)
 
+levelOrdering <- unique(c(sort(unique(rsfResults$td)),
+                          sort(unique(rsfResults$tf)),
+                          unique(rsfResults$area),
+                          sort(unique(rsfResults$contour)),
+                          sort(unique(rsfResults$availPointsPer)),
+                          sort(unique(rsfResults$weighting))))
+
 (splitSpecCurve <- rsfResults %>%
-    select(Estimate, indi, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
-    # select(Estimate, td,  tf, areaMethod, areaContour, availablePointsPer, weighting) %>%
-    melt(c("Estimate", "indi")) %>%
-    # melt("Estimate") %>%
+    select(Estimate, indi, species, td,  tf, area, contour, availPointsPer, weighting) %>%
+    melt(c("Estimate", "indi", "species")) %>%
     mutate(
       variable = case_when(
         variable == "td" ~ "Tracking Duration (days)",
-        variable == "tf" ~ "Tracking Frequency (points/hour)",
-        variable == "areaMethod" ~ "Available Area Method",
-        variable == "areaContour" ~ "Available Area Contour (%)",
-        variable == "availablePointsPer" ~ "Available Points Multipiler",
+        variable == "tf" ~ "Tracking Frequency (hours)",
+        variable == "area" ~ "Available Area Method",
+        variable == "contour" ~ "Available Area Contour (%)",
+        variable == "availPointsPer" ~ "Available Points Multipiler",
         variable == "weighting" ~ "Weighting of Used Points"
-      )
+      ),
+      indi = as.factor(indi),
+      species = as.factor(species),
+      value = factor(value, levels = levelOrdering)
     ) %>%
     ggplot() +
-    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+               linetype = 1) +
+    geom_point(aes(x = Estimate, y = value, colour = indi, shape = species),
+               position = position_jitter(width = 0, height = 0.2), alpha = 0.2) +
+    geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                linetype = 2) +
-    geom_point(aes(x = Estimate, y = value, colour = indi)) +
     facet_wrap(.~variable, ncol = 1, scales = "free_y", strip.position = "left") +
+    labs(y = "", x = "Estimate") +
     theme_bw() +
     theme(
       line = element_line(colour = palette["coreGrey"]),
       text = element_text(colour = palette["coreGrey"]),
       strip.background = element_blank(),
       strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-      strip.text.y.left = element_text(angle = 0, margin = margin(0,5,0,0)),
-      axis.text.y.left = element_text(margin = margin(0,-144,0,100)), # 2nd value needed to alligns with facet, 50 gives space left
+      strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+      axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
       axis.ticks.y.left = element_blank(),
+      axis.line.x = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
       panel.grid = element_blank())
 )
 
 (overallSpecCurve <- rsfResults %>%
     arrange(Estimate) %>%
-    mutate(index = row_number()) %>%
+    mutate(index = row_number(),
+           indi = as.factor(indi),
+           species = as.factor(species)) %>%
     ggplot() +
-    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.45, colour = "#403F41",
-               linetype = 2) +
-    geom_point(aes(x = Estimate, y = index, colour = indi))+
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+               linetype = 1) +
+    geom_point(aes(x = Estimate, y = index, colour = indi, shape = species),
+               size = 1)+
+    labs(y = "", x = "Estimate") +
     theme_bw() +
-    theme(
-      line = element_line(colour = palette["coreGrey"]),
-      text = element_text(colour = palette["coreGrey"]),
-      strip.background = element_blank(),
-      strip.text = element_text(face = 4, hjust = 0),
-      panel.grid = element_blank())
+      theme(
+        line = element_line(colour = palette["coreGrey"]),
+        text = element_text(colour = palette["coreGrey"]),
+        strip.background = element_blank(),
+        strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+        strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+        axis.text.y.left = element_blank(),
+        axis.ticks.y.left = element_blank(),
+        axis.line.x = element_line(),
+        strip.clip = "off",
+        panel.border = element_blank(),
+        panel.spacing = unit(18, "pt"),
+        panel.grid = element_blank())
 )
 
 overallSpecCurve / splitSpecCurve +
