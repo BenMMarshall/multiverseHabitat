@@ -15,25 +15,25 @@ parse_combined_results <- function(combResults){
   combResults$analysis <- stringr::str_extract(combResults$branches, "wides|rsf|ssf")
 
   # species
-  combResults$species <- stringr::str_extract(combResults$branches, "badger|vulture|kingcobra")
+  combResults$species <- stringr::str_extract(combResults$branches, "BADGER|VULTURE|KINGCOBRA")
 
   # individuals
   indi <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
     x[length(x) -1]
   })
-  combResults$indi <- indi
-
-  # tracking duration
-  td <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
-    x[length(x) -2]
-  })
-  combResults$td <- td
+  combResults$indi <- as.numeric(indi)
 
   # tracking frequency
   tf <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
+    x[length(x) -2]
+  })
+  combResults$tf <- as.numeric(tf)
+
+  # tracking duration
+  td <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
     x[length(x) -3]
   })
-  combResults$tf <- tf
+  combResults$td <- as.numeric(td)
 
   # area method
   combResults$area <- stringr::str_extract(combResults$branches, "MCP|KDEhref|AKDE|dBBMM")
@@ -55,7 +55,7 @@ parse_combined_results <- function(combResults){
   combResults$covarExtract <- ifelse(contour %in% c("start", "end"), contour, NA)
   # available points for wides and rsf
   availPointsPer <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
-    x[length(x) -6]
+    x[length(x) -7]
   })
   # adds NA for SSF
   combResults$availPointsPer <- as.numeric(availPointsPer)
@@ -64,7 +64,7 @@ parse_combined_results <- function(combResults){
   # weighting for RSF only, but will pull out wides with 1's but doesn't matter
   # as it wont be used in the model
   weighting <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
-    x[length(x) -7]
+    x[length(x) -6]
   })
   combResults$weighting <- as.numeric(weighting)
 
