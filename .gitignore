@@ -6,8 +6,11 @@
 *.log
 data/
 prelimMultiData/
-_targets/
-_targets/meta/
-_targets/meta/meta
+
+_targets/objects/*
+_targets/meta/*
+_targets/user/*
+!_targets/objects/combinedResults
+
 notebook/prereg/bcf examples/
 
