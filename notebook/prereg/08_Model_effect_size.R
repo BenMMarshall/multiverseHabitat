@@ -1,10 +1,4 @@
 
-#### Code from:
-### Lots of movement, little progress: A review of reptile home range literature
-## Matt Crane*, Inês Silva, Benjamin Michael Marshall, Colin Thomas Strine**
-# * mattecology@gmail.com **strine.conservation@gmail.com
-# bioRxiv Preprint DOI: https://doi.org/10.1101/2020.12.03.409292
-
 # library(stringr)
 library(dplyr)
 library(brms)
@@ -17,63 +11,128 @@ library(tidybayes)
 # library(scico)
 # library(ggtext)
 
+palette <- c("#AD6DED", "#7D26D4", "#4F0E99", "#E87D13", "#965A1D", "#302010", "#403F41")
+names(palette) <- c("KINGCOBRA", "VULTURE", "BADGER", "2", "1", "0", "coreGrey")
+
 targets::tar_load(combinedResults)
-combinedResults
+combinedResults <- multiverseHabitat::parse_combined_results(combinedResults)
+
+names(combinedResults)
+
+# convert tf to points/hour to help interpretation
+combinedResults$tf <- round(combinedResults$tf, digits = 2)
+
+rsfModelData <- combinedResults %>%
+  filter(analysis == "rsf") %>%
+  mutate(medEst = median(Estimate, na.rm = TRUE),
+         absDeltaEst = abs(Estimate - medEst)) %>%
+  mutate(tfScaled = (tf-mean(tf))/sd(tf),
+         tdScaled = (td-mean(td))/sd(td),
+         availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
+         # weightingScaled = (weighting-mean(weighting))/sd(weighting),
+         #### PLACEHOLDER WEIGHTING UNTIL MORE THAN 1 VARIATION COMPLETE
+         weightingScaled = weighting,
+         # contour = as.factor(contour)
+         contourScaled = (contour-mean(contour))/sd(contour))
+
+widesModelData <- combinedResults %>%
+  filter(analysis == "wides") %>%
+  mutate(medEst = median(Estimate, na.rm = TRUE),
+         absDeltaEst = abs(Estimate - medEst)) %>%
+  mutate(tfScaled = (tf-mean(tf))/sd(tf),
+         tdScaled = (td-mean(td))/sd(td),
+         availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
+         contourScaled = (contour-mean(contour))/sd(contour))
 
 # model formula
 # wides
-formWides <- bf(xxx ~ 1 + td + tf +
-                  areaMethod + areaContour + Method_ap +
+formWides <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+                  area + contourScaled + availPointsPerScaled +
                   (1|species/indi))
 # rsf
-formRSF <- bf(xxx ~ 1 + td + tf +
-                areaMethod + areaContour + Method_ap + Method_we +
+formRSF <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+                area + contourScaled + availPointsPerScaled + weightingScaled +
                 (1|species/indi))
 # ssf
-formSSF <- bf(xxx ~ 1 + td + tf +
-                MethodSSF_mf + MethodSSF_ce + MethodSSF_as +
-                (1|species/indi))
+# formSSF <- bf(xxx ~ 1 + td + tf +
+#                 MethodSSF_mf + MethodSSF_ce + MethodSSF_as +
+#                 (1|species/indi))
 # AKA (1|species) + (1|species:indi) for a nested group effect intercept
 
-get_prior(formSSF, data = combinedResults)
+get_prior(formRSF, data = rsfModelData)
+get_prior(formWides, data = widesModelData)
 
 # priors
-brmprior <- c(set_prior("cauchy(0.1, 3)", coef = "log10mass"),
-              set_prior("cauchy(0, 1)", class = "sd", group = "order"))
+brmpriorRSF <- c(
+  set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
+  set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
+  set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
+  set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "tfScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "weightingScaled")
+)
+brmpriorWides <- c(
+  set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
+  set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
+  set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
+  set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+  set_prior("cauchy(0.1, 3)", coef = "tfScaled")
+)
 
-# ggpubr::ggdensity(rcauchy(2000, location = 0.1, scale = 3))
+ggplot(data.frame("x" = rcauchy(2000, location = 0.1, scale = 1))) +
+  geom_density(aes(x = x)) +
+  coord_cartesian(xlim = c(-100, 100))
 
-moddata <- combinedResults
+rsfModOUT_dEst <- brm(formula = formRSF,
+                      data = rsfModelData,
+                      family = gaussian,
+                      prior = brmpriorRSF,
+                      warmup = 2000, iter = 5000, chains = 4,
+                      cores = 12,
+                      thin = 2,
+                      control = list(adapt_delta = 0.90,
+                                     max_treedepth = 15),
+                      seed = 1,
+                      save_pars = save_pars(all = TRUE),
+                      save_model = "./notebook/prereg/modelOutputs/absDeltaEstModel_rsf.txt",
+                      file = "./notebook/prereg/modelOutputs/absDeltaEstModel_rsf")
 
-brmfit <- brm(formula = brmform,
-              data = moddata,
-              family = gaussian,
-              prior = brmprior,
-              warmup = 2000, iter = 5000, chains = 4,
-              cores = 6,
-              thin = 2,
-              control = list(adapt_delta = 0.90,
-                             max_treedepth = 15),
-              seed = 1,
-              save_pars = save_pars(all = TRUE),
-              save_model = "./notebook/prereg/modelOutputs/effectSizeModel.txt",
-              file = "./notebook/prereg/modelOutputs/effectSizeModel")
+rsfModOUT_dEst
 
-brmfit
+widesModOUT_dEst <- brm(formula = formWides,
+                      data = widesModelData,
+                      family = gaussian,
+                      prior = brmpriorWides,
+                      warmup = 2000, iter = 5000, chains = 4,
+                      cores = 12,
+                      thin = 2,
+                      control = list(adapt_delta = 0.90,
+                                     max_treedepth = 15),
+                      seed = 1,
+                      save_pars = save_pars(all = TRUE),
+                      save_model = "./notebook/prereg/modelOutputs/absDeltaEstModel_wides.txt",
+                      file = "./notebook/prereg/modelOutputs/absDeltaEstModel_wides")
+
+widesModOUT_dEst
 
 # Review convergence ------------------------------------------------------
 
 ## check how many need reviewing
-varsToPlot <- get_variables(brmfit)[1:6]
+varsToPlot <- get_variables(rsfModOUT_dEst)[2:10]
+# varsToPlot <- get_variables(widesModOUT_dEst)[2:8]
 
 png(file = "./notebook/prereg/modelOutputs/Traceplot.png", res = 300, width = 210, height = 140,
     units = "mm")
-mcmc_trace(brmfit, pars = varsToPlot)
+mcmc_trace(rsfModOUT_dEst, pars = varsToPlot)
 dev.off()
 
 png(file = "./notebook/prereg/modelOutputs/ACFplot.png", res = 300, width = 210, height = 140,
     units = "mm")
-mcmc_acf(brmfit, pars = varsToPlot)
+mcmc_acf(rsfModOUT_dEst, pars = varsToPlot)
 dev.off()
 
 # review the divergent instances and check where they are in the parameter space
@@ -99,98 +158,157 @@ dev.off()
 
 # Model results -----------------------------------------------------------
 
-# get_variables(brmfit)
-#
-# intercept <- brmfit %>%
-#   spread_draws(b_Intercept) %>%
-#   median_hdi(.width = c(0.95))
-#
-# interbase <- intercept[1:3]
-# exp(interbase) / (1 + exp(interbase)) * 100
-# # 0.062% chance of being studied, low of 0.017 to high of 0.181%
-#
-# log10massEffect <- brmfit %>%
-#   spread_draws(b_log10mass) %>%
-#   median_hdi(.width = c(0.95))
-#
-# brmfit %>%
-#   spread_draws(r_order[condition,]) %>%
-#   median_hdi(.width = c(0.95))
-#
-# r2scores <- performance::r2_bayes(brmfit)
-#
-# brmfit
-#
-# fittedVals <- fitted(brmfit, nsamples = 100, probs = c(0.025, 0.0975))
-#
-# moddata %>%
-#   mutate(fitted = fittedVals[,1],
-#          plotloc = case_when(
-#            order == "Crocodylia" & studied == 0 ~ -0.1,
-#            order == "Crocodylia" & studied == 1 ~ 1.4,
-#            order == "Squamata (Serpentes)" & studied == 0 ~ -0.2,
-#            order == "Squamata (Serpentes)" & studied == 1 ~ 1.3,
-#            order == "Squamata (Sauria)" & studied == 0 ~ -0.3,
-#            order == "Squamata (Sauria)" & studied == 1 ~ 1.2,
-#            order == "Testudines" & studied == 0 ~ -0.4,
-#            order == "Testudines" & studied == 1 ~ 1.1)
-#   ) %>%
-#   mutate(order = case_when(
-#     order == "Squamata (Sauria)" ~ "Sauria",
-#     order == "Squamata (Serpentes)" ~ "Serpentes",
-#     TRUE ~ order)) %>%
-#   ggplot() +
-#   geom_hline(yintercept = c(0,1), linetype = 2, alpha = 0.25) +
-#   geom_line(aes(x = log10mass, y = fitted, colour = order)) +
-#   geom_point(aes(x = log10mass, y = plotloc, colour = order),
-#              position = position_jitter(seed = 1), alpha = 0.5,
-#              pch = 16) +
-#   geom_text(data = data.frame(
-#     label = c("Crocodylia", "Serpentes", "Sauria", "Testudines"),
-#     locy = c(1.4, 1.3, 1.2, 1.1, -0.1, -0.2, -0.3, -0.4),
-#     locx = rep(6.3, 8)),
-#     aes(x = locx, y = locy, label = label, colour = label),
-#     vjust = 0.5, hjust = 0, fontface = 2) +
-#   geom_text(data = data.frame(
-#     label = c("Not Studied", "Studied"),
-#     locy = c(-0.05, 1.05),
-#     locx = rep(-1.2, 2)),
-#     aes(x = locx, y = locy, label = label),
-#     vjust = 0.5, hjust = 0, fontface = 4) +
-#   annotate("richtext", x = -1.2, y = 0.9,
-#            label = paste0("<span style = 'font-size:9pt;'>Conditional <i>R<sup>2</sup></i>: <b>",
-#                           round(r2scores$R2_Bayes, digits = 3),
-#                           "</b><br>Population effect of mass: <b>",
-#                           round(log10massEffect$b_log10mass, digits = 3),
-#                           "</b><br></span><span style = 'font-size:7pt;'>(CrI 95%: ",
-#                           round(log10massEffect$.lower, digits = 2), "–",
-#                           round(log10massEffect$.upper, digits = 2), ")</span>"),
-#            hjust = 0, vjust = 1, lineheight = 0.95,
-#            label.color = NA,
-#            label.padding = grid::unit(rep(0, 4), "pt")) +
-#   scale_y_continuous(breaks = seq(0,1,0.25),
-#                      limits = c(-0.45, 1.45)) +
-#   scale_x_continuous(limits = c(-1.2, 6.3), expand = expansion(add = c(0.2, 0.2))) +
-#   coord_cartesian(clip = "off") +
-#   labs(y = "P(studied)", x = "Mass (log10 g)",
-#        colour = "Clade") +
-#   scale_colour_manual(values = scico(n = 4, palette = "roma", direction = 1)[c(1,3,2,4)]) +
-#   theme_bw() +
-#   theme(axis.title = element_text(face = 2),
-#         axis.title.x = element_text(hjust = 1),
-#         axis.line.x = element_line(),
-#         axis.text.x = element_text(),
-#         axis.title.y = element_text(angle = 0, hjust = 0.5, vjust = 0.5),
-#         legend.title = element_text(face = 2),
-#         legend.position = "none",
-#         plot.margin = unit(c(1,4,0.5,2), "lines"),
-#         panel.spacing.x = unit(0,"line"),
-#         panel.grid = element_blank(),
-#         panel.border = element_blank(),
-#         axis.line = element_line())
-#
-# ggsave("./Figures/Mass effect on study.png", width = 180,
-#        height = 100,
-#        dpi = 300, units = "mm")
-# ggsave("./Figures/Mass effect on study.pdf", width = 180,
-#        height = 100, units = "mm")
+tdScaledEffect <- rsfModOUT_dEst %>%
+  spread_draws(b_tdScaled) %>%
+  median_hdci(.width = c(0.95))
+
+rsfModOUT_dEst %>%
+  spread_draws(r_species[condition,]) %>%
+  median_hdi(.width = c(0.95))
+
+rsfModOUT_dEst %>%
+  spread_draws(`r_species:indi`[condition,]) %>%
+  median_hdi(.width = c(0.95))
+
+r2scores <- performance::r2_bayes(rsfModOUT_dEst)
+
+varsToPlot
+
+rsfModOUT_dEst %>%
+  spread_draws(`b_.*`, regex = TRUE) %>%
+  select(-.chain, -.iteration, -.draw) %>%
+  melt() %>%
+  ### WEIGHTING FILTERED OUT UNTIL VARIATION
+  filter(!variable %in% c("b_weightingScaled", "b_Intercept")) %>%
+  mutate(
+    variable = case_when(
+      variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+      variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+      variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
+      variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
+      variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
+      variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+      variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
+      variable == "b_weightingScaled" ~ "\u03B2 Weighting of Used Points"
+    )
+  ) %>%
+  ggplot(aes(x = value, y = variable)) +
+  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+             linetype = 1) +
+  stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
+            alpha = 1) +
+  stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                     point_interval = median_hdci, .width = c(.66, .95),
+                     stroke = 1.25, colour = palette[c("coreGrey")]) +
+  stat_summary(aes(colour = after_stat(x) > 0),
+               position = position_dodge(width = 0.2, preserve = "single"),
+               fun = median, size = 0.25) +
+  scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+  scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+  annotate("segment", x = 0.01, xend = 0.5, y = -0.1, yend = -0.1,
+           linewidth = 1.25,
+           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+           colour = palette["2"]) +
+  annotate("text", x = 0.5, y = -0.1, label = "Greater deviation\nfrom median preference estimate",
+           colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
+  annotate("segment", x = -0.01, xend = -0.5, y = -0.1, yend = -0.1,
+           linewidth = 1.25,
+           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+           colour = palette["BADGER"]) +
+  annotate("text", x = -0.5, y = -0.1, label = "Closer to\nmedian preference estimate",
+           colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
+  coord_cartesian(clip = "off", ylim = c(1, NA)) +
+  labs(x = "Estimated Beta", y = "") +
+  theme_bw() +
+  theme(
+    line = element_line(colour = palette["coreGrey"]),
+    text = element_text(colour = palette["coreGrey"]),
+    strip.background = element_blank(),
+    strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+    # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+    # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+    axis.title.x = element_text(margin = margin(60,0,0,0)),
+    axis.ticks.y.left = element_blank(),
+    axis.line.x = element_line(),
+    strip.clip = "off",
+    panel.border = element_blank(),
+    panel.spacing = unit(18, "pt"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.position = "none")
+
+
+# wides results -----------------------------------------------------------
+
+r2scores <- performance::r2_bayes(widesModOUT_dEst)
+
+varsToPlot
+
+widesModOUT_dEst %>%
+  spread_draws(`b_.*`, regex = TRUE) %>%
+  select(-.chain, -.iteration, -.draw) %>%
+  melt() %>%
+  ### WEIGHTING FILTERED OUT UNTIL VARIATION
+  filter(!variable %in% c("b_weightingScaled", "b_Intercept")) %>%
+  mutate(
+    variable = case_when(
+      variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+      variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+      variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
+      variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
+      variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
+      variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+      variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
+      variable == "b_weightingScaled" ~ "\u03B2 Weighting of Used Points"
+    )
+  ) %>%
+  ggplot(aes(x = value, y = variable)) +
+  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+             linetype = 1) +
+  stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
+            alpha = 1) +
+  stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                     point_interval = median_hdci, .width = c(.66, .95),
+                     stroke = 1.25, colour = palette[c("coreGrey")]) +
+  stat_summary(aes(colour = after_stat(x) > 0),
+               position = position_dodge(width = 0.2, preserve = "single"),
+               fun = median, size = 0.25) +
+  scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+  scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+  annotate("segment",
+           x = 0.01, xend = 0.05, y = -0.1, yend = -0.1,
+           linewidth = 1.25,
+           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+           colour = palette["2"]) +
+  annotate("text",
+           x = 0.05, y = -0.1,
+           label = "Greater deviation\nfrom median preference estimate",
+           colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
+  annotate("segment",
+           x = -0.01, xend = -0.05, y = -0.1, yend = -0.1,
+           linewidth = 1.25,
+           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+           colour = palette["BADGER"]) +
+  annotate("text",
+           x = -0.05, y = -0.1,
+           label = "Closer to\nmedian preference estimate",
+           colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
+  coord_cartesian(clip = "off", ylim = c(1, NA)) +
+  labs(x = "Estimated Beta", y = "") +
+  theme_bw() +
+  theme(
+    line = element_line(colour = palette["coreGrey"]),
+    text = element_text(colour = palette["coreGrey"]),
+    strip.background = element_blank(),
+    strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+    # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+    # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+    axis.title.x = element_text(margin = margin(60,0,0,0)),
+    axis.ticks.y.left = element_blank(),
+    axis.line.x = element_line(),
+    strip.clip = "off",
+    panel.border = element_blank(),
+    panel.spacing = unit(18, "pt"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.position = "none")

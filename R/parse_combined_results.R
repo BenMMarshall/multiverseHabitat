@@ -27,7 +27,7 @@ parse_combined_results <- function(combResults){
   tf <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
     x[length(x) -2]
   })
-  combResults$tf <- as.numeric(tf)
+  combResults$tf <- 1/as.numeric(tf)
 
   # tracking duration
   td <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
