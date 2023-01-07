@@ -138,12 +138,29 @@ simulate_landscape <- function(
   classLandscape[classLandscape[] <= 0.6 & classLandscape[] > 0.3] <- 1
   classLandscape[classLandscape[] <= 0.3] <- 0
 
+
   classLandscapeList <- list(
     "classified" = matrix(data = raster::getValues(classLandscape),
                           nrow = row,
                           ncol = col))
 
   landscapeLayersList$classified <- classLandscapeList$classified
+
+  classRaster <- raster::raster(nrows = nrow(landscapeLayersList$classified),
+                                ncols = ncol(landscapeLayersList$classified),
+                                xmn = 0, xmx = nrow(landscapeLayersList$classified),
+                                ymn = 0, ymx = ncol(landscapeLayersList$classified),
+                                crs = CRS(SRS_string = "EPSG:32601"),
+                                # need to transpose cos matrix and raster deal with rows and col differently
+                                vals = t(landscapeLayersList$classified))
+  # and flip to full match the raster with the matrix used in the sims
+  classRaster <- raster::flip(classRaster)
+
+  classRasterList <- list(
+    "classRaster" = raster::flip(classRaster))
+
+  landscapeLayersList$classRaster <- classRasterList$classRaster
+
   return(landscapeLayersList)
 
 }

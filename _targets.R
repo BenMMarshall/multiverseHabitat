@@ -31,12 +31,12 @@ tar_source()
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
-  species = c("BADGER", "VULTURE", "KINGCOBRA")
-  # species = c("BADGER")
+  # species = c("BADGER", "VULTURE", "KINGCOBRA")
+  species = c("BADGER")
 )
 values_SimIndi <- tibble(
-  # individual = 1
-  individual = 1:4
+  individual = 1
+  # individual = 1:4
   # individual = seq_len(30)
 )
 
@@ -50,12 +50,12 @@ values_SimIndi <- tibble(
 #   tf = c(0.5, 1, 2, 6)
 # )
 values_Sampling <- tidyr::expand_grid(
-  td = c(7, 15, 30, 60),
-  tf = c(0.5, 1, 2, 6)
+  # td = c(7, 15, 30, 60),
+  # tf = c(0.5, 1, 2, 6)
   # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0),
   # td = c(7, 15, 30, 60, 120, 240, 365)
-  # td = c(7, 15),
-  # tf = c(0.5, 1)
+  td = c(7, 15),
+  tf = c(0.5, 1)
 )
 
 # values_MethodArea <- tidyr::expand_grid(
@@ -65,12 +65,12 @@ values_Sampling <- tidyr::expand_grid(
 #   areaContour = c(90, 95, 99)
 # )
 values_MethodArea <- tibble(
-  # areaMethod = c("MCP", "dBBMM"),
-  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
+  areaMethod = c("MCP", "dBBMM"),
+  # areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
 )
 values_MethodContour <- tidyr::expand_grid(
-  # areaContour = c(90)
-  areaContour = c(90, 95, 99)
+  areaContour = c(90)
+  # areaContour = c(90, 95, 99)
 )
 
 values_MethodSSF <- tidyr::expand_grid(
@@ -85,6 +85,7 @@ values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of in
   Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
   # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
+  Method_sp = c("rd", "st"),
   # Method_ap = 100,
   # Method_we = exp(seq(log(100), log(10000000), length.out = 3))
   Method_we = 1
@@ -164,6 +165,7 @@ targetsList <- list(
               # names = "tNames", # Select columns from `values` for target names.
               tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
                                                   landscape = landscape,
+                                                  spSamp = Method_sp,
                                                   availableArea = polygon,
                                                   availablePoints = Method_ap,
                                                   weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
@@ -221,8 +223,9 @@ list(targetsList, resultsCompiled)
 # targets::tar_visnetwork()
 # targets::tar_manifest()
 # targets::tar_make()
-# targets::tar_make_clustermq(workers = 12, log_worker = TRUE) # watch out too many workers can hit ram limits
-# targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE) # watch out too many workers can hit ram limits
+# watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 20, log_worker = TRUE)
