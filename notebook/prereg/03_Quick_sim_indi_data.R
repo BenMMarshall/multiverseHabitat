@@ -1,5 +1,5 @@
 testLand <- multiverseHabitat::simulate_landscape(species = "VULTURE", seed = 2022)
-
+testLand$classRaster
 testData <- multiverseHabitat::simulate_individual(
   individualNum = 2,
   species = "VULTURE",
@@ -31,20 +31,23 @@ sampDuraData <- multiverseHabitat::subset_duration(movementData = testData$locat
 sampDuraFreqData <- multiverseHabitat::subset_frequency(movementData = sampDuraData,
                                                         freqPreset = 0.5)
 
+multiverseHabitat::method_indi_wides(movementData = sampDuraFreqData,
+                                   landscape = testLand,
+                                   availableArea,
+                                   availablePointsPer)
+
 # akdeOUT <- multiverseHabitat::build_available_area(movementData = sampDuraFreqData,
 #                                         "AKDE", 95)
-# methOUT_method_indi_rsf_4_1_90_AKDE_2_30_3_badger
-targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_6_7_2_badger")
-targets::tar_load("polygon_99_KDE_href_6_7_2_badger")
+# methOUT_method_indi_rsf_1_st_1_90_MCP_7_0.5_1_BADGER
+targets::tar_load("landscape_BADGER")
+targets::tar_load("sampDuraFreqData_7_0.5_1_BADGER")
+targets::tar_load("polygon_90_MCP_7_0.5_1_BADGER")
 
-# methEstimate_method_indi_wides_2_1_95_dBBMM_0.5_30_4_badger
-# methOUT_method_indi_wides_2_1_95_dBBMM_0.5_30_4_badger
-# Last error: 'names' attribute [2] must be the same length as the vector [1]
-landscape <- landscape_badger
-movementData <- sampDuraFreqData_6_7_2_badger
-availableArea <- polygon_99_KDE_href_6_7_2_badger
-availablePointsPer <- 4
+landscape <- landscape_BADGER
+movementData <- sampDuraFreqData_7_0.5_1_BADGER
+availableArea <- polygon_90_MCP_7_0.5_1_BADGER
+availablePointsPer <- 1
+spSamp <- "st"
 weighting <- 1
 
 sp::plot(availableArea)
@@ -52,7 +55,8 @@ sp::plot(availableArea)
 # wides ---------------------------------------------------------------
 multiverseHabitat::method_indi_wides(
   movementData,
-  landscape_badger,
+  landscape_BADGER,
+  spSamp,
   availableArea,
   availablePointsPer
 )
@@ -60,29 +64,29 @@ multiverseHabitat::method_indi_wides(
 # generate points based on the availableArea and the number of points
 ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
 suppressWarnings({
-  availPoints <- sp::spsample(x = availableArea,
+  availPoints <- sp::spsample(availableArea,
                               n = nrow(movementData) * availablePointsPer,
-                              type = "random")
+                              type = ifelse(spSamp == "rd", "random", "stratified"))
 })
 
-classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                              ncols = ncol(landscape$classified),
-                              xmn = 0, xmx = nrow(landscape$classified),
-                              ymn = 0, ymx = ncol(landscape$classified),
-                              crs = CRS(SRS_string = "EPSG:32601"),
-                              # need to transpose cos matrix and raster deal with rows and col differently
-                              vals = t(landscape$classified))
-# and flip to full match the raster with the matrix used in the sims
-classRaster <- raster::flip(classRaster)
+# classRaster <- raster::raster(nrows = nrow(landscape$classified),
+#                               ncols = ncol(landscape$classified),
+#                               xmn = 0, xmx = nrow(landscape$classified),
+#                               ymn = 0, ymx = ncol(landscape$classified),
+#                               crs = CRS(SRS_string = "EPSG:32601"),
+#                               # need to transpose cos matrix and raster deal with rows and col differently
+#                               vals = t(landscape$classified))
+# # and flip to full match the raster with the matrix used in the sims
+# classRaster <- raster::flip(classRaster)
 
 # extract the habitat types each point is located within
-availValues <- raster::extract(classRaster, availPoints)
+availValues <- raster::extract(landscape_BADGER$classRaster, availPoints)
 
 availValues_DF <- data.frame(rbind(table(availValues)))
 names(availValues_DF) <- sub("X", "c", names(availValues_DF))
 
 suppressWarnings({
-  usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+  usedValues <- raster::extract(landscape_BADGER$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                                sp::CRS(SRS_string = "EPSG:32601")))
 })
 usedValues_DF <- data.frame(rbind(table(usedValues)))
@@ -123,49 +127,43 @@ if(class(wiOUT)[1] == "try-error"){
 
 # rsf ---------------------------------------------------------------------
 
-rsfOUT <- method_indi_rsf(sampDuraFreqData_6_7_2_badger,
-                          landscape_badger,
-                          polygon_99_KDE_href_6_7_2_badger,
-                          availablePointsPer = availablePointsPer,
-                          weighting = weighting)
+rsfOUT <- multiverseHabitat::method_indi_rsf(movementData,
+                                             landscape,
+                                             spSamp,
+                                             availableArea,
+                                             availablePointsPer = availablePointsPer,
+                                             weighting = weighting)
 
-# rsfDF <- as.data.frame(summary(rsfOUT)$coef)
-# method <- rep("rsf", nrow(rsfDF))
-# rsfDF <- cbind(rsfDF, method)
-#
-# rsfDF[,"method"][1] == "rsf"
-# class(rsfDF)
+suppressWarnings({
+  availPoints <- sp::spsample(availableArea,
+                              n = nrow(movementData) * availablePointsPer,
+                              type = ifelse(spSamp == "rd", "random", "stratified"))
+})
 
-extract_estimate(rsfDF)
-
-availPoints <- sp::spsample(availableArea, n = 10, type = "random")
-plot(availPoints)
-classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                      ncols = ncol(landscape$classified),
-                      xmn = 0, xmx = nrow(landscape$classified),
-                      ymn = 0, ymx = ncol(landscape$classified),
-                      crs = CRS(SRS_string = "EPSG:32601"),
-                      # need to transpose cos matrix and raster deal with rows and col differently
-                      vals = t(landscape$classified))
-# and flip to full match the raster with the matrix used in the sims
-classRaster <- raster::flip(classRaster)
-
-availValues <- raster::extract(classRaster, availPoints)
+# extract the habitat types each point is located within
+availValues <- raster::extract(landscape$classRaster, availPoints)
 
 availValues_DF <- as.data.frame(availPoints@coords)
 availValues_DF$values <- as.factor(availValues)
+# case_ == false cos not used
 availValues_DF$case_ <- FALSE
-availValues_DF$weights <- 1
+# assign the weighting
+availValues_DF$weights <- weighting
+names(availValues_DF)[1:2] <- c("x", "y")
 
-usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
-                                                             sp::CRS(SRS_string = "EPSG:32601")))
+suppressWarnings({
+  usedValues <- raster::extract(landscape$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                                         sp::CRS(SRS_string = "EPSG:32601")))
+})
 movementData$values <- as.factor(usedValues)
 modelData <- movementData[,c("x", "y", "values")]
 # used gets case_ == TRUE, and weights == 1
 modelData$case_ <- TRUE
 modelData$weights <- 1
 
+names(modelData); names(availValues_DF)
 modelData <- rbind(modelData, availValues_DF)
+modelData$values <- paste0("c", modelData$values)
 
 # fit the model using base R glm()
 rsfOUT <- glm(case_ ~ values,
@@ -173,17 +171,23 @@ rsfOUT <- glm(case_ ~ values,
               data = modelData,
               weights = weights)
 
+rsfDF <- as.data.frame(summary(rsfOUT)$coef)
+method <- rep("rsf", nrow(rsfDF))
+rsfDF <- cbind(rsfDF, method)
+
 
 # ssf testing -------------------------------------------------------------
 
+# ssfOUT_mf.is_end_5_15_1_1_BADGER
+
 targets::tar_load("landscape_badger")
-targets::tar_load("sampDuraFreqData_1_15_4_badger")
+targets::tar_load("sampDuraFreqData_15_1_1_BADGER")
 landscape <- landscape_badger
-movementData <- sampDuraFreqData_1_15_4_badger
-availableSteps <- 10
+movementData <- sampDuraFreqData_15_1_1_BADGER
+availableSteps <- 5
 covExtract <- "end"
 
-modout <- multiverseHabitat::method_indi_ssf(movementData = sampDuraFreqData_6_7_2_badger,
+modout <- multiverseHabitat::method_indi_ssf(movementData = sampDuraFreqData_15_1_1_BADGER,
                                              landscape = landscape_badger,
                                              methodForm = "mf.ss",
                                              covExtract = "end",

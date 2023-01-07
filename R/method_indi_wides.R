@@ -4,6 +4,7 @@
 #' @description A
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param landscape
+#' @param spSamp c("rd", "st")
 #' @param availableArea
 #' @param availablePointsPer
 #' @return a
@@ -18,6 +19,7 @@ method_indi_wides <- function(
   # in
   #### designType, # design type not needed cos typeII is more pop-level analysis?
   # could be swapped for random/systematic point selection
+  spSamp,
   availableArea,
   availablePointsPer,
   # ... is needed so this function can work alongside RSF without throwing
@@ -31,29 +33,19 @@ method_indi_wides <- function(
   # generate points based on the availableArea and the number of points
   ### POSSIBLE NEW NODE, RANDOM VERSUS SYSTEMATIC???
   suppressWarnings({
-    availPoints <- sp::spsample(x = availableArea,
+    availPoints <- sp::spsample(availableArea,
                                 n = nrow(movementData) * availablePointsPer,
-                                type = "random")
+                                type = ifelse(spSamp == "rd", "random", "stratified"))
   })
 
-  classRaster <- raster::raster(nrows = nrow(landscape$classified),
-                                ncols = ncol(landscape$classified),
-                                xmn = 0, xmx = nrow(landscape$classified),
-                                ymn = 0, ymx = ncol(landscape$classified),
-                                crs = CRS(SRS_string = "EPSG:32601"),
-                                # need to transpose cos matrix and raster deal with rows and col differently
-                                vals = t(landscape$classified))
-  # and flip to full match the raster with the matrix used in the sims
-  classRaster <- raster::flip(classRaster)
-
   # extract the habitat types each point is located within
-  availValues <- raster::extract(classRaster, availPoints)
+  availValues <- raster::extract(landscape$classRaster, availPoints)
 
   availValues_DF <- data.frame(rbind(table(availValues)))
   names(availValues_DF) <- sub("X", "c", names(availValues_DF))
 
   suppressWarnings({
-    usedValues <- raster::extract(classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+    usedValues <- raster::extract(landscape$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                                  sp::CRS(SRS_string = "EPSG:32601")))
   })
   usedValues_DF <- data.frame(rbind(table(usedValues)))
