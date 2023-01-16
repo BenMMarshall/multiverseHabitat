@@ -19,7 +19,7 @@ combinedResults <- multiverseHabitat::parse_combined_results(combinedResults)
 
 names(combinedResults)
 
-# convert tf to points/hour to help interpretation
+# parse combined results converts tf to points/hour to help interpretation
 combinedResults$tf <- round(combinedResults$tf, digits = 2)
 
 rsfModelData <- combinedResults %>%
