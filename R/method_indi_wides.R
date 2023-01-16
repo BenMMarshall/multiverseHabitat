@@ -54,6 +54,8 @@ method_indi_wides <- function(
   aClass <- names(availValues_DF)
   uClass <- names(usedValues_DF)
 
+  print(6)
+
   if(length(aClass) > length(uClass)){
 
     toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(aClass[!aClass %in% uClass])))
@@ -63,11 +65,11 @@ method_indi_wides <- function(
   } else if(length(uClass) > length(aClass)){
 
     toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(uClass[!uClass %in% aClass])))
-    toAdd <- data.frame(0)
     names(toAdd) <- uClass[!uClass %in% aClass]
     availValues_DF <- cbind(availValues_DF, toAdd)
 
   }
+
 
   usedValues_DF <- usedValues_DF[,sort(names(usedValues_DF))]
   availValues_DF <- availValues_DF[,sort(names(availValues_DF))]

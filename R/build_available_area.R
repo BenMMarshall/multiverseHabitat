@@ -5,7 +5,6 @@
 #' @param movementData must have a x and y column for locations, and a datetime
 #'   column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param method "MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"
-#' @param contour Numeric, > 0 and < 100. Can be a vector.
 #' @param SRS_string = "EPSG:32601"
 #' @param dBBMMsettings time duration of window and margin in hours, function
 #'   translate duration to datapoints

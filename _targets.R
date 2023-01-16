@@ -31,12 +31,12 @@ tar_source()
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
-  species = c("BADGER", "VULTURE", "KINGCOBRA")
-  # species = c("BADGER")
+  # species = c("BADGER", "VULTURE", "KINGCOBRA")
+  species = c("BADGER")
 )
 values_SimIndi <- tibble(
-  # individual = 1
-  individual = 1:4
+  individual = 1
+  # individual = 1:4
   # individual = seq_len(30)
 )
 
@@ -49,31 +49,10 @@ values_Sampling <- tidyr::expand_grid(
   # tf = c(0.5, 1)
 )
 
-# values_MethodArea <- tidyr::expand_grid(
-#   areaMethod = c("MCP", "dBBMM"),
-#   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
-#   # areaContour = c(90)
-#   areaContour = c(90, 95, 99)
-# )
-values_MethodArea <- tibble(
-  # areaMethod = c("MCP", "dBBMM"),
-  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
-)
-values_MethodContour <- tidyr::expand_grid(
-  # areaContour = c(90)
-  areaContour = c(90, 95, 99)
-)
-
-values_MethodSSF <- tidyr::expand_grid(
-  MethodSSF_mf = c("mf.is", "mf.ss"),
-  # MethodSSF_ce = c("start", "end"),
-  MethodSSF_ce = c("end"),
-  # MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
-  MethodSSF_as = c(5, 50)
-)
-
-values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of input settings.
-  Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
+optionsList_area <- list(
+  Method_method = c("wides", "rsf"),
+  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
+  areaContour = c(90, 95, 99),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
   # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
   Method_sp = c("rd", "st"),
@@ -81,11 +60,14 @@ values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of in
   Method_we = exp(seq(log(1), log(10000000), length.out = 3))
   # Method_we = 1
 )
-# trim out the wieghting variation for when it is wides as that doesn't apply
-values_MethodMethod <- values_MethodMethod[
-  values_MethodMethod$Method_function == "method_indi_rsf" |
-    (values_MethodMethod$Method_function == "method_indi_wides" &
-       values_MethodMethod$Method_we == 1),]
+
+optionsList_sff <- list(
+  Method_method = c("ssf"),
+  MethodSSF_mf = c("mf.is", "mf.ss"),
+  MethodSSF_sd = c("gamma", "exp"),
+  MethodSSF_td = c("vonmises", "unif"),
+  MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
+)
 
 values_MethodCTM <- tidyr::expand_grid(
   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
@@ -119,7 +101,7 @@ targetsList <- list(
         seed = 2022),
         priority = 0.93), # FUNCTION simulate_individual
 
-      ## DURATION MAP
+      ## DURATION + FREQUENCY MAP
       tar_map(
         values = values_Sampling,
         tar_target(sampDuraFreqData,
@@ -127,91 +109,50 @@ targetsList <- list(
                      movementData = subset_frequency(movementData = simData$locations,
                                                      freqPreset = tf),
                      daysDuration = td),
-                   priority = 0.92), # FUNCTION subset_duration
-        ## FREQUENCY MAP
-        # tar_map(
-        #   values = values_SampFrequency,
-        #   tar_target(sampDuraFreqData,
-        #              subset_frequency(movementData = sampDuraData,
-        #                               freqPreset = tf)), # FUNCTION subset_frequency
-        ## AREA + CONTOUR MAP
-        tar_map(
-          values = values_MethodArea,
-          tar_target(area,
-                     build_available_area(movementData = sampDuraFreqData,
-                                          method = areaMethod,
-                                          SRS_string = "EPSG:32601",
-                                          dBBMMsettings = c(168, 48)),
-                     priority = 0.9), # FUNCTION build_available_area
-          tar_map(
-            values = values_MethodContour,
-            tar_target(polygon,
-                       build_available_polygon(areaResource = area,
-                                               method = areaMethod,
-                                               contour = areaContour,
-                                               SRS_string = "EPSG:32601"),
-                       priority = 0.91), # FUNCTION build_available_area
-            ## AREA-BASED METHODS MAP
-            tar_map(
-              values = values_MethodMethod,
-              # names = "tNames", # Select columns from `values` for target names.
-              tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
-                                                  landscape = landscape,
-                                                  spSamp = Method_sp,
-                                                  availableArea = polygon,
-                                                  availablePoints = Method_ap,
-                                                  weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
-              # tar_target(methEstimate, extract_estimate(methOUT))
-
-              # next level goes here using tar_map() again
-            ) # area methods map
-          ) # contour map
-        ), # area creation map
-        ## SSF MAP
-        tar_map(
-          values = values_MethodSSF,
-          tar_target(ssfOUT, method_indi_ssf(movementData = sampDuraFreqData,
-                                             landscape = landscape,
-                                             methodForm = MethodSSF_mf,
-                                             covExtract = MethodSSF_ce,
-                                             availableSteps = MethodSSF_as)) # FUNCTION method_ssf
-          # tar_target(ssfEstimate, extract_estimate(ssfOUT))
-        ) # ssf map
-        # ## CTMC MAP
-        # tar_map(
-        #   values = values_MethodCTM,
-        #   tar_target(ctmcOUT, paste0(sampDuraFreqData, "_-_ctm1_", Methodctm_ks,
-        #                           Methodctm_it, Methodctm_pm,
-        #                           Methodctm_im, Methodctm_di))
-        # ) # ctmc map
-        # ) # frequency map
+                   priority = 0.92),
+        ## AREA-BASED METHODS
+        tar_target(areaMethodsOUT,
+                   wrapper_indi_area(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_area
+                   ),
+                   priority = 0.9),
+        ## SSF
+        tar_target(ssfOUT,
+                   wrapper_indi_ssf(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_sff
+                   ),
+                   priority = 0.9)
       ) # duration map
     ) # individual map
   ) # species map
-)
+) # list
 
-# tar_combine(
-#   name = resultsList,
-#   methOUT,
-#   values_MethodSSF,
-#   command = list(!!!.x)
-# )
-
-# targetsList[[1]][grep("OUT", names(targetsList[[1]]))]
-resultsCompiled <- tar_combine(
-  combinedResults,
-  targetsList[[1]][grep("OUT", names(targetsList[[1]]))],
-  # command = list(!!!.x)
+areaCompiled <- tar_combine(
+  areaResults,
+  targetsList[[1]][grep("areaMethodsOUT", names(targetsList[[1]]))],
+  # command = list(!!!.x),
   command = rbind(!!!.x),
   priority = 0
 )
-list(targetsList, resultsCompiled)
+ssfCompiled <- tar_combine(
+  ssfResults,
+  targetsList[[1]][grep("ssfOUT", names(targetsList[[1]]))],
+  # command = list(!!!.x),
+  command = rbind(!!!.x),
+  priority = 0
+)
+list(targetsList, areaCompiled, ssfCompiled)
 
 # Launch the app in a background process.
 # tar_watch(seconds = 60, outdated = FALSE, targets_only = TRUE)
 
 # preview one species
-# targets::tar_visnetwork(allow = contains("badger"))
+# targets::tar_visnetwork(allow = contains("BADGER"))
+# targets::tar_visnetwork(allow = contains("7_6_3"))
 # targets::tar_visnetwork()
 # targets::tar_manifest()
 # targets::tar_make()
