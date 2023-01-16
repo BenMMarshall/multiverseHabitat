@@ -27,6 +27,7 @@ parse_combined_results <- function(combResults){
   tf <- sapply(stringr::str_split(combResults$branches, "_"), function(x){
     x[length(x) -2]
   })
+  # convert tf to points/hour to help interpretation
   combResults$tf <- 1/as.numeric(tf)
 
   # tracking duration

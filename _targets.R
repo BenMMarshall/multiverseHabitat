@@ -31,31 +31,22 @@ tar_source()
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
-  # species = c("BADGER", "VULTURE", "KINGCOBRA")
-  species = c("BADGER")
+  species = c("BADGER", "VULTURE", "KINGCOBRA")
+  # species = c("BADGER")
 )
 values_SimIndi <- tibble(
-  individual = 1
-  # individual = 1:4
+  # individual = 1
+  individual = 1:4
   # individual = seq_len(30)
 )
 
-# values_SampDuration <- tibble(
-#   # td = c(7)
-#   td = c(7, 15, 30, 60)
-#   # td = c(7, 15, 30, 60, 120, 240, 365)
-# )
-# values_SampFrequency <- tibble(
-#   # tf = c(0.5)
-#   tf = c(0.5, 1, 2, 6)
-# )
 values_Sampling <- tidyr::expand_grid(
-  # td = c(7, 15, 30, 60),
-  # tf = c(0.5, 1, 2, 6)
+  td = c(7, 15, 30, 60),
+  tf = c(0.5, 1, 2, 6)
   # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0),
   # td = c(7, 15, 30, 60, 120, 240, 365)
-  td = c(7, 15),
-  tf = c(0.5, 1)
+  # td = c(7, 15),
+  # tf = c(0.5, 1)
 )
 
 # values_MethodArea <- tidyr::expand_grid(
@@ -65,12 +56,12 @@ values_Sampling <- tidyr::expand_grid(
 #   areaContour = c(90, 95, 99)
 # )
 values_MethodArea <- tibble(
-  areaMethod = c("MCP", "dBBMM"),
-  # areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
+  # areaMethod = c("MCP", "dBBMM"),
+  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
 )
 values_MethodContour <- tidyr::expand_grid(
-  areaContour = c(90)
-  # areaContour = c(90, 95, 99)
+  # areaContour = c(90)
+  areaContour = c(90, 95, 99)
 )
 
 values_MethodSSF <- tidyr::expand_grid(
@@ -87,8 +78,8 @@ values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of in
   # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
   Method_sp = c("rd", "st"),
   # Method_ap = 100,
-  # Method_we = exp(seq(log(100), log(10000000), length.out = 3))
-  Method_we = 1
+  Method_we = exp(seq(log(1), log(10000000), length.out = 3))
+  # Method_we = 1
 )
 # trim out the wieghting variation for when it is wides as that doesn't apply
 values_MethodMethod <- values_MethodMethod[
@@ -125,7 +116,8 @@ targetsList <- list(
         desOptions = 10,
         options = 12,
         landscape,
-        seed = 2022)), # FUNCTION simulate_individual
+        seed = 2022),
+        priority = 0.93), # FUNCTION simulate_individual
 
       ## DURATION MAP
       tar_map(
@@ -224,6 +216,7 @@ list(targetsList, resultsCompiled)
 # targets::tar_manifest()
 # targets::tar_make()
 # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
