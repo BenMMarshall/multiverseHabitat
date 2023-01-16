@@ -1,7 +1,8 @@
 
 # summary plots draft -----------------------------------------------------
 
-targets::tar_load(combinedResults)
+targets::tar_load(areaResults)
+names(combinedResults)
 combinedResults <- multiverseHabitat::parse_combined_results(combinedResults)
 
 library(ggplot2)

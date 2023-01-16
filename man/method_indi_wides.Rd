@@ -7,6 +7,7 @@
 method_indi_wides(
   movementData,
   landscape,
+  spSamp,
   availableArea,
   availablePointsPer,
   ...
@@ -14,6 +15,8 @@ method_indi_wides(
 }
 \arguments{
 \item{movementData}{must have a x and y column for locations, and a datetime column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
+
+\item{spSamp}{c("rd", "st")}
 }
 \value{
 a

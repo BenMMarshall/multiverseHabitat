@@ -5,9 +5,9 @@
 #' @param movementData must have a x and y column for locations, and a datetime column for timestamps ("%Y-%m-%d %H:%M:%S")
 #' @param landscape
 #' @param methodForm "mf.is", "mf.ss"
-#' @param covExtract "start", "end", "both"
+#' @param stepDist "gamma", "exp"
+#' @param turnDist "vonmises", "unif"
 #' @param availableSteps
-#' @param weighting
 #' @return a
 #'
 #' @export
@@ -19,7 +19,8 @@ method_indi_ssf <- function(
   # targets workflow will be used to feed multiple values
   # in
   methodForm,
-  covExtract,
+  stepDist,
+  turnDist,
   availableSteps){
 
   if(!require(amt)){
@@ -31,14 +32,18 @@ method_indi_ssf <- function(
   movementSteps <- amt::steps(movementTrack)
 
   set.seed(2022)
+  # modelData <- amt::random_steps(movementSteps,
+  #                                n_control = availableSteps,
+  #                                sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
+  #                                ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
   modelData <- amt::random_steps(movementSteps,
                                  n_control = availableSteps,
-                                 sl_distr = amt::fit_distr(movementSteps$sl_, "gamma"),
-                                 ta_distr = amt::fit_distr(movementSteps$ta_, "vonmises"))
+                                 sl_distr = amt::fit_distr(movementSteps$sl_, stepDist),
+                                 ta_distr = amt::fit_distr(movementSteps$ta_, turnDist))
 
   modelData <- amt::extract_covariates(modelData,
                                        landscape$classRaster,
-                                       where = covExtract)
+                                       where = "end")
 
   modelData$values <- paste0("c", modelData$layer)
   modelData$values <- factor(modelData$values)
