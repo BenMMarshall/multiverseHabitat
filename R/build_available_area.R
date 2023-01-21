@@ -80,7 +80,6 @@ build_available_area <- function(movementData,
 
     akdeRes <- ctmm::akde(teleObj, fits[[1]],
                           weights = TRUE)
-
     area_OUT <- akdeRes
 
   } else if(method == "dBBMM"){
@@ -91,15 +90,21 @@ build_available_area <- function(movementData,
 
     # As our most infrequent tracking is 168 hours (1 week), we will set the
     # window to the number of data points collected over 168 hours, and a margin
-    # of 48 hours.
+    # of 48 hours. In cases where that is not possible set window and margin to minimum
     windowSize <- nrow(movementData[movementData$timestep <= dBBMMsettings[1]*60,])
     if(windowSize %% 2 == 0){
       windowSize <- windowSize - 1
+    }
+    if(windowSize < 7){
+      windowSize <- 7
     }
 
     marginSize <- nrow(movementData[movementData$timestep <= dBBMMsettings[2]*60,])
     if(marginSize %% 2 == 0){
       marginSize <- marginSize - 1
+    }
+    if(marginSize < 3){
+      marginSize <- 3
     }
 
     area_OUT <- vector("list", 2)

@@ -10,7 +10,7 @@ library(tibble)
 
 # Set target options:
 tar_option_set(
-  packages = c("qs", "here", "raster", "NLMR", "tibble",
+  packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
   garbage_collection = TRUE,
@@ -31,23 +31,29 @@ tar_source()
 
 ## every split requires it's own tibble, otherwise it's applied to all of them
 values_SimSpecies <- tibble(
-  # species = c("BADGER", "VULTURE", "KINGCOBRA")
-  species = c("BADGER")
+  species = c("BADGER", "VULTURE", "KINGCOBRA")
+  # species = c("BADGER")
 )
 values_SimIndi <- tibble(
-  individual = 1
-  # individual = 1:4
+  # individual = 1
+  individual = 1:4
   # individual = seq_len(30)
 )
 
 values_Sampling <- tidyr::expand_grid(
-  td = c(7, 15, 30, 60),
-  tf = c(0.5, 1, 2, 6)
-  # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0),
-  # td = c(7, 15, 30, 60, 120, 240, 365)
+  # td = c(7, 15, 30, 60),
+  # tf = c(0.5, 1, 2, 6)
+  # td = c(7, 15, 30, 60, 120, 240, 365),
+  td = c(7, 15, 30, 60, 120, 240),
+  tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
   # td = c(7, 15),
   # tf = c(0.5, 1)
 )
+# have to filter out certain combos that have too little data to work with
+values_Sampling <- values_Sampling %>%
+  dplyr::mutate(datapoints = td*24 * (1/tf)) %>%
+  dplyr::filter(datapoints > 30) %>%
+  dplyr::select(td, tf)
 
 optionsList_area <- list(
   Method_method = c("wides", "rsf"),
@@ -117,7 +123,7 @@ targetsList <- list(
                      landscape = landscape,
                      optionsList = optionsList_area
                    ),
-                   priority = 0.9),
+                   priority = 0.91),
         ## SSF
         tar_target(ssfOUT,
                    wrapper_indi_ssf(
