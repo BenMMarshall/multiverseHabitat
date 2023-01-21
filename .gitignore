@@ -4,6 +4,8 @@
 .Ruserdata
 .Renviron
 *.log
+*.rds
+
 data/
 prelimMultiData/
 

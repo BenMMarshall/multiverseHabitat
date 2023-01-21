@@ -54,8 +54,6 @@ method_indi_wides <- function(
   aClass <- names(availValues_DF)
   uClass <- names(usedValues_DF)
 
-  print(6)
-
   if(length(aClass) > length(uClass)){
 
     toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(aClass[!aClass %in% uClass])))
@@ -70,13 +68,15 @@ method_indi_wides <- function(
 
   }
 
-
   usedValues_DF <- usedValues_DF[,sort(names(usedValues_DF))]
   availValues_DF <- availValues_DF[,sort(names(availValues_DF))]
   # so because the difference is use the available, we can do III design with the
   # II set up just with different availabilities. Is in a try() function because
   # of the instances where habitats are used, but not available bceause of the
   # random sampling of available points
+
+  print("wides")
+
   wiOUT <- try(
     adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
   )
@@ -85,6 +85,6 @@ method_indi_wides <- function(
   }
   # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
 
-  return(extract_estimate(wiOUT))
+  return(multiverseHabitat::extract_estimate(wiOUT))
 
 }

@@ -37,15 +37,17 @@ optionsList_sff <- list(
   MethodSSF_sd = c("gamma", "exp"),
   MethodSSF_td = c("vonmises", "unif"),
   MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
-  # MethodSSF_as = c(5, 50)
 )
 
-targets::tar_load("sampDuraFreqData_7_6_1_BADGER")
-targets::tar_load("landscape_BADGER")
+targets::tar_load("sampDuraFreqData_60_48_3_VULTURE")
+targets::tar_load("landscape_VULTURE")
+
+movementData <- sampDuraFreqData_60_48_3_VULTURE
+landscape <- landscape_VULTURE
 
 multiverseHabitat::wrapper_indi_area(
-  movementData = sampDuraFreqData_7_6_1_BADGER,
-  landscape = landscape_BADGER,
+  movementData = sampDuraFreqData_60_48_3_VULTURE,
+  landscape = landscape_VULTURE,
   optionsList = optionsList_area
 )
 
@@ -68,7 +70,7 @@ areaMethod <- optionsList_area$areaMethod
 areaContour <- optionsList_area$areaContour
 Method_ap <- optionsList_area$Method_ap
 Method_sp <- optionsList_area$Method_sp
-Method_we <- optiooptionsList_areansList$Method_we
+Method_we <- optionsList_area$Method_we
 
 # wides places
 listSize <- length(areaMethod) *
@@ -88,6 +90,9 @@ listOUT <- vector("list",
                   length = listSize)
 i <- 0
 for(am in areaMethod){
+  # am <- areaMethod[3]
+  cat(am)
+
   areaOUT <- multiverseHabitat::build_available_area(
     movementData = movementData,
     method = am,
@@ -95,7 +100,9 @@ for(am in areaMethod){
     dBBMMsettings = c(168, 48)
   )
 
+
   for(ac in areaContour){
+    # ac <- areaContour[2]
 
     polyOUT <- multiverseHabitat::build_available_polygon(
       areaResource = areaOUT,
@@ -103,20 +110,80 @@ for(am in areaMethod){
       contour = ac,
       SRS_string = "EPSG:32601")
 
+
     for(ap in Method_ap){
-
+      # ap <- Method_ap[1]
       for(sp in Method_sp){
-
+        # sp <- Method_sp[1]
         for(me in Method_method){
-
+          # me <- Method_method[1]
           if(me == "wides"){
 
-            wiOUT <- multiverseHabitat::method_indi_wides(
-              movementData = movementData,
-              landscape = landscape,
-              spSamp = sp,
-              availableArea = polyOUT,
-              availablePointsPer = ap)
+            # wiOUT <- multiverseHabitat::method_indi_wides(
+            #   movementData = movementData,
+            #   landscape = landscape,
+            #   spSamp = sp,
+            #   availableArea = polyOUT,
+            #   availablePointsPer = ap)
+
+            spSamp = sp
+            availableArea = polyOUT
+            availablePointsPer = ap
+
+            suppressWarnings({
+              availPoints <- sp::spsample(availableArea,
+                                          n = nrow(movementData) * availablePointsPer,
+                                          type = ifelse(spSamp == "rd", "random", "stratified"))
+            })
+
+            # extract the habitat types each point is located within
+            availValues <- raster::extract(landscape$classRaster, availPoints)
+
+            availValues_DF <- data.frame(rbind(table(availValues)))
+            names(availValues_DF) <- sub("X", "c", names(availValues_DF))
+
+            suppressWarnings({
+              usedValues <- raster::extract(landscape$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                                                     sp::CRS(SRS_string = "EPSG:32601")))
+            })
+            usedValues_DF <- data.frame(rbind(table(usedValues)))
+            names(usedValues_DF) <- sub("X", "c", names(usedValues_DF))
+
+            aClass <- names(availValues_DF)
+            uClass <- names(usedValues_DF)
+
+            print(6)
+
+            if(length(aClass) > length(uClass)){
+
+              toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(aClass[!aClass %in% uClass])))
+              names(toAdd) <- aClass[!aClass %in% uClass]
+              usedValues_DF <- cbind(usedValues_DF, toAdd)
+
+            } else if(length(uClass) > length(aClass)){
+
+              toAdd <- as.data.frame(matrix(0, nrow = 1, ncol = length(uClass[!uClass %in% aClass])))
+              names(toAdd) <- uClass[!uClass %in% aClass]
+              availValues_DF <- cbind(availValues_DF, toAdd)
+
+            }
+
+
+            usedValues_DF <- usedValues_DF[,sort(names(usedValues_DF))]
+            availValues_DF <- availValues_DF[,sort(names(availValues_DF))]
+            # so because the difference is use the available, we can do III design with the
+            # II set up just with different availabilities. Is in a try() function because
+            # of the instances where habitats are used, but not available bceause of the
+            # random sampling of available points
+            wiOUT <- try(
+              adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+            )
+            if(class(wiOUT)[1] == "try-error"){
+              wiOUT <- wiOUT[1]
+            }
+            # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
+
+            wiOUT <- multiverseHabitat::extract_estimate(wiOUT)
 
             i <- i+1
 
@@ -127,22 +194,70 @@ for(am in areaMethod){
               area = am,
               contour = ac,
               availPointsPer = ap,
-              samplingPattern = sp
+              samplingPattern = sp,
+              weighting = NA
             )
-            print(i)
+            cat(i)
 
           } else if(me == "rsf"){
 
             for(we in Method_we){
+              # we <- Method_we[1]
 
-              rsfOUT <- multiverseHabitat::method_indi_rsf(
-                movementData = movementData,
-                landscape = landscape,
-                spSamp = sp,
-                availableArea = polyOUT,
-                availablePointsPer = ap,
+              # rsfOUT <- multiverseHabitat::method_indi_rsf(
+              #   movementData = movementData,
+              #   landscape = landscape,
+              #   spSamp = sp,
+              #   availableArea = polyOUT,
+              #   availablePointsPer = ap,
+              #   weighting = we
+              # )
+                spSamp = sp
+                availableArea = polyOUT
+                availablePointsPer = ap
                 weighting = we
-              )
+
+                suppressWarnings({
+                  availPoints <- sp::spsample(availableArea,
+                                              n = nrow(movementData) * availablePointsPer,
+                                              type = ifelse(spSamp == "rd", "random", "stratified"))
+                })
+
+                # extract the habitat types each point is located within
+                availValues <- raster::extract(landscape$classRaster, availPoints)
+
+                availValues_DF <- as.data.frame(availPoints@coords)
+                availValues_DF$values <- as.factor(availValues)
+                # case_ == false cos not used
+                availValues_DF$case_ <- FALSE
+                # assign the weighting
+                availValues_DF$weights <- we
+                names(availValues_DF)[1:2] <- c("x", "y")
+
+                suppressWarnings({
+                  usedValues <- raster::extract(landscape$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+                                                                                         sp::CRS(SRS_string = "EPSG:32601")))
+                })
+                movementData$values <- as.factor(usedValues)
+                modelData <- movementData[,c("x", "y", "values")]
+                # used gets case_ == TRUE, and weights == 1
+                modelData$case_ <- TRUE
+                modelData$weights <- 1
+
+                modelData <- rbind(modelData, availValues_DF)
+                modelData$values <- paste0("c", modelData$values)
+
+                # fit the model using base R glm()
+                rsfOUT <- glm(case_ ~ values,
+                              family = binomial(),
+                              data = modelData,
+                              weights = weights)
+
+                rsfDF <- as.data.frame(summary(rsfOUT)$coef)
+                method <- rep("rsf", nrow(rsfDF))
+                rsfDF <- cbind(rsfDF, method)
+
+                rsfOUT <- multiverseHabitat::extract_estimate(rsfDF)
 
               i <- i+1
 
@@ -153,26 +268,20 @@ for(am in areaMethod){
                 area = am,
                 contour = ac,
                 availPointsPer = ap,
-                samplingPattern = sp
+                samplingPattern = sp,
+                weighting = we
               )
-              print(i)
+              cat(i)
 
-            }
+            } # we
+          } # if method
+        } # me
+      } # sp
+    } # ap
+  } # ac
+} # am
 
-          }
-
-          # wiOUT <- adehabitatHS::widesIII(u = usedValues_DF, a = availValues_DF)
-        }
-
-      }
-    }
-  }
-}
-
-egOUT <- do.call(rbind, listOUT)
-egOUT[egOUT$analysis == "rsf",]
-
-
+do.call(rbind, listOUT)
 
 
 

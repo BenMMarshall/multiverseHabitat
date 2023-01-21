@@ -17,28 +17,50 @@ extract_estimate <- function(OUT){
 
   if(class(OUT)[1] == "character"){
     OUTDF <- data.frame("Estimate" = NA,
-                 "SE" = NA,
-                 "Method" = NA)
+                        "SE" = NA,
+                        "Method" = "wides")
     return(OUTDF)
   }
 
   if(class(OUT)[1] == "wiIII"){
 
-    OUTDF <- data.frame("Estimate" = OUT$wi["c2"],
-                        "SE" = OUT$se.wi["c2"],
-                        "Method" = "wides")
+    if(any(names(OUT$wi) %in% "c2")){
+
+      OUTDF <- data.frame("Estimate" = OUT$wi["c2"],
+                          "SE" = OUT$se.wi["c2"],
+                          "Method" = "wides")
+    } else {
+      OUTDF <- data.frame("Estimate" = NA,
+                          "SE" = NA,
+                          "Method" = "wides")
+    }
+
     return(OUTDF)
 
   } else if(class(OUT)[1] == "data.frame"){
 
     if(OUT$method[1] == "rsf"){
+
       # coefDF <- summary(OUT)$coefficients
       coefDF <- OUT
-      OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
-                          coefDF[rownames(coefDF) == "valuesc2",][2],
-                          "rsf")
-      names(OUTDF) <- c("Estimate", "SE", "Method")
-      return(OUTDF)
+      if(any(rownames(coefDF) %in% "valuesc2")){
+
+        OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
+                            coefDF[rownames(coefDF) == "valuesc2",][2],
+                            "rsf")
+        names(OUTDF) <- c("Estimate", "SE", "Method")
+        return(OUTDF)
+
+      } else {
+
+        OUTDF <- data.frame(NA,
+                            NA,
+                            "rsf")
+        names(OUTDF) <- c("Estimate", "SE", "Method")
+        return(OUTDF)
+
+      }
+
 
     } else if(OUT$method[1] == "ssf"){
 
@@ -46,12 +68,23 @@ extract_estimate <- function(OUT){
 
       # coefDF <- summary(OUT)$coefficients
       coefDF <- OUT
-      OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
-                          coefDF[rownames(coefDF) == "valuesc2",][3],
-                          "ssf")
-      names(OUTDF) <- c("Estimate", "SE", "Method")
-      return(OUTDF)
 
+      if(any(rownames(coefDF) %in% "valuesc2")){
+
+        OUTDF <- data.frame(coefDF[rownames(coefDF) == "valuesc2",][1],
+                            coefDF[rownames(coefDF) == "valuesc2",][3],
+                            "ssf")
+        names(OUTDF) <- c("Estimate", "SE", "Method")
+        return(OUTDF)
+
+      } else{
+
+        OUTDF <- data.frame(NA,
+                            NA,
+                            "ssf")
+        names(OUTDF) <- c("Estimate", "SE", "Method")
+        return(OUTDF)
+      }
     }
 
   } # if end

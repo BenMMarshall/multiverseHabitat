@@ -42,7 +42,7 @@ wrapper_indi_area <- function(
   i <- 0
   for(am in areaMethod){
 
-    cat(am)
+    print(am)
 
     areaOUT <- multiverseHabitat::build_available_area(
       movementData = movementData,
@@ -53,11 +53,16 @@ wrapper_indi_area <- function(
 
     for(ac in areaContour){
 
+      print(ac)
+      print(nrow(movementData))
+
       polyOUT <- multiverseHabitat::build_available_polygon(
         areaResource = areaOUT,
         method = am,
         contour = ac,
         SRS_string = "EPSG:32601")
+
+      print("polyOUT")
 
       for(ap in Method_ap){
 
@@ -86,7 +91,7 @@ wrapper_indi_area <- function(
                 samplingPattern = sp,
                 weighting = NA
               )
-              cat(i)
+              print(me)
 
             } else if(me == "rsf"){
 
@@ -113,7 +118,7 @@ wrapper_indi_area <- function(
                   samplingPattern = sp,
                   weighting = we
                 )
-                cat(i)
+                print(me)
 
               } # we
             } # if method
