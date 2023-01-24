@@ -10,7 +10,7 @@ library(tibble)
 
 # Set target options:
 tar_option_set(
-  packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr",
+  packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move"), # packages that your targets need to run
   garbage_collection = TRUE,
@@ -88,7 +88,7 @@ values_MethodCTM <- tidyr::expand_grid(
   Methodctm_di = "di.ro"
 )
 
-targetsList <- list(
+allIndividualEstimatesList <- list(
   ## LANDSCAPE SIMULATION
   tar_map(
     values = values_SimSpecies,
@@ -139,19 +139,36 @@ targetsList <- list(
 
 areaCompiled <- tar_combine(
   areaResults,
-  targetsList[[1]][grep("areaMethodsOUT", names(targetsList[[1]]))],
+  allIndividualEstimatesList[[1]][grep("areaMethodsOUT", names(allIndividualEstimatesList[[1]]))],
   # command = list(!!!.x),
   command = rbind(!!!.x),
   priority = 0
 )
 ssfCompiled <- tar_combine(
   ssfResults,
-  targetsList[[1]][grep("ssfOUT", names(targetsList[[1]]))],
+  allIndividualEstimatesList[[1]][grep("ssfOUT", names(allIndividualEstimatesList[[1]]))],
   # command = list(!!!.x),
   command = rbind(!!!.x),
   priority = 0
 )
-list(targetsList, areaCompiled, ssfCompiled)
+
+simsCompiled <- tar_combine(
+  simResults,
+  allIndividualEstimatesList[[1]][grep("simData", names(allIndividualEstimatesList[[1]]))],
+  command = list(!!!.x),
+  # command = rbind(!!!.x),
+  priority = 0
+)
+
+directCompiled <- list(
+  tar_target(directEstimates, direct_estimates(simResults))
+)
+
+list(allIndividualEstimatesList,
+     areaCompiled,
+     ssfCompiled,
+     simsCompiled,
+     directCompiled)
 
 # Launch the app in a background process.
 # tar_watch(seconds = 60, outdated = FALSE, targets_only = TRUE)

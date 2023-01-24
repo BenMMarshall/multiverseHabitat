@@ -1,4 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+allIndividualEstimatesList|object|1e5637a1caee735a|||||||||||||||
 apply_to_leaves|function|b1d46ba8693c70e2|||||||||||||||
 areaMethodsOUT_120_0.5_1_BADGER|stem|8d40832110654464|3288355b03472b73|da8381465747e4e8|1514861941||t19374.8047235791s|bf100c94084bf8e0|5235|qs|local|vector|||1383.401|CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html|
 areaMethodsOUT_120_0.5_1_KINGCOBRA|stem|d23829481c4ff8ca|d418e841e97b8837|0ca80dac1aea1a29|-1141582103||t19374.7646136913s|9456df09f89aba00|5286|qs|local|vector|||1323.736|CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html|
@@ -451,12 +452,15 @@ build_available_area|function|5a020b7dea025270|||||||||||||||
 build_available_polygon|function|7001a7b16c8b43a2|||||||||||||||
 build_nested_list|function|a5128199400f298e|||||||||||||||
 combinedResults|stem|f831ca1d6cdc79ce|1f08c7b205cb33f0|96065bac7247d650|-1607905899||t19373.793538311s|822de25dec4e058d|89034|qs|local|vector|||0||
+direct_estimates|function|5f41f47efc29141e|||||||||||||||
+directCompiled|object|6e37ab784867b865|||||||||||||||
+directEstimates|stem|73889c0739874476|7d3bae5ba37a9d05|6f03eafc5085c09a|-547029378||t19381.6456647883s|55c6f0d524268d55|1465|qs|local|vector|||904.231|Loglik converged before variable  3  beta may be infinite. . Loglik converged before variable  3  beta may be infinite. . Loglik converged before variable  3  beta may be infinite. . Loglik converged before variable  3  beta may be infinite.|
 extract_estimate|function|291fc3380242fac4|||||||||||||||
 landscape_BADGER|stem|f37c125df7630d5c|899644475ee1fa73|26ca4947bc9d4158|1817666615||t19373.7631854794s|8a2147a58015f31a|74910372|qs|local|vector|||19.872||
 landscape_KINGCOBRA|stem|f07ed2baed64fdf7|2fb11fbe553c83ac|26ca4947bc9d4158|-1205708112||t19374.4322983873s|61b86525075c02bb|74657740|qs|local|vector|||24.341||
 landscape_VULTURE|stem|2f36ca6d128c2b22|af472d0c58f53ad2|26ca4947bc9d4158|-1650950429||t19374.4322969984s|c7fb5152764a0842|41570759|qs|local|vector|||24.414||
 method_indi_rsf|function|57c810bdaf3f7a76|||||||||||||||
-method_indi_ssf|function|5d6e4987c37ac5be|||||||||||||||
+method_indi_ssf|function|367232d476fd48c8|||||||||||||||
 method_indi_wides|function|e719724c0f7a3aae|||||||||||||||
 nest_list|function|0a17c0164b424038|||||||||||||||
 optionsList_area|object|109f0e7943a24164|||||||||||||||
@@ -1245,6 +1249,7 @@ simData_3_VULTURE|stem|43ac45477a695457|0846733ea0492974|5a0436d45a1cb660|142698
 simData_4_BADGER|stem|8af08ee4708e7d95|6e01208d768e74b2|b7adbc45d53492b9|-1268557517||t19374.4322138021s|b1d0284303f4e977|205548363|qs|local|vector|||9.887||
 simData_4_KINGCOBRA|stem|262762ebc76154aa|2a384f9fe5360afe|1c075c87f58d7beb|-1411180865||t19374.43243427s|26e6d79d128709f7|205976466|qs|local|vector|||8.252||
 simData_4_VULTURE|stem|8b18f2fa1b5da51a|9832a05403130162|5a0436d45a1cb660|1295133080||t19374.4325099661s|b3994f5cd33a8a32|174839703|qs|local|vector|||8.434||
+simResults|stem|ed3bf510199b7885|d63c72c516ec3be7|1f5a9f9d2525e150|-1410501438||t19381.5276842813s|6c0950475563d22a|2345042516|qs|local|vector|||0||
 simulate_individual|function|213f0f53bad2d975|||||||||||||||
 simulate_landscape|function|540904705b1de390|||||||||||||||
 ssfOUT_120_0.5_1_BADGER|stem|4745e66d679bb4ed|91674423cc53af22|e6cbddeae466ce78|-1503065611||t19374.8179339297s|7ab60aebd40b847a|777|qs|local|vector|||343.018|NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced|
@@ -1699,7 +1704,7 @@ ssfOUT_7_6_4_VULTURE|stem|37e2679d6e70c841|446544a173d67ee6|a7662021793a55f3|-18
 ssfResults|stem|6b8040e6ac596150|615096820192ded8|6b1526aa4e23aae2|1439985569||t19374.8277623247s|30c2e1d49126fb14|242522|qs|local|vector|||0.033||
 subset_duration|function|23d51a061493df33|||||||||||||||
 subset_frequency|function|1ed10fbc2ef3c0f5|||||||||||||||
-targetsList|object|13adfbd80f258927|||||||||||||||
+targetsList|object|1e5637a1caee735a|||||||||||||||
 values_MethodCTM|object|53fdc05abf40dc8c|||||||||||||||
 values_Sampling|object|60ccb9c2b2adc44d|||||||||||||||
 values_SimIndi|object|fc969e1a355a332f|||||||||||||||
