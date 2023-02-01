@@ -36,7 +36,7 @@ values_SimSpecies <- tibble(
 )
 values_SimIndi <- tibble(
   # individual = 1
-  individual = 1:4
+  individual = 1:6
   # individual = seq_len(30)
 )
 
@@ -63,7 +63,7 @@ optionsList_area <- list(
   # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
   Method_sp = c("rd", "st"),
   # Method_ap = 100,
-  Method_we = exp(seq(log(1), log(10000000), length.out = 3))
+  Method_we = exp(seq(log(1), log(10000000), length.out = 6))
   # Method_we = 1
 )
 
@@ -160,6 +160,38 @@ simsCompiled <- tar_combine(
   priority = 0
 )
 
+method_BRMS <- tibble(
+  method = c("rsf", "wides")
+)
+
+brmsCompiled <- list(
+  # area method models
+  tar_map(
+    values = method_BRMS,
+    tar_target(areaBrms,
+               run_brms(
+                 simResults = areaResults,
+                 method = method)
+    ),
+    tar_target(summaryBrms,
+               diagnostics_brms(
+                 brmsResults = areaBrms
+               )
+    )
+  ),
+  #ssf models
+  tar_target(ssfBrms,
+             run_brms(
+               simResults = ssfResults,
+               method = "ssf")
+  ),
+  tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
+             diagnostics_brms(
+               brmsResults = ssfBrms
+             )
+  )
+)
+
 directCompiled <- list(
   tar_target(directEstimates, direct_estimates(simResults))
 )
@@ -168,6 +200,7 @@ list(allIndividualEstimatesList,
      areaCompiled,
      ssfCompiled,
      simsCompiled,
+     brmsCompiled,
      directCompiled)
 
 # Launch the app in a background process.
