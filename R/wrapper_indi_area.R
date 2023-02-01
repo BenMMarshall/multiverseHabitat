@@ -56,13 +56,24 @@ wrapper_indi_area <- function(
       print(ac)
       print(nrow(movementData))
 
-      polyOUT <- multiverseHabitat::build_available_polygon(
-        areaResource = areaOUT,
-        method = am,
-        contour = ac,
-        SRS_string = "EPSG:32601")
+      if(class(areaOUT)[1] == "try-error"){
 
-      print("polyOUT")
+        polyOUT <- NA
+
+      } else {
+
+        print(ac)
+        print(nrow(movementData))
+
+        polyOUT <- multiverseHabitat::build_available_polygon(
+          areaResource = areaOUT,
+          method = am,
+          contour = ac,
+          SRS_string = "EPSG:32601")
+
+        print("polyOUT")
+
+      }
 
       for(ap in Method_ap){
 
@@ -72,52 +83,86 @@ wrapper_indi_area <- function(
 
             if(me == "wides"){
 
-              wiOUT <- multiverseHabitat::method_indi_wides(
-                movementData = movementData,
-                landscape = landscape,
-                spSamp = sp,
-                availableArea = polyOUT,
-                availablePointsPer = ap)
-
               i <- i+1
 
-              listOUT[[i]] <- data.frame(
-                Estimate = wiOUT$Estimate,
-                SE = wiOUT$SE,
-                analysis = me,
-                area = am,
-                contour = ac,
-                availPointsPer = ap,
-                samplingPattern = sp,
-                weighting = NA
-              )
+              # this tackles the instances where area estimates fail
+              if(is.na(polyOUT)){
+
+                listOUT[[i]] <- data.frame(
+                  Estimate = NA,
+                  SE = NA,
+                  analysis = me,
+                  area = am,
+                  contour = ac,
+                  availPointsPer = ap,
+                  samplingPattern = sp,
+                  weighting = NA
+                )
+
+              } else {
+
+                wiOUT <- multiverseHabitat::method_indi_wides(
+                  movementData = movementData,
+                  landscape = landscape,
+                  spSamp = sp,
+                  availableArea = polyOUT,
+                  availablePointsPer = ap)
+
+                listOUT[[i]] <- data.frame(
+                  Estimate = wiOUT$Estimate,
+                  SE = wiOUT$SE,
+                  analysis = me,
+                  area = am,
+                  contour = ac,
+                  availPointsPer = ap,
+                  samplingPattern = sp,
+                  weighting = NA
+                )
+              } # if poly NA
               print(me)
 
             } else if(me == "rsf"){
 
               for(we in Method_we){
 
-                rsfOUT <- multiverseHabitat::method_indi_rsf(
-                  movementData = movementData,
-                  landscape = landscape,
-                  spSamp = sp,
-                  availableArea = polyOUT,
-                  availablePointsPer = ap,
-                  weighting = we
-                )
-
                 i <- i+1
+                if(is.na(polyOUT)){
 
-                listOUT[[i]] <- data.frame(
-                  Estimate = rsfOUT$Estimate,
-                  SE = rsfOUT$SE,
-                  analysis = me,
-                  area = am,
-                  contour = ac,
-                  availPointsPer = ap,
-                  samplingPattern = sp,
-                  weighting = we
-                )
+                  listOUT[[i]] <- data.frame(
+                    Estimate = NA,
+                    SE = NA,
+                    analysis = me,
+                    area = am,
+                    contour = ac,
+                    availPointsPer = ap,
+                    samplingPattern = sp,
+                    weighting = we
+                  )
+
+                } else {
+
+                  rsfOUT <- multiverseHabitat::method_indi_rsf(
+                    movementData = movementData,
+                    landscape = landscape,
+                    spSamp = sp,
+                    availableArea = polyOUT,
+                    availablePointsPer = ap,
+                    weighting = we
+                  )
+
+
+                  listOUT[[i]] <- data.frame(
+                    Estimate = rsfOUT$Estimate,
+                    SE = rsfOUT$SE,
+                    analysis = me,
+                    area = am,
+                    contour = ac,
+                    availPointsPer = ap,
+                    samplingPattern = sp,
+                    weighting = we
+                  )
+                } # if poly NA
+
                 print(me)
 
               } # we
