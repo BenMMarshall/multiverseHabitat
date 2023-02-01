@@ -12,7 +12,8 @@ library(tibble)
 tar_option_set(
   packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
-               "amt", "adehabitatHR", "move"), # packages that your targets need to run
+               "amt", "adehabitatHR", "move",
+               "brms", "bayesplot", "tidybayes"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -142,14 +143,14 @@ areaCompiled <- tar_combine(
   allIndividualEstimatesList[[1]][grep("areaMethodsOUT", names(allIndividualEstimatesList[[1]]))],
   # command = list(!!!.x),
   command = rbind(!!!.x),
-  priority = 0
+  priority = 0.8
 )
 ssfCompiled <- tar_combine(
   ssfResults,
   allIndividualEstimatesList[[1]][grep("ssfOUT", names(allIndividualEstimatesList[[1]]))],
   # command = list(!!!.x),
   command = rbind(!!!.x),
-  priority = 0
+  priority = 0.8
 )
 
 simsCompiled <- tar_combine(
@@ -157,7 +158,13 @@ simsCompiled <- tar_combine(
   allIndividualEstimatesList[[1]][grep("simData", names(allIndividualEstimatesList[[1]]))],
   command = list(!!!.x),
   # command = rbind(!!!.x),
-  priority = 0
+  priority = 0.8
+)
+
+
+directCompiled <- list(
+  tar_target(directEstimates, direct_estimates(simResults),
+             priority = 0.99)
 )
 
 method_BRMS <- tibble(
@@ -170,30 +177,30 @@ brmsCompiled <- list(
     values = method_BRMS,
     tar_target(areaBrms,
                run_brms(
-                 simResults = areaResults,
-                 method = method)
+                 compiledResults = areaResults,
+                 method = method),
+               priority = 0.71
     ),
     tar_target(summaryBrms,
                diagnostics_brms(
                  brmsResults = areaBrms
-               )
+               ),
+               priority = 0.71
     )
   ),
   #ssf models
   tar_target(ssfBrms,
              run_brms(
-               simResults = ssfResults,
-               method = "ssf")
+               compiledResults = ssfResults,
+               method = "ssf"),
+             priority = 0.72
   ),
   tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
              diagnostics_brms(
                brmsResults = ssfBrms
-             )
+             ),
+             priority = 0.73
   )
-)
-
-directCompiled <- list(
-  tar_target(directEstimates, direct_estimates(simResults))
 )
 
 list(allIndividualEstimatesList,
@@ -222,5 +229,6 @@ list(allIndividualEstimatesList,
 # targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "summary", log_worker = TRUE)
 
+# warnings <- targets::tar_meta(fields = warnings, complete_only = TRUE)
 
 # endPointsAndNodes <- targets::tar_network(targets_only = TRUE)

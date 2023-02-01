@@ -21,13 +21,17 @@ build_available_area <- function(movementData,
 
   if(method == "MCP"){
 
-    area_OUT <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    suppressWarnings({
+      area_OUT <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    })
 
   } else if(method == "KDElscv"){
 
-    spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    suppressWarnings({
+      spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    })
 
-    area_OUT <- vector("list", 2)
+    # area_OUT <- vector("list", 2)
 
     suppressWarnings({
       kdeLSCV_UD <- adehabitatHR::kernelUD(spPoints,
@@ -43,8 +47,10 @@ build_available_area <- function(movementData,
 
   } else if(method == "KDEhref"){
 
-    spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
-    area_OUT <- vector("list", 2)
+    suppressWarnings({
+      spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    })
+    # area_OUT <- vector("list", 2)
     suppressWarnings({
       kdehref_UD <- adehabitatHR::kernelUD(spPoints,
                                            h = "href",
@@ -59,28 +65,52 @@ build_available_area <- function(movementData,
 
   } else if(method == "AKDE"){
 
-    spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
-    spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
+    suppressWarnings({
+      spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+    })
+
+    suppressWarnings({
+      spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
+    })
+
     movementData$lon <- spLL@coords[,1]
     movementData$lat <- spLL@coords[,2]
 
-    area_OUT <- vector("list", 2)
+    # area_OUT <- vector("list", 2)
 
     teleObj <- ctmm::as.telemetry(movementData,
                                   timeformat = "%Y-%m-%d %H:%M:%S",
                                   timezone="UTC",
                                   projection = sp::CRS(SRS_string = "EPSG:32601"))
 
+    print(attributes(teleObj)$info$identity)
+    print("teleObj")
     # can do the slower one for the real deal
     # varioDataVar <- variogram(teleObj, fast = FALSE, CI = "Gauss")
     varioDataVar <- ctmm::variogram(teleObj, fast = TRUE)
+    print("vario")
     guess <- ctmm::ctmm.guess(teleObj, interactive = FALSE)
+    print("guess")
     # need to specify more cores???
-    fits <- ctmm::ctmm.select(teleObj, guess, verbose = TRUE, cores = 1, method = "pHREML")
+    fits <- try(
+      ctmm::ctmm.select(teleObj, guess, verbose = FALSE,
+                        cores = 4, method = "pHREML")
+    )
+    print("fit")
 
-    akdeRes <- ctmm::akde(teleObj, fits[[1]],
-                          weights = TRUE)
-    area_OUT <- akdeRes
+    if(class(fits) == "try-error"){
+      area_OUT <- fits
+    } else {
+      # akdeRes <- ctmm::akde(teleObj, fits[[1]],
+      #                       weights = TRUE)
+      # needed to catch weird instances with limited data
+      akdeRes <- try(
+        ctmm::akde(teleObj, fits[[1]],
+                   weights = TRUE)
+      )
+      print("area")
+      area_OUT <- akdeRes
+    }
 
   } else if(method == "dBBMM"){
 
@@ -107,12 +137,12 @@ build_available_area <- function(movementData,
       marginSize <- 3
     }
 
-    area_OUT <- vector("list", 2)
+    # area_OUT <- vector("list", 2)
 
     suppressWarnings({
-    moveObj <- move::move(x = movementData$x, y = movementData$y,
-                          time = movementData$datetime,
-                          proj = sp::CRS(SRS_string = "EPSG:32601"))
+      moveObj <- move::move(x = movementData$x, y = movementData$y,
+                            time = movementData$datetime,
+                            proj = sp::CRS(SRS_string = "EPSG:32601"))
     })
 
     set_grid.ext <- 4
