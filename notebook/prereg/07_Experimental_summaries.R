@@ -3,6 +3,8 @@
 
 targets::tar_load(areaResults)
 targets::tar_load(ssfResults)
+targets::tar_load(directEstimates)
+
 areaResults <- multiverseHabitat::parse_combined_results(areaResults)
 ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
 
@@ -151,6 +153,9 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
     annotate("segment", x = overallMed$medEst +20, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
+    geom_vline(data = directEstimates %>%
+                 filter(Method == "rsf", scale == "movement"),
+               aes(xintercept = Estimate)) +
     scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
     labs(y = "", x = "Estimate") +
     theme_bw() +
@@ -277,6 +282,9 @@ overallMed <- data.frame("medEst" = median(widesResults$Estimate, na.rm = TRUE),
     annotate("segment", x = overallMed$medEst +10, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
+    geom_vline(data = directEstimates %>%
+                 filter(Method == "wides", scale == "movement"),
+               aes(xintercept = Estimate)) +
     # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
     labs(y = "", x = "Estimate") +
     theme_bw() +
@@ -398,6 +406,9 @@ overallMed <- data.frame("medEst" = median(ssfResults$Estimate, na.rm = TRUE),
     annotate("segment", x = overallMed$medEst -5, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
+    geom_vline(data = directEstimates %>%
+                 filter(Method == "wides", scale == "movement"),
+               aes(xintercept = Estimate)) +
     scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
     labs(y = "", x = "Estimate") +
     theme_bw() +

@@ -134,8 +134,8 @@ simulate_landscape <- function(
   # > 0.6
   # <= 0.6 & > 0.3
   # <= 0.3
-  classLandscape[classLandscape[] > 0.6] <- 2
-  classLandscape[classLandscape[] <= 0.6 & classLandscape[] > 0.3] <- 1
+  classLandscape[classLandscape[] > 0.5] <- 2
+  classLandscape[classLandscape[] <= 0.5 & classLandscape[] > 0.3] <- 1
   classLandscape[classLandscape[] <= 0.3] <- 0
 
 

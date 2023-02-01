@@ -14,145 +14,167 @@ library(tidybayes)
 palette <- c("#AD6DED", "#7D26D4", "#4F0E99", "#E87D13", "#965A1D", "#302010", "#403F41")
 names(palette) <- c("KINGCOBRA", "VULTURE", "BADGER", "2", "1", "0", "coreGrey")
 
-targets::tar_load(areaResults)
-targets::tar_load(ssfResults)
-areaResults <- multiverseHabitat::parse_combined_results(areaResults)
-ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
+# targets::tar_load(areaResults)
+# targets::tar_load(ssfResults)
 
-# parse combined results converts tf to points/hour to help interpretation
-areaResults$tf <- round(areaResults$tf, digits = 2)
-ssfResults$tf <- round(ssfResults$tf, digits = 2)
+if(method == "rsf"){
 
-modelDataRSF <- areaResults %>%
-  filter(analysis == "rsf") %>%
-  mutate(medEst = median(Estimate, na.rm = TRUE),
-         absDeltaEst = abs(Estimate - medEst)) %>%
-  mutate(tfScaled = (tf-mean(tf))/sd(tf),
-         tdScaled = (td-mean(td))/sd(td),
-         availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
-         weightingScaled = (weighting-mean(weighting))/sd(weighting),
-         contourScaled = (contour-mean(contour))/sd(contour))
 
-modelDataWides <- areaResults %>%
-  filter(analysis == "wides") %>%
-  mutate(medEst = median(Estimate, na.rm = TRUE),
-         absDeltaEst = abs(Estimate - medEst)) %>%
-  mutate(tfScaled = (tf-mean(tf))/sd(tf),
-         tdScaled = (td-mean(td))/sd(td),
-         availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
-         contourScaled = (contour-mean(contour))/sd(contour))
+  # parse combined results converts tf to points/hour to help interpretation
+  areaResults <- multiverseHabitat::parse_combined_results(areaResults)
+  areaResults$tf <- round(areaResults$tf, digits = 2)
 
-modelDataSSF <- ssfResults %>%
-  mutate(medEst = median(Estimate, na.rm = TRUE),
-         absDeltaEst = abs(Estimate - medEst)) %>%
-  mutate(tfScaled = (tf-mean(tf))/sd(tf),
-         tdScaled = (td-mean(td))/sd(td),
-         availablePerStepScaled  = (availablePerStep-mean(availablePerStep))/sd(availablePerStep))
+  modelDataRSF <- areaResults %>%
+    filter(analysis == "rsf") %>%
+    mutate(medEst = median(Estimate, na.rm = TRUE),
+           absDeltaEst = abs(Estimate - medEst)) %>%
+    mutate(tfScaled = (tf-mean(tf))/sd(tf),
+           tdScaled = (td-mean(td))/sd(td),
+           availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
+           weightingScaled = (weighting-mean(weighting))/sd(weighting),
+           contourScaled = (contour-mean(contour))/sd(contour))
 
-# model formula
-# wides
-formWides <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+  hist(modelDataRSF$absDeltaEst, breaks = 20000)
+  # model formula
+  # rsf
+  formRSF <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
                   area + contourScaled + availPointsPerScaled + samplingPattern +
+                  weightingScaled +
                   (1|species/indi))
-# rsf
-formRSF <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
-                area + contourScaled + availPointsPerScaled + samplingPattern +
-                weightingScaled +
-                (1|species/indi))
-# ssf
-formSSF <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
-                modelForm + stepDist + turnDist + availablePerStepScaled +
-                (1|species/indi))
-# AKA (1|species) + (1|species:indi) for a nested group effect intercept
-
-get_prior(formRSF, data = modelDataRSF)
-get_prior(formWides, data = modelDataWides)
-get_prior(formSSF, data = ssfModelData)
-
-# priors
-brmpriorRSF <- c(
-  set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
-  set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
-  set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
-  set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "tfScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "weightingScaled")
-)
-brmpriorWides <- c(
-  set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
-  set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
-  set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
-  set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "tfScaled")
-)
-brmpriorSSF <- c(
-  set_prior("cauchy(0.1, 3)", coef = "availablePerStepScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "modelFormmf.ss"),
-  set_prior("cauchy(0.1, 3)", coef = "stepDistgamma"),
-  set_prior("cauchy(0.1, 3)", coef = "turnDistvonmises"),
-  set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
-  set_prior("cauchy(0.1, 3)", coef = "tfScaled")
-)
-
-ggplot(data.frame("x" = rcauchy(2000, location = 0.1, scale = 1))) +
-  geom_density(aes(x = x)) +
-  coord_cartesian(xlim = c(-100, 100))
-
-modOUT_dEstRSF <- brm(formula = formRSF,
-                      data = modelDataRSF,
-                      family = gaussian,
-                      prior = brmpriorRSF,
-                      warmup = 1000, iter = 2000, chains = 4,
-                      # warmup = 2000, iter = 5000, chains = 4,
-                      cores = 12,
-                      thin = 2,
-                      # control = list(adapt_delta = 0.90,
-                      #                max_treedepth = 15),
-                      seed = 1,
-                      save_pars = save_pars(all = TRUE),
-                      save_model = here("notebook", "modelOuput", "absDeltaEstModel_RSF.txt"),
-                      file = here("notebook", "modelOuput", "absDeltaEstModel_RSF"))
-
-modOUT_dEstRSF
 
 
-modOUT_dEstWides <- brm(formula = formWides,
-                        data = modelDataWides,
-                        family = gaussian,
-                        prior = brmpriorWides,
+  get_prior(formRSF, data = modelDataRSF)
+  # priors
+  brmpriorRSF <- c(
+    set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
+    set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
+    set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
+    set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "tfScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "weightingScaled")
+  )
+  modOUT_dEstRSF <- brm(formula = formRSF,
+                        data = modelDataRSF,
+                        family = gamma,
+                        prior = brmpriorRSF,
                         warmup = 1000, iter = 2000, chains = 4,
                         # warmup = 2000, iter = 5000, chains = 4,
-                        cores = 12,
+                        cores = 4,
                         thin = 2,
                         # control = list(adapt_delta = 0.90,
                         #                max_treedepth = 15),
                         seed = 1,
                         save_pars = save_pars(all = TRUE),
-                        save_model = here("notebook", "modelOuput", "absDeltaEstModel_Wides.txt"),
-                        file = here("notebook", "modelOuput", "absDeltaEstModel_Wides"))
+                        save_model = here("notebook", "modelOutput", "absDeltaEstModel_RSF.txt"),
+                        file = here("notebook", "modelOutput", "absDeltaEstModel_RSF"))
 
-modOUT_dEstWides
+  return(list(method = "rsf",
+              brmOUT = modOUT_dEstRSF))
 
-modOUT_dEstSSF <- brm(formula = formSSF,
-                      data = modelDataSSF,
-                      family = gaussian,
-                      prior = brmpriorSSF,
-                      warmup = 1000, iter = 2000, chains = 4,
-                      # warmup = 2000, iter = 5000, chains = 4,
-                      cores = 12,
-                      thin = 2,
-                      # control = list(adapt_delta = 0.90,
-                      #                max_treedepth = 15),
-                      seed = 1,
-                      save_pars = save_pars(all = TRUE),
-                      save_model = here("notebook", "modelOuput", "absDeltaEstModel_SSF.txt"),
-                      file = here("notebook", "modelOuput", "absDeltaEstModel_SSF.txt"))
+} else if(method == "wides"){
+  # parse combined results converts tf to points/hour to help interpretation
+  areaResults <- multiverseHabitat::parse_combined_results(areaResults)
+  areaResults$tf <- round(areaResults$tf, digits = 2)
 
-modOUT_dEstSSF
+  modelDataWides <- areaResults %>%
+    filter(analysis == "wides") %>%
+    mutate(medEst = median(Estimate, na.rm = TRUE),
+           absDeltaEst = abs(Estimate - medEst)) %>%
+    mutate(tfScaled = (tf-mean(tf))/sd(tf),
+           tdScaled = (td-mean(td))/sd(td),
+           availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
+           contourScaled = (contour-mean(contour))/sd(contour))
+
+
+  hist(modelDataWides$absDeltaEst, breaks = 20000)
+  # 2 % of the wides results are NA
+  sum(is.na(modelDataWides$Estimate))/
+    nrow(modelDataWides) *100
+  # wides
+  formWides <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+                    area + contourScaled + availPointsPerScaled + samplingPattern +
+                    (1|species/indi))
+  get_prior(formWides, data = modelDataWides)
+  brmpriorWides <- c(
+    set_prior("cauchy(0.1, 3)", coef = "areadBBMM"),
+    set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
+    set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
+    set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "tfScaled")
+  )
+
+  modOUT_dEstWides <- brm(formula = formWides,
+                          data = modelDataWides,
+                          family = gamma,
+                          prior = brmpriorWides,
+                          warmup = 1000, iter = 2000, chains = 4,
+                          # warmup = 2000, iter = 5000, chains = 4,
+                          cores = 4,
+                          thin = 2,
+                          # control = list(adapt_delta = 0.90,
+                          #                max_treedepth = 15),
+                          seed = 1,
+                          save_pars = save_pars(all = TRUE),
+                          save_model = here("notebook", "modelOutput", "absDeltaEstModel_Wides.txt"),
+                          file = here("notebook", "modelOutput", "absDeltaEstModel_Wides"))
+
+  return(list(method = "wides",
+              brmOUT = modOUT_dEstWides))
+
+} else if(method == "ssf"){
+
+  ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
+  ssfResults$tf <- round(ssfResults$tf, digits = 2)
+
+  modelDataSSF <- ssfResults %>%
+    mutate(medEst = median(Estimate, na.rm = TRUE),
+           absDeltaEst = abs(Estimate - medEst)) %>%
+    mutate(tfScaled = (tf-mean(tf))/sd(tf),
+           tdScaled = (td-mean(td))/sd(td),
+           availablePerStepScaled  = (availablePerStep-mean(availablePerStep))/sd(availablePerStep))
+
+  hist(modelDataSSF$absDeltaEst, breaks = 20000)
+  # ssf
+  formSSF <- bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+                  modelForm + stepDist + turnDist + availablePerStepScaled +
+                  (1|species/indi))
+  # AKA (1|species) + (1|species:indi) for a nested group effect intercept
+  get_prior(formSSF, data = ssfModelData)
+  brmpriorSSF <- c(
+    set_prior("cauchy(0.1, 3)", coef = "availablePerStepScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "modelFormmf.ss"),
+    set_prior("cauchy(0.1, 3)", coef = "stepDistgamma"),
+    set_prior("cauchy(0.1, 3)", coef = "turnDistvonmises"),
+    set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "tfScaled")
+  )
+  # ggplot(data.frame("x" = rcauchy(2000, location = 0.1, scale = 1))) +
+  #   geom_density(aes(x = x)) +
+  #   coord_cartesian(xlim = c(-100, 100))
+
+  modOUT_dEstSSF <- brm(formula = formSSF,
+                        data = modelDataSSF,
+                        family = gamma,
+                        prior = brmpriorSSF,
+                        warmup = 1000, iter = 2000, chains = 4,
+                        # warmup = 2000, iter = 5000, chains = 4,
+                        cores = 4,
+                        thin = 2,
+                        # control = list(adapt_delta = 0.90,
+                        #                max_treedepth = 15),
+                        seed = 1,
+                        save_pars = save_pars(all = TRUE),
+                        save_model = here("notebook", "modelOutput", "absDeltaEstModel_SSF.txt"),
+                        file = here("notebook", "modelOutput", "absDeltaEstModel_SSF.txt"))
+
+  return(list(method = "ssf",
+              brmOUT = modOUT_dEstSSF))
+}
+
 
 # Review convergence ------------------------------------------------------
 
@@ -218,67 +240,67 @@ modOUT_dEstRSF %>%
 varsToPlot
 
 (rsfEffectPlot <- modOUT_dEstRSF %>%
-  spread_draws(`b_.*`, regex = TRUE) %>%
-  select(-.chain, -.iteration, -.draw) %>%
-  melt() %>%
-  filter(!variable %in% c("b_Intercept")) %>%
-  mutate(
-    variable = case_when(
-      variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
-      variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
-      variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
-      variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
-      variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
-      variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
-      variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
-      variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified",
-      variable == "b_weightingScaled" ~ "\u03B2 Weighting of Used Points"
-    )
-  ) %>%
-  ggplot(aes(x = value, y = variable)) +
-  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-             linetype = 1) +
-  stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
-            alpha = 1) +
-  stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
-                     point_interval = median_hdci, .width = c(.66, .95),
-                     stroke = 1.25, colour = palette[c("coreGrey")]) +
-  stat_summary(aes(colour = after_stat(x) > 0),
-               position = position_dodge(width = 0.2, preserve = "single"),
-               fun = median, size = 0.25) +
-  scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
-  scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-  annotate("segment", x = 0.01, xend = 0.5, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["2"]) +
-  annotate("text", x = 0.5, y = -0.1, label = "Greater deviation\nfrom median preference estimate",
-           colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
-  annotate("segment", x = -0.01, xend = -0.5, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["BADGER"]) +
-  annotate("text", x = -0.5, y = -0.1, label = "Closer to\nmedian preference estimate",
-           colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
-  coord_cartesian(clip = "off", ylim = c(1, NA)) +
-  labs(x = "Estimated Beta", y = "") +
-  theme_bw() +
-  theme(
-    line = element_line(colour = palette["coreGrey"]),
-    text = element_text(colour = palette["coreGrey"]),
-    strip.background = element_blank(),
-    strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-    # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-    # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
-    axis.title.x = element_text(margin = margin(60,0,0,0)),
-    axis.ticks.y.left = element_blank(),
-    axis.line.x = element_line(),
-    strip.clip = "off",
-    panel.border = element_blank(),
-    panel.spacing = unit(18, "pt"),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    legend.position = "none"))
+    spread_draws(`b_.*`, regex = TRUE) %>%
+    select(-.chain, -.iteration, -.draw) %>%
+    melt() %>%
+    filter(!variable %in% c("b_Intercept")) %>%
+    mutate(
+      variable = case_when(
+        variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+        variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+        variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
+        variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
+        variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
+        variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+        variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
+        variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified",
+        variable == "b_weightingScaled" ~ "\u03B2 Weighting of Used Points"
+      )
+    ) %>%
+    ggplot(aes(x = value, y = variable)) +
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+               linetype = 1) +
+    stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
+              alpha = 1) +
+    stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                       point_interval = median_hdci, .width = c(.66, .95),
+                       stroke = 1.25, colour = palette[c("coreGrey")]) +
+    stat_summary(aes(colour = after_stat(x) > 0),
+                 position = position_dodge(width = 0.2, preserve = "single"),
+                 fun = median, size = 0.25) +
+    scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+    scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+    annotate("segment", x = 0.01, xend = 0.5, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["2"]) +
+    annotate("text", x = 0.5, y = -0.1, label = "Greater deviation\nfrom median preference estimate",
+             colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
+    annotate("segment", x = -0.01, xend = -0.5, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["BADGER"]) +
+    annotate("text", x = -0.5, y = -0.1, label = "Closer to\nmedian preference estimate",
+             colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
+    coord_cartesian(clip = "off", ylim = c(1, NA)) +
+    labs(x = "Estimated Beta", y = "") +
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+      # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+      axis.title.x = element_text(margin = margin(60,0,0,0)),
+      axis.ticks.y.left = element_blank(),
+      axis.line.x = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "none"))
 
 ggsave(rsfEffectPlot,
        filename = here("notebook", "figures", "rsfEffectPlot.png"),
@@ -292,72 +314,72 @@ ggsave(rsfEffectPlot,
 varsToPlot
 
 (widesEffectPlot <- modOUT_dEstWides %>%
-  spread_draws(`b_.*`, regex = TRUE) %>%
-  select(-.chain, -.iteration, -.draw) %>%
-  melt() %>%
-  filter(!variable %in% c("b_Intercept")) %>%
-  mutate(
-    variable = case_when(
-      variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
-      variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
-      variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
-      variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
-      variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
-      variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
-      variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
-      variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified"
-    )
-  ) %>%
-  ggplot(aes(x = value, y = variable)) +
-  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-             linetype = 1) +
-  stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
-            alpha = 1) +
-  stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
-                     point_interval = median_hdci, .width = c(.66, .95),
-                     stroke = 1.25, colour = palette[c("coreGrey")]) +
-  stat_summary(aes(colour = after_stat(x) > 0),
-               position = position_dodge(width = 0.2, preserve = "single"),
-               fun = median, size = 0.25) +
-  scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
-  scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-  annotate("segment",
-           x = 0.01, xend = 0.05, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["2"]) +
-  annotate("text",
-           x = 0.05, y = -0.1,
-           label = "Greater deviation\nfrom median preference estimate",
-           colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
-  annotate("segment",
-           x = -0.01, xend = -0.05, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["BADGER"]) +
-  annotate("text",
-           x = -0.05, y = -0.1,
-           label = "Closer to\nmedian preference estimate",
-           colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
-  coord_cartesian(clip = "off", ylim = c(1, NA)) +
-  labs(x = "Estimated Beta", y = "") +
-  theme_bw() +
-  theme(
-    line = element_line(colour = palette["coreGrey"]),
-    text = element_text(colour = palette["coreGrey"]),
-    strip.background = element_blank(),
-    strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-    # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-    # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
-    axis.title.x = element_text(margin = margin(60,0,0,0)),
-    axis.ticks.y.left = element_blank(),
-    axis.line.x = element_line(),
-    strip.clip = "off",
-    panel.border = element_blank(),
-    panel.spacing = unit(18, "pt"),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    legend.position = "none"))
+    spread_draws(`b_.*`, regex = TRUE) %>%
+    select(-.chain, -.iteration, -.draw) %>%
+    melt() %>%
+    filter(!variable %in% c("b_Intercept")) %>%
+    mutate(
+      variable = case_when(
+        variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+        variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+        variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
+        variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
+        variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
+        variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+        variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
+        variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified"
+      )
+    ) %>%
+    ggplot(aes(x = value, y = variable)) +
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+               linetype = 1) +
+    stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
+              alpha = 1) +
+    stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                       point_interval = median_hdci, .width = c(.66, .95),
+                       stroke = 1.25, colour = palette[c("coreGrey")]) +
+    stat_summary(aes(colour = after_stat(x) > 0),
+                 position = position_dodge(width = 0.2, preserve = "single"),
+                 fun = median, size = 0.25) +
+    scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+    scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+    annotate("segment",
+             x = 0.01, xend = 0.05, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["2"]) +
+    annotate("text",
+             x = 0.05, y = -0.1,
+             label = "Greater deviation\nfrom median preference estimate",
+             colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
+    annotate("segment",
+             x = -0.01, xend = -0.05, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["BADGER"]) +
+    annotate("text",
+             x = -0.05, y = -0.1,
+             label = "Closer to\nmedian preference estimate",
+             colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
+    coord_cartesian(clip = "off", ylim = c(1, NA)) +
+    labs(x = "Estimated Beta", y = "") +
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+      # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+      axis.title.x = element_text(margin = margin(60,0,0,0)),
+      axis.ticks.y.left = element_blank(),
+      axis.line.x = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "none"))
 
 ggsave(widesEffectPlot,
        filename = here("notebook", "figures", "widesEffectPlot.png"),
@@ -371,71 +393,71 @@ ggsave(widesEffectPlot,
 varsToPlot
 
 (ssfEffectPlot <- modOUT_dEstSSF %>%
-  spread_draws(`b_.*`, regex = TRUE) %>%
-  select(-.chain, -.iteration, -.draw) %>%
-  melt() %>%
-  filter(!variable %in% c("b_Intercept")) %>%
-  mutate(
-    variable = case_when(
-      variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
-      variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
-      variable == "b_modelFormmf.ss" ~ "\u03B2 Model Formula: Step Selection",
-      variable == "b_stepDistgamma" ~ "\u03B2 Step Distribution: Gamma",
-      variable == "b_turnDistvonmises" ~ "\u03B2 Turn Distribution: Von Mises",
-      variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
-      variable == "b_availablePerStepScaled" ~ "\u03B2 Available Points Per Step"
-    )
-  ) %>%
-  ggplot(aes(x = value, y = variable)) +
-  geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-             linetype = 1) +
-  stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
-            alpha = 1) +
-  stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
-                     point_interval = median_hdci, .width = c(.66, .95),
-                     stroke = 1.25, colour = palette[c("coreGrey")]) +
-  stat_summary(aes(colour = after_stat(x) > 0),
-               position = position_dodge(width = 0.2, preserve = "single"),
-               fun = median, size = 0.25) +
-  scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
-  scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-  annotate("segment",
-           x = 0.01, xend = 0.05, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["2"]) +
-  annotate("text",
-           x = 0.05, y = -0.1,
-           label = "Greater deviation\nfrom median preference estimate",
-           colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
-  annotate("segment",
-           x = -0.01, xend = -0.05, y = -0.1, yend = -0.1,
-           linewidth = 1.25,
-           arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-           colour = palette["BADGER"]) +
-  annotate("text",
-           x = -0.05, y = -0.1,
-           label = "Closer to\nmedian preference estimate",
-           colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
-  coord_cartesian(clip = "off", ylim = c(1, NA)) +
-  labs(x = "Estimated Beta", y = "") +
-  theme_bw() +
-  theme(
-    line = element_line(colour = palette["coreGrey"]),
-    text = element_text(colour = palette["coreGrey"]),
-    strip.background = element_blank(),
-    strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-    # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-    # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
-    axis.title.x = element_text(margin = margin(60,0,0,0)),
-    axis.ticks.y.left = element_blank(),
-    axis.line.x = element_line(),
-    strip.clip = "off",
-    panel.border = element_blank(),
-    panel.spacing = unit(18, "pt"),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    legend.position = "none"))
+    spread_draws(`b_.*`, regex = TRUE) %>%
+    select(-.chain, -.iteration, -.draw) %>%
+    melt() %>%
+    filter(!variable %in% c("b_Intercept")) %>%
+    mutate(
+      variable = case_when(
+        variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+        variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+        variable == "b_modelFormmf.ss" ~ "\u03B2 Model Formula: Step Selection",
+        variable == "b_stepDistgamma" ~ "\u03B2 Step Distribution: Gamma",
+        variable == "b_turnDistvonmises" ~ "\u03B2 Turn Distribution: Von Mises",
+        variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+        variable == "b_availablePerStepScaled" ~ "\u03B2 Available Points Per Step"
+      )
+    ) %>%
+    ggplot(aes(x = value, y = variable)) +
+    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+               linetype = 1) +
+    stat_slab(aes(fill = after_stat(x > 0)), fill_type = "gradient",
+              alpha = 1) +
+    stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                       point_interval = median_hdci, .width = c(.66, .95),
+                       stroke = 1.25, colour = palette[c("coreGrey")]) +
+    stat_summary(aes(colour = after_stat(x) > 0),
+                 position = position_dodge(width = 0.2, preserve = "single"),
+                 fun = median, size = 0.25) +
+    scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+    scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+    annotate("segment",
+             x = 0.01, xend = 0.05, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["2"]) +
+    annotate("text",
+             x = 0.05, y = -0.1,
+             label = "Greater deviation\nfrom median preference estimate",
+             colour = palette["2"], hjust = 0, vjust = 0.5, lineheight = 0.95) +
+    annotate("segment",
+             x = -0.01, xend = -0.05, y = -0.1, yend = -0.1,
+             linewidth = 1.25,
+             arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+             colour = palette["BADGER"]) +
+    annotate("text",
+             x = -0.05, y = -0.1,
+             label = "Closer to\nmedian preference estimate",
+             colour = palette["BADGER"], hjust = 1, vjust = 0.5, lineheight = 0.95) +
+    coord_cartesian(clip = "off", ylim = c(1, NA)) +
+    labs(x = "Estimated Beta", y = "") +
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+      # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+      axis.title.x = element_text(margin = margin(60,0,0,0)),
+      axis.ticks.y.left = element_blank(),
+      axis.line.x = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "none"))
 
 ggsave(ssfEffectPlot,
        filename = here("notebook", "figures", "ssfEffectPlot.png"),
