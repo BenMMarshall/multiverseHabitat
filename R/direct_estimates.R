@@ -207,7 +207,7 @@ direct_estimates <- function(simDataList){
       multiverseHabitat::extract_estimate(ssfdestinationDF))
     )
     indiResults$scale <- c(rep("movement", 3), rep("destination", 3))
-    indiResults$indi <- stringr::str_extract(nameSingle, "[:digit:]")
+    indiResults$indi <- stringr::str_extract(nameSingle, "[:digit:]+")
     indiResults$species <- stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA")
 
     simDirectResultsList[[nameSingle]] <- indiResults

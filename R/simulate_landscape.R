@@ -56,9 +56,11 @@ simulate_landscape <- function(
     (max(moveQual[], na.rm = TRUE) - min(moveQual[], na.rm = TRUE))
 
 
-  # shelter sites are best found near the edge of high resource areas, but deeper than the best movement routes
+  # shelter sites are best found near the edge of high resource areas, but
+  # deeper than the best movement routes
   shelterQual[shelterQual[] < 0.7 & shelterQual[] > 0.5] <-
     shelterQual[shelterQual[] < 0.7 & shelterQual[] > 0.5] + 1
+  shelterQual[shelterQual[] < 0.5] <- 0
   shelterQual[] <- (shelterQual[] - min(shelterQual[], na.rm = TRUE)) /
     (max(shelterQual[], na.rm = TRUE) - min(shelterQual[], na.rm = TRUE))
 
