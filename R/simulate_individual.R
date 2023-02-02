@@ -53,9 +53,20 @@ simulate_individual <- function(
 
 
   ## BADGER SERVES AS DEFAULT
-  sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 2,
-                                          ext = raster::extent(0.45, 0.65, 0.45, 0.65),
-                                          rowcol = TRUE)
+  # sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 2,
+  #                                         ext = raster::extent(0.45, 0.65, 0.45, 0.65),
+  #                                         rowcol = TRUE)
+  extractedMovementValues <- c(0, 0)
+  while(!all(extractedMovementValues == 2)){
+    sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 2,
+                                            ext = raster::extent(0.45, 0.65, 0.45, 0.65),
+                                            rowcol = TRUE)
+
+    spMovementPoints <- sp::SpatialPoints(sampledShelters[,c("col", "row")],
+                                          sp::CRS(SRS_string = "EPSG:32601"))
+    extractedMovementValues <- raster::extract(landscapeList$classRaster, spMovementPoints)
+  }
+
   IN_shelterLocs <- data.frame(
     "x" = sampledShelters[,2],
     "y" = sampledShelters[,1])
@@ -85,9 +96,20 @@ simulate_individual <- function(
   ## VULTURE CHANGES
   if(species == "VULTURE"){
 
-    sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 3,
-                                            ext = raster::extent(0.45, 0.65, 0.45, 0.65),
-                                            rowcol = TRUE)
+    # sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 3,
+    #                                         ext = raster::extent(0.45, 0.65, 0.45, 0.65),
+    #                                         rowcol = TRUE)
+    extractedMovementValues <- c(0, 0)
+    while(!all(extractedMovementValues == 2)){
+      sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 2,
+                                              ext = raster::extent(0.45, 0.65, 0.45, 0.65),
+                                              rowcol = TRUE)
+
+      spMovementPoints <- sp::SpatialPoints(sampledShelters[,c("col", "row")],
+                                            sp::CRS(SRS_string = "EPSG:32601"))
+      extractedMovementValues <- raster::extract(landscapeList$classRaster, spMovementPoints)
+    }
+
     IN_shelterLocs <- data.frame(
       "x" = sampledShelters[,2],
       "y" = sampledShelters[,1])
@@ -130,9 +152,21 @@ simulate_individual <- function(
     IN_behaveMatrix[3,1] <- 0.00025
     IN_behaveMatrix[3,2] <- 0.000001
     IN_behaveMatrix[3,3] <- 0.999
-    sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 12,
-                                            ext = raster::extent(0.35, 0.65, 0.42, 0.65),
-                                            rowcol = TRUE)
+
+    # sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 12,
+    #                                         ext = raster::extent(0.35, 0.65, 0.42, 0.65),
+    #                                         rowcol = TRUE)
+    extractedMovementValues <- c(0, 0)
+    while(!all(extractedMovementValues == 2)){
+      sampledShelters <- raster::sampleRandom(raster::raster(landscapeList$shelter), 2,
+                                              ext = raster::extent(0.45, 0.65, 0.45, 0.65),
+                                              rowcol = TRUE)
+
+      spMovementPoints <- sp::SpatialPoints(sampledShelters[,c("col", "row")],
+                                            sp::CRS(SRS_string = "EPSG:32601"))
+      extractedMovementValues <- raster::extract(landscapeList$classRaster, spMovementPoints)
+    }
+
     IN_shelterLocs <- data.frame(
       "x" = sampledShelters[,2],
       "y" = sampledShelters[,1])

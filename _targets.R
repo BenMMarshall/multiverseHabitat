@@ -37,7 +37,7 @@ values_SimSpecies <- tibble(
 )
 values_SimIndi <- tibble(
   # individual = 1
-  individual = 1:6
+  individual = 1:4
   # individual = seq_len(30)
 )
 
@@ -102,9 +102,9 @@ allIndividualEstimatesList <- list(
         individualNum = individual,
         species = species,
         simSteps = 24*60 *365,
-        desOptions = 10,
-        options = 12,
-        landscape,
+        desOptions = 12,
+        options = 15,
+        landscapeList = landscape,
         seed = 2022),
         priority = 0.93), # FUNCTION simulate_individual
 
