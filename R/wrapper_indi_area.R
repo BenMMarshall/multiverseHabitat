@@ -24,7 +24,8 @@ wrapper_indi_area <- function(
   Method_we <- optionsList$Method_we
 
   # wides places
-  listSize <- length(areaMethod) *
+  listSize <-
+    length(areaMethod) *
     length(areaContour) *
     length(Method_ap) *
     length(Method_sp) +
@@ -33,7 +34,9 @@ wrapper_indi_area <- function(
     length(areaContour) *
     length(Method_ap) *
     length(Method_sp) *
-    length(Method_we)
+    length(Method_we) +
+    # wRSF place
+    1
 
   ## loop is better than an apply function as the for loop reduces the number of
   ## times the AKDE fit is ran
@@ -51,126 +54,196 @@ wrapper_indi_area <- function(
       dBBMMsettings = c(168, 48)
     )
 
-    for(ac in areaContour){
+    for(me in Method_method){
 
-      print(ac)
-      print(nrow(movementData))
+      if(!me == "wRSF"){
 
-      if(class(areaOUT)[1] == "try-error"){
+        for(ac in areaContour){
 
-        polyOUT <- NA
+          print(ac)
+          print(nrow(movementData))
 
-      } else {
+          if(class(areaOUT)[1] == "try-error"){
 
-        print(ac)
-        print(nrow(movementData))
+            print(areaOUT)
 
-        polyOUT <- multiverseHabitat::build_available_polygon(
-          areaResource = areaOUT,
-          method = am,
-          contour = ac,
-          SRS_string = "EPSG:32601")
+            polyOUT <- NA
 
-        print("polyOUT")
+          } else {
 
-      }
+            print(ac)
+            print(nrow(movementData))
 
-      for(ap in Method_ap){
+            polyOUT <- multiverseHabitat::build_available_polygon(
+              areaResource = areaOUT,
+              method = am,
+              contour = ac,
+              SRS_string = "EPSG:32601")
 
-        for(sp in Method_sp){
+            print("polyOUT")
 
-          for(me in Method_method){
+          }
 
-            if(me == "wides"){
+          for(ap in Method_ap){
 
-              i <- i+1
+            for(sp in Method_sp){
 
-              # this tackles the instances where area estimates fail
-              if(is.na(polyOUT)){
-
-                listOUT[[i]] <- data.frame(
-                  Estimate = NA,
-                  SE = NA,
-                  analysis = me,
-                  area = am,
-                  contour = ac,
-                  availPointsPer = ap,
-                  samplingPattern = sp,
-                  weighting = NA
-                )
-
-              } else {
-
-                wiOUT <- multiverseHabitat::method_indi_wides(
-                  movementData = movementData,
-                  landscape = landscape,
-                  spSamp = sp,
-                  availableArea = polyOUT,
-                  availablePointsPer = ap)
-
-                listOUT[[i]] <- data.frame(
-                  Estimate = wiOUT$Estimate,
-                  SE = wiOUT$SE,
-                  analysis = me,
-                  area = am,
-                  contour = ac,
-                  availPointsPer = ap,
-                  samplingPattern = sp,
-                  weighting = NA
-                )
-              } # if poly NA
-              print(me)
-
-            } else if(me == "rsf"){
-
-              for(we in Method_we){
+              if(me == "wides"){
 
                 i <- i+1
+
+                # this tackles the instances where area estimates fail
                 if(is.na(polyOUT)){
 
                   listOUT[[i]] <- data.frame(
                     Estimate = NA,
-                    SE = NA,
+                    Lower = NA,
+                    Upper = NA,
                     analysis = me,
                     area = am,
                     contour = ac,
                     availPointsPer = ap,
                     samplingPattern = sp,
-                    weighting = we
+                    weighting = NA
                   )
 
                 } else {
 
-                  rsfOUT <- multiverseHabitat::method_indi_rsf(
+                  wiOUT <- multiverseHabitat::method_indi_wides(
                     movementData = movementData,
                     landscape = landscape,
                     spSamp = sp,
                     availableArea = polyOUT,
-                    availablePointsPer = ap,
-                    weighting = we
-                  )
-
+                    availablePointsPer = ap)
 
                   listOUT[[i]] <- data.frame(
-                    Estimate = rsfOUT$Estimate,
-                    SE = rsfOUT$SE,
+                    Estimate = wiOUT$Estimate,
+                    Lower = wiOUT$Estimate - wiOUT$SE,
+                    Upper = wiOUT$Estimate + wiOUT$SE,
                     analysis = me,
                     area = am,
                     contour = ac,
                     availPointsPer = ap,
                     samplingPattern = sp,
-                    weighting = we
+                    weighting = NA
                   )
                 } # if poly NA
+                # print(me)
 
-                print(me)
+              } else if(me == "rsf"){
 
-              } # we
-            } # if method
-          } # me
-        } # sp
-      } # ap
-    } # ac
+                for(we in Method_we){
+
+                  i <- i+1
+                  if(is.na(polyOUT)){
+
+                    listOUT[[i]] <- data.frame(
+                      Estimate = NA,
+                      Lower = NA,
+                      Upper = NA,
+                      analysis = me,
+                      area = am,
+                      contour = ac,
+                      availPointsPer = ap,
+                      samplingPattern = sp,
+                      weighting = we
+                    )
+
+                  } else {
+
+                    rsfOUT <- multiverseHabitat::method_indi_rsf(
+                      movementData = movementData,
+                      landscape = landscape,
+                      spSamp = sp,
+                      availableArea = polyOUT,
+                      availablePointsPer = ap,
+                      weighting = we
+                    )
+
+
+                    listOUT[[i]] <- data.frame(
+                      Estimate = rsfOUT$Estimate,
+                      Lower = rsfOUT$Estimate - rsfOUT$SE,
+                      Upper = rsfOUT$Estimate + rsfOUT$SE,
+                      analysis = me,
+                      area = am,
+                      contour = ac,
+                      availPointsPer = ap,
+                      samplingPattern = sp,
+                      weighting = we
+                    )
+                  } # if poly NA
+
+                  # print(me)
+
+                } # we
+              } # if method rsf
+            } # sp
+          } # ap
+        } # ac
+
+      } else if(me == "wRSF" & am == "AKDE"){
+
+        print(me)
+
+        i <- i+1
+        if(class(areaOUT)[1] == "try-error"){
+
+          print(areaOUT)
+
+          listOUT[[i]] <- data.frame(
+            Estimate = NA,
+            Lower = NA,
+            Upper = NA,
+            analysis = "wRSF",
+            area = NA,
+            contour = NA,
+            availPointsPer = NA,
+            samplingPattern = NA,
+            weighting = NA
+          )
+
+        } else {
+
+          spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+          spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
+          movementData$lon <- spLL@coords[,1]
+          movementData$lat <- spLL@coords[,2]
+          teleObj <- ctmm::as.telemetry(movementData,
+                                        timeformat = "%Y-%m-%d %H:%M:%S",
+                                        timezone="UTC",
+                                        projection = sp::CRS(SRS_string = "EPSG:32601"))
+
+          wRSF <- ctmm:::rsf.fit(teleObj,
+                                 UD = areaOUT,
+                                 R = list(c = landscape$classRasterLatLon),
+                                 # R = list(
+                                 #   c0 = r0,
+                                 #   c1 = r1,
+                                 #   c2 = r2),
+                                 error = 0.01,
+                                 reference = 1,
+                                 max.mem = "1 Gb")
+
+          # summary(wRSF)
+          wRSFOUT <- summary(wRSF)$CI[1,]
+          rm(wRSF)
+
+          listOUT[[i]] <- data.frame(
+            Estimate = wRSFOUT["est"],
+            Lower = wRSFOUT["low"],
+            Upper = wRSFOUT["high"],
+            analysis = "wRSF",
+            area = NA,
+            contour = NA,
+            availPointsPer = NA,
+            samplingPattern = NA,
+            weighting = NA
+          )
+        } # if error in akde area method
+      } # if wRSF
+
+    } # me
   } # am
 
   return(do.call(rbind, listOUT))

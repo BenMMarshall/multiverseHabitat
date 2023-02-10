@@ -13,7 +13,7 @@ tar_option_set(
   packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move",
-               "brms", "bayesplot", "tidybayes"), # packages that your targets need to run
+               "brms", "bayesplot", "tidybayes", "ggplot2"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -57,6 +57,7 @@ values_Sampling <- values_Sampling %>%
   dplyr::select(td, tf)
 
 optionsList_area <- list(
+  # Method_method = c("wides", "rsf", "wRSF"),
   Method_method = c("wides", "rsf"),
   areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
   areaContour = c(90, 95, 99),

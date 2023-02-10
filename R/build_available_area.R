@@ -14,7 +14,6 @@
 #' @export
 build_available_area <- function(movementData,
                                  method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
-                                 contour,
                                  SRS_string = "EPSG:32601",
                                  dBBMMsettings = NULL){
 
@@ -105,7 +104,7 @@ build_available_area <- function(movementData,
       #                       weights = TRUE)
       # needed to catch weird instances with limited data
       akdeRes <- try(
-        ctmm::akde(teleObj, fits[[1]],
+        ctmm::akde(teleObj, fits,
                    weights = TRUE)
       )
       print("area")
