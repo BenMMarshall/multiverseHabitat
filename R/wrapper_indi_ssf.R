@@ -53,7 +53,8 @@ wrapper_indi_ssf <- function(
 
           listOUT[[i]] <- data.frame(
             Estimate = ssfOUT$Estimate,
-            SE = ssfOUT$SE,
+            Lower = ssfOUT$Estimate - ssfOUT$SE,
+            Upper = ssfOUT$Estimate + ssfOUT$SE,
             analysis = "ssf",
             modelForm = mf,
             stepDist = sd,

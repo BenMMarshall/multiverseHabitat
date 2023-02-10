@@ -89,8 +89,9 @@ wRSF <- ctmm:::rsf.fit(teleObj,
                        #   c0 = r0,
                        #   c1 = r1,
                        #   c2 = r2),
-                       error = 0.1,
-                       reference = 1)
+                       error = 0.01,
+                       reference = 1,
+                       max.mem = "4 GB")
 
 # wRSF <- ctmm:::rsf.fit(pepper, UD=ud, R=list(habitat1=r1), error=0.1)
 summary(wRSF)

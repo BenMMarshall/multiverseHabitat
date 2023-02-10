@@ -38,12 +38,12 @@ parse_combined_results <- function(combResults){
   combResults$td <- as.numeric(td)
 
   # prepare upper and lower based on SE
-  combResults$upper <- combResults$Estimate + combResults$SE
-  combResults$lower <- combResults$Estimate - combResults$SE
+  # combResults$upper <- combResults$Estimate + combResults$SE
+  # combResults$lower <- combResults$Estimate - combResults$SE
   # and a column that describes whether SE overlaps 0
   combResults$sigColour <-
-    ifelse(combResults$upper > 0 & combResults$lower > 0, "preference",
-           ifelse(combResults$upper < 0 & combResults$lower < 0, "avoidance",
+    ifelse(combResults$Upper > 0 & combResults$Lower > 0, "preference",
+           ifelse(combResults$Upper < 0 & combResults$Lower < 0, "avoidance",
                   "no effect"))
 
   return(combResults)

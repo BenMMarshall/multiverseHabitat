@@ -7,7 +7,6 @@
 build_available_area(
   movementData,
   method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
-  contour,
   SRS_string = "EPSG:32601",
   dBBMMsettings = NULL
 )

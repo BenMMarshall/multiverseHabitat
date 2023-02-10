@@ -158,10 +158,21 @@ simulate_landscape <- function(
   # and flip to full match the raster with the matrix used in the sims
   classRaster <- raster::flip(classRaster)
 
+
   classRasterList <- list(
     "classRaster" = raster::flip(classRaster))
 
   landscapeLayersList$classRaster <- classRasterList$classRaster
+
+  rBase <- landscapeLayersList$classRaster
+  rAll <- raster::projectRaster(from = rBase,
+                                to = projectExtent(rBase, crs = sp::CRS(SRS_string = "EPSG:4326")))
+  rAll[] <- as.factor(paste0("c", round(rAll[], digits = 0)))
+
+  classRasterLatLonList <- list(
+    "classRasterLatLon" = rAll)
+
+  landscapeLayersList$classRasterLatLon <- classRasterLatLonList$classRasterLatLon
 
   return(landscapeLayersList)
 
