@@ -6,10 +6,12 @@ library(brms)
 library(bayesplot)
 library(tidybayes)
 
-# library(ggplot2)
-# library(ggridges)
-# library(scico)
-# library(ggtext)
+library(ggplot2)
+library(ggridges)
+library(scico)
+library(ggtext)
+library(here)
+library(reshape2)
 
 palette <- c("#AD6DED", "#7D26D4", "#4F0E99", "#E87D13", "#965A1D", "#302010", "#403F41")
 names(palette) <- c("KINGCOBRA", "VULTURE", "BADGER", "2", "1", "0", "coreGrey")
@@ -223,6 +225,22 @@ for(mod in ls(pattern = "modOUT")){
 
 # Model results -----------------------------------------------------------
 
+areaResults <- multiverseHabitat::parse_combined_results(areaResults)
+areaResults$tf <- round(areaResults$tf, digits = 2)
+
+modelDataRSF <- areaResults %>%
+  filter(analysis == "rsf") %>%
+  mutate(medEst = median(Estimate, na.rm = TRUE),
+         absDeltaEst = abs(Estimate - medEst)) %>%
+  mutate(tfScaled = (tf-mean(tf))/sd(tf),
+         tdScaled = (td-mean(td))/sd(td),
+         availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
+         weightingScaled = (weighting-mean(weighting))/sd(weighting),
+         contourScaled = (contour-mean(contour))/sd(contour))
+
+targets::tar_load("areaBrms_rsf")
+modOUT_dEstRSF <- areaBrms_rsf$modOUT_dEst
+
 tdScaledEffect <- modOUT_dEstRSF %>%
   spread_draws(b_tdScaled) %>%
   median_hdci(.width = c(0.95))
@@ -237,17 +255,19 @@ modOUT_dEstRSF %>%
 
 (r2scores <- performance::r2_bayes(modOUT_dEstRSF))
 
-varsToPlot
+library(stringr)
 
 (rsfEffectPlot <- modOUT_dEstRSF %>%
     spread_draws(`b_.*`, regex = TRUE) %>%
     select(-.chain, -.iteration, -.draw) %>%
     melt() %>%
-    filter(!variable %in% c("b_Intercept")) %>%
+    filter(!variable %in% c("b_Intercept"),
+           !str_detect(variable, ":")) %>%
     mutate(
       variable = case_when(
         variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
         variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+        variable == "b_areaAKDE" ~ "\u03B2 Available Area: AKDE",
         variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
         variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
         variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
@@ -306,7 +326,94 @@ ggsave(rsfEffectPlot,
        filename = here("notebook", "figures", "rsfEffectPlot.png"),
        dpi = 300, width = 210, height = 140,
        units = "mm")
+ggsave(rsfEffectPlot,
+       filename = here("notebook", "figures", "rsfEffectPlot.pdf"),
+       width = 210, height = 140,
+       units = "mm", device = cairo_pdf)
 
+
+# rsf interations ---------------------------------------------------------
+
+intConditions <- list(
+  area = c("dBBMM", "AKDE", "MCP", "KDEhref")
+)
+
+tdAreaData <- conditional_effects(modOUT_dEstRSF, effects = "tdScaled:area",
+                                  int_conditions = intConditions, points = TRUE)
+
+endLabelstd <- tdAreaData$`tdScaled:area` %>%
+  group_by(area) %>%
+  summarise(maxx = max(tdScaled),
+            miny = min(estimate__))
+
+(tdAreaPlot <- tdAreaData$`tdScaled:area` %>%
+    ggplot() +
+    geom_line(aes(x = tdScaled, y = estimate__, colour = area)) +
+    geom_text(data = endLabelstd, aes(x = maxx, y = miny,
+                                    label = area, colour = area),
+              vjust = 0.5, hjust = 0) +
+    labs(y = "Estimated effect", x = "Tracking Duration (scaled)") +
+    coord_cartesian(ylim = c(-0.25,4))+
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      axis.line.x = element_line(),
+      axis.line.y = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "none")
+)
+
+tfAreaData <- conditional_effects(modOUT_dEstRSF, effects = "tfScaled:area",
+                                  int_conditions = intConditions, points = TRUE)
+
+endLabelstf <- tfAreaData$`tfScaled:area` %>%
+  group_by(area) %>%
+  summarise(maxx = max(tfScaled),
+            miny = min(estimate__))
+
+(tfAreaPlot <- tfAreaData$`tfScaled:area` %>%
+    ggplot() +
+    geom_line(aes(x = tfScaled, y = estimate__, colour = area)) +
+    geom_text(data = endLabelstf, aes(x = maxx, y = miny,
+                                    label = area, colour = area),
+              vjust = 0.5, hjust = 0) +
+    labs(y = "Estimated effect", x = "Tracking Frequency (scaled)") +
+    coord_cartesian(ylim = c(-0.25,4))+
+    theme_bw() +
+    theme(
+      line = element_line(colour = palette["coreGrey"]),
+      text = element_text(colour = palette["coreGrey"]),
+      strip.background = element_blank(),
+      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+      axis.line.x = element_line(),
+      axis.line.y = element_line(),
+      strip.clip = "off",
+      panel.border = element_blank(),
+      panel.spacing = unit(18, "pt"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "none")
+)
+
+(bothIterations <- tdAreaPlot + tfAreaPlot)
+
+ggsave(bothIterations,
+       filename = here("notebook", "figures", "rsfEffectPlot_iterations.png"),
+       dpi = 300, width = 210, height = 140,
+       units = "mm")
+ggsave(bothIterations,
+       filename = here("notebook", "figures", "rsfEffectPlot_iterations.pdf"),
+       width = 210, height = 140,
+       units = "mm", device = cairo_pdf)
+
+##
 # wides results -----------------------------------------------------------
 
 (r2scores <- performance::r2_bayes(modOUT_dEstWides))
