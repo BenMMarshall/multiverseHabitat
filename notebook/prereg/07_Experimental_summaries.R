@@ -89,18 +89,30 @@ rsfResultsPlotData <- rsfResults %>%
     ),
     indi = as.factor(indi),
     species = as.factor(species),
-    value = factor(value, levels = levelOrdering))
+    value = factor(value, levels = levelOrdering)) %>%
+  group_by(variable, value) %>%
+  mutate(d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
+  ungroup()
 
 medData <- rsfResultsPlotData %>%
   group_by(variable, value) %>%
   summarise(medEst = median(Estimate, na.rm = TRUE))
 
+nSummary <- rsfResultsPlotData %>%
+  mutate(bunch = case_when(
+    Estimate > 7.5 ~ 18.5,
+    Estimate < -7.5 ~ -33,
+    TRUE ~ -8
+  )) %>%
+  group_by(bunch, variable, value) %>%
+  summarise(n = n())
+
 (splitSpecCurve_rsf <- rsfResultsPlotData %>%
     ggplot() +
     geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
                linetype = 1) +
-    geom_point(aes(x = Estimate, y = value, colour = sigColour),
-               position = position_jitter(width = 0, height = 0.2), alpha = 0.2) +
+    geom_point(aes(x = Estimate, y = value, colour = d_medEst),
+               position = position_jitter(width = 0, height = 0.2), alpha = 0.05) +
     geom_point(data = medData, aes(x = medEst, y = value),
                alpha = 1, size = 1.5, colour = "#FFFFFF") +
     geom_point(data = medData, aes(x = medEst, y = value),
@@ -109,7 +121,8 @@ medData <- rsfResultsPlotData %>%
                linetype = 2) +
     facet_wrap(.~variable, ncol = 1, scales = "free_y", strip.position = "left") +
     labs(y = "", x = "Estimate") +
-    scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+    # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+    scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
     theme_bw() +
     theme(
       line = element_line(colour = palette["coreGrey"]),
@@ -117,7 +130,7 @@ medData <- rsfResultsPlotData %>%
       strip.background = element_blank(),
       strip.text = element_text(face = 4, hjust = 1, vjust = 1),
       strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-      axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+      axis.text.y.left = element_text(margin = margin(0,-140,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
       axis.ticks.y.left = element_blank(),
       axis.line.x = element_line(),
       strip.clip = "off",
@@ -126,6 +139,9 @@ medData <- rsfResultsPlotData %>%
       panel.grid = element_blank())
 )
 
+splitSpecCurve_rsf_numbers <- splitSpecCurve_rsf +
+    geom_text(data = nSummary, aes(x = bunch, y = value, label = n), fontface = 3)
+
 overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
                          "indexLoc" = round(nrow(rsfResults)/2, digits = 0))
 
@@ -133,11 +149,12 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
     arrange(Estimate) %>%
     mutate(index = row_number(),
            indi = as.factor(indi),
-           species = as.factor(species)) %>%
+           species = as.factor(species),
+           d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
     ggplot() +
-    geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+    geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
                linetype = 1) +
-    geom_point(aes(x = Estimate, y = index, colour = sigColour),
+    geom_point(aes(x = Estimate, y = index, colour = d_medEst),
                size = 1, alpha = 0.2)+
     geom_point(data = data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
                                  "indexLoc" = round(nrow(rsfResults)/2, digits = 0)),
@@ -147,16 +164,17 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
                                  "indexLoc" = round(nrow(rsfResults)/2, digits = 0)),
                aes(x = medEst, y = indexLoc),
                alpha = 1, size = 2, colour = "#403F41") +
-    annotate("text", x = overallMed$medEst +20, y = overallMed$indexLoc, label = "Median",
+    annotate("text", x = overallMed$medEst +14, y = overallMed$indexLoc, label = "Median",
              fontface = 4, size = 5, colour = palette["coreGrey"],
              hjust = 1, vjust = -0.2) +
-    annotate("segment", x = overallMed$medEst +20, xend = overallMed$medEst,
+    annotate("segment", x = overallMed$medEst +14, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
-    geom_vline(data = directEstimates %>%
-                 filter(Method == "rsf", scale == "movement"),
-               aes(xintercept = Estimate)) +
-    scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+    # geom_vline(data = directEstimates %>%
+    #              filter(Method == "rsf", scale == "destination"),
+    #            aes(xintercept = Estimate)) +
+    # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+    scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
     labs(y = "", x = "Estimate") +
     theme_bw() +
       theme(
@@ -177,9 +195,32 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
 (rsfSpecComplete <- overallSpecCurve_rsf / splitSpecCurve_rsf +
     plot_layout(heights = c(1, 3), guides = "collect"))
 
+ggsave(filename = here("notebook", "figures", "rsfSpecCurve_split.png"),
+       plot = splitSpecCurve_rsf,
+       width = 360, height = 240, units = "mm", dpi = 300)
+# ggsave(filename = here("notebook", "figures", "rsfSpecCurve_split.pdf"),
+#        plot = splitSpecCurve_rsf,
+#        width = 360, height = 240, units = "mm", device = cairo_pdf)
+
+ggsave(filename = here("notebook", "figures", "rsfSpecCurve_split_numbers.png"),
+       plot = splitSpecCurve_rsf_numbers,
+       width = 360, height = 240, units = "mm", dpi = 300)
+# ggsave(filename = here("notebook", "figures", "rsfSpecCurve_split_numbers.pdf"),
+#        plot = splitSpecCurve_rsf_numbers,
+#        width = 360, height = 240, units = "mm", device = cairo_pdf)
+
+ggsave(filename = here("notebook", "figures", "rsfSpecCurve_overall.png"),
+       plot = overallSpecCurve_rsf,
+       width = 360, height = 240, units = "mm", dpi = 300)
+ggsave(filename = here("notebook", "figures", "rsfSpecCurve_overall.pdf"),
+       plot = overallSpecCurve_rsf,
+       width = 360, height = 240, units = "mm", device = cairo_pdf)
 ggsave(filename = here("notebook", "figures", "rsfSpecCurve.png"),
        plot = rsfSpecComplete,
        width = 360, height = 240, units = "mm", dpi = 300)
+# ggsave(filename = here("notebook", "figures", "rsfSpecCurve.pdf"),
+#        plot = rsfSpecComplete,
+#        width = 360, height = 240, units = "mm", device = cairo_pdf)
 
 
 # wides spec curve --------------------------------------------------------
@@ -282,9 +323,9 @@ overallMed <- data.frame("medEst" = median(widesResults$Estimate, na.rm = TRUE),
     annotate("segment", x = overallMed$medEst +10, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
-    geom_vline(data = directEstimates %>%
-                 filter(Method == "wides", scale == "movement"),
-               aes(xintercept = Estimate)) +
+    # geom_vline(data = directEstimates %>%
+    #              filter(Method == "wides", scale == "movement"),
+    #            aes(xintercept = Estimate)) +
     # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
     labs(y = "", x = "Estimate") +
     theme_bw() +
