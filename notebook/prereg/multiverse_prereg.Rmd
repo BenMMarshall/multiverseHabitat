@@ -313,20 +313,44 @@ In addition the RSF we also explore the impact of varying the weighting of the a
 There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates [NEED THE FIEBERG CITE HERE]; we include this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
 
 Other than the area based methods of Wides and RSF, we also include an exploration of Step Selection Functions (SSF).
-The second amt method does not use an area to define availability.
 Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
-As a result SSFs have a number of unique decisions.
-First is whether to run the model as an integrated SSF, where the step lengths and turn angles interact with the habitat.
-Second is where the habitat covariate data is extracted from along the step length: start, middle, or the end.
-Third is the number of available random steps to be generated at each time step.
+As a result SSFs have a number of decisions not shared with the area methods.
+
+We explored three decisions associated with the generation of random (available but unused) locations for each step.
+The first is similar to the area methods, we varied the number of random locations generated per step from ## to ##.
+The second and third are concerning the distributions used to generate the random step and turn angles.
+Step lengths were tested with a Gamma and Exponential distributions, while turn angle was tested with Von-Mises and Uniform distributions.
+
+The other decisions we explored in SSFs was whether to run the model as a standard step selection or an integrated step selection function.
+The standard step selection model is a conditional logistic regression, where we aim to estimate the used/non-used by the habitat values (case_ ~ values + strata(step_id_)).
+The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
+The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artifact of the movements of the animal rather than active habitat preference [CITE HERE].
+
+We have neglected to explore one very expansive aspect of SSFs regarding high resolution data and the use of "bursts".
+Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
+Such grouping of data deserves investigation, but the myriad of ways bursts can be defined and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
+As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
 
 <!-- The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path. -->
 <!-- We will vary the spacing of the knots, the times at which the imputed path is sampled, and the precision matrix used during the path imputation. -->
 <!-- We will also vary the method used to convert the imputed path to a continuous-time discrete-space path. -->
 <!-- We will explore the impact of Linear Interpretation versus Shortest Path, and Rook's neighbourhood versus King's neighbourhood. -->
 
-Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable.
-This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat.
+<!-- Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable. -->
+<!-- This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat. -->
+
+As the three methods described above produce habitat preference values on different scales and have different decisions associated with them, we elected to analyse the impact of the decisions separately.
+For each method we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated preference, 2) which decisions best explain the transformed deviation from the median estimated preference.
+The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased noise surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat preference.
+
+We elected to have the model try and predict the median estimate of habitat preference because the simulation cannot provide a direct analogous value to the outputs of all three methods.
+Although the simulation is a discrete time model, where the animal makes decisions based upon a number of options, is similar to a step selection model, the decision making of the animal is made on two time frames breaking our ability to directly compare simulation values with step selection outputs.
+Further, the simulated preference of the animal is balanced against other demands such as site fidelity, movement resistance, and avoidance of certain locations.
+The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
+We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioral state switch.
+These model results, while not strictly comparable to the other outputs, help confirm the animal was correctly preferring the chosen habitat (bare in mind the animal had a no preference exploratory state that would weaken the effect), and support the use of the median estimate to explore the cause behind the most deviant estimates.
+
+
 
 <!-- ### Validation -->
 <!-- comparing estimates to a second year of data -->
