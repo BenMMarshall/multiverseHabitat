@@ -149,30 +149,32 @@ We describe the simulated scenarios we plan to base the study upon and a prelimi
 We simulated three scenarios/species, comprising of different animals and landscapes.
 We simulated the landscapes using the NLMR `r paste0("v.", packageVersion("NLMR"))` package [@NLMR], and the animal movement using abmAnimalMovement `r paste0("v.", packageVersion("abmAnimalMovement"))` [@abmAnimalMovement].
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-The full details of how the scenarios were parametrised can be found in [@abmAnimalMovement], and also in the abmAnimalMovement github repository ([abmAnimalMovement Github](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
+Further details of how the scenarios were parametrised can be found in [@abmAnimalMovement], and also in the abmAnimalMovement github repository ([abmAnimalMovement Github](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
 
 In brief:
-- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts
-- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts
-- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle
+- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
+- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
+- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
 <!-- How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world. -->
-Using these setting we simulated a population individuals of each species.
+<!-- Using these setting we simulated a population individuals of each species. -->
 <!-- Two years of simulation, one for model, second for validation -->
-Each simulation contained sufficient time steps (i.e., movement choices made by the animal) to provide data for model generation and validation.
+Each simulation generated a years worth of movement data, with a data point recorded every minute.
 
 <!-- Weighted landscapes translated into three-tier categories -->
-Our landscapes comprise of three elements, which are considered by the animal differently depending on the behavioural state the animal is in.
-The three elements are matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
+Our landscapes comprise of three elements, which are considered by the animal differently depending on the behavioural state the animal is in (resting, exploring, foraging).
+The three elements were matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
 The three are non-independent, and based on a single initial random generation using a Gaussian field.
 
 <!-- [MORE SETTINGS HERE?] -->
 From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas. 
-Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease and also housing higher shelter quality, and more barren areas with high movement ease but with minimal foraging value.
+Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease, and more barren areas with high movement ease but with minimal foraging value.
+All shelter sites occurred within the higher quality core resource areas.
 
 <!-- figure here of landscapes -->
-While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categoric habitat metrics or land use types.
+While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
 Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
+While the categroisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the lanscape classification constant to maintain an feasible multiverse analysis.
 <!-- figure here of landscapes turned into categories -->
 
 ```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
@@ -181,13 +183,11 @@ knitr::include_graphics(here::here("notebook", "prereg", "figures", "landscapeEx
 
 ## Sampling and Analysis Options
 
-Ultimately number of variations and choices we are able to explore will be dictated by computational costs and therefore time; however, below we describe the currently planned decision nodes.
+Ultimately number of variations and choices we were able to explore is dictated by computational costs and time.
+No multiverse can ever be entirely comprehensive, but we endeavoured to include the major decisions that are required during analysis that may not have immediately apparent "correct" answers.
 
 ### Sampling
 
-As stated we have three species simulations planned using the abmAnimalMovement package [@abmAnimalMovement].
-The first decision point of a study would be the number of individuals sampled from that population (i.e., sample size).
-However, as many of the habitat selection analyses focus on individual selection we will not explore study sample size initially.
 <!-- # ```{r samplingNum} -->
 <!-- # # possible way of generating a range that is skewed to more realistic number while still hitting the extremes -->
 <!-- # exp(seq(log(1), log(200), length.out = 8)) -->
@@ -198,18 +198,21 @@ However, as many of the habitat selection analyses focus on individual selection
 <!-- Tracking timing in relation to activity of animal -->
 <!-- Tracking consistency - might be very difficult to define systematically -->
 The first decisions concern data quantity.
-We aim to vary tracking duration and tracking frequency primarily, while keep consistency fixed.
-While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we will not explore tracking consistency at this time.
+We varied tracking duration and tracking frequency primarily, while keep consistency fixed.
+While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we did not explore tracking consistency at this time.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
-For this exploration we will assume that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
-This only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
+For this exploration we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
+Timing only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
+Therefore, for the lower tracking frequencies we ensured that daily tracking was centred around midday (as all our simulated species had diurnal activity patterns).
+<!-- [LOAD IN AND LIST THE TRACKING DURATIONS HERE] -->
+<!-- [LOAD IN AND LIST THE TRACKING FREQS HERE] -->
 
 <!-- Error is likely not worth the effort right now, too much complexity linked to cleaning -->
 Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
-In summary, the sampling decisions will cover species, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)A).
+In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)A).
 
 ```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="..."}
 knitr::include_graphics(here::here("notebook", "prereg", "figures", "preregDecisionTrees.png"))
@@ -217,15 +220,15 @@ knitr::include_graphics(here::here("notebook", "prereg", "figures", "preregDecis
 
 ### Analysis
 
-For the analysis decisions we focus entirely on decisions that can come out of an R analysis workflow.
+For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
 R presents the number one tool for analysing animal movement data [@joo_recent_2022].
-@joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we use this review as a resource for determining the options for habitat analysis.
-Specifically, we will explore the decisions made during the workflows using adehabitatHS `r paste0("v.", packageVersion("adehabitatHS"))` [@adehabitatHS], amt `r paste0("v.", packageVersion("amt"))` [@amt], and ctmcmove `r paste0("v.", packageVersion("ctmcmove"))` [@ctmcmove] R packages.
-Combined the packages offer many options for habitat analysis, we will focus on three.
+@joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
+Specifically, we explored a subset of decisions made during the workflows using adehabitatHS `r paste0("v.", packageVersion("adehabitatHS"))` [@adehabitatHS], and amt `r paste0("v.", packageVersion("amt"))` [@amt] R packages.
+
+Combined the packages offer many options for habitat analysis, we focus on three that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
 <!-- Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (Compana), Eigenanalysis of Selection Ratios (Eisera). -->
 And two from the amt package: resource selection function (RSF), step selection function (SSF)
-<!-- ; and one from the ctmcmove package using a continuous time Markov chain (CTMC) framework. -->
 Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)B). 
 
 <!-- #### adeHabaitatHS -->
@@ -247,46 +250,33 @@ Each of the methods require downstream decisions resulting in a "garden of forki
 <!-- could vary the distributions sl and ta are based on?  -->
 <!-- no resampling or burst because we have artificially consistent data collected -->
 
-<!-- #### ctmcmove -->
-<!-- - define the sequence of times on which to sample the imputed path -->
-<!-- - varying the spacing of the knots -->
-<!-- - LinearInterp or ShortestPath -->
-<!-- - CAR1 and CAR2 -->
-
 The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
-<!-- The methods from the adehabitatHS package all require similar choices to be made; -->
 The first decisions is whether to approach the habitat selection analysis as a type I, II or III design, as we are concerned about an individuals' habitat selection we will ignore type I.
-While type II habitat selection can identify individual preference it requires habitat availability to be defined on a population or landscape scale (i.e., a universal availability).
+While type II habitat selection can identify individual preference, it requires habitat availability to be defined on a population or landscape scale (i.e., a universal availability).
 As movement data presents an opportunity to estimate individual preference, and we are not simulating a true interacting population, we focus on type III.
 Type III and the need to individually define available habitat opens up many different analytically decisions concerning how that availability is defined.
-<!-- Wides, Compana, and Eisera analyses can be used in either type II or III scenarios. -->
 
-We used a range of methods are build areas from the recorded locations of the animal.
-Minimum convex polygons (MCPs) are a simply create a polygon based on the out most locations.
+We used a range of methods are build areas from the recorded locations of the animal: Minimum convex polygons (MCPs), Kernel Density Estimations (KDEs), Autocorrelated Kernel Density Estimations (AKDEs), and dynamic Brownian Bridge Movement Models (dBBMMs).
+Minimum convex polygons (MCPs) simply creates a polygon based on the out most locations, where the interior angles sum to less than 180 degrees.
+
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use or utilisation.
-Critical to their operation is a bandwidth or smoothing factor (h) that can alter the resulting area treated as used by the animal [@silva_reptiles_2020].
+Critical to KDEs operation is a bandwidth or smoothing factor (h) that alters the resulting area treated as used by the animal [@silva_reptiles_2020].
 For this analysis we use the the reference bandwidth (href) as it is commonly used [@crane_lots_2020], while also quickly and consistently calculable on a individual by individual basis.
-An alternative method to determine smoothing factor is Least Squares Cross Validation (LSCV).
+An alternative common method to determine smoothing factor is Least Squares Cross Validation (LSCV).
 However, we avoided the LSCV method for two reasons: 1) the LSCV method can fail to converge on a smoothing factor thereby introducing an unpredictable fail state in any potential multiverse, 2) the more limited area estimate it produces make it less suitable for defining habitat availability.
 
 The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation [@silva_reptiles_2020] that better account for the non-independence and autocorrelative structures within animal movement data [@Noonan2018].
-We use two of these methods to define availability.
+We used two of these methods to define availability.
 
 First is the Autocorrelated Kernel Density Estimations (AKDEs) [@Fleming2015; @Fleming2017] from the ctmm package [@ctmm; @Calabrese2016].
 The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
-The movement models (Ornstein-Uhlenbeck, Ornstein–Uhlenbeck Foraging, and Independent Identically Distributed) include different levels of autocorrelative structure.
-[BREAKDOWN EACH HERE]
+The movement models include different levels of autocorrelative structure: Ornstein-Uhlenbeck (OU) models account for central tendency, the Ornstein–Uhlenbeck Foraging (OUF) build on this by also accounting for autocorrelation in movement speed, while the Independent Identically Distributed (IID) models assume location independence meaning they are similar to traditional kernel density approaches.
+Each model type is also fitted in isotropic (circular) or anisotropic (elliptical) forms. 
 The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
-Therefore, we will use the guidance from [@silva_autocorrelationinformed_2022] to generate weighted AKDEs using (PHREML), and select the best performing by AICc for inclusion in further analysis.
+Therefore, we use the guidance from [@silva_autocorrelationinformed_2022] to generate weighted AKDEs using perturbative hybrid residual maximum likelihood method (pHREML), and select the best performing by AICc for inclusion in further analysis.
+Using weighted AKDEs means the area estimates better address gaps between locations [@silva_autocorrelationinformed_2022], with no apparent drawbacks nor large computational cost. 
 
-The second movement-specific method we will use is dynamic Brownian Bridge Movement Models (dBBMMs) [@Kranstauber2012] from the move package [@move], that estimates movement capacity of the animal to calibrate repeated random walks between known locations.
-Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
-As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
-This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
-Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
-We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
-[ALSTON newer paper on unifiying terms needs to be cited here]
-
+The second movement-specific method we used was dynamic Brownian Bridge Movement Models (dBBMMs) [@Kranstauber2012] from the move package [@move], which estimates movement capacity of the animal to calibrate repeated random walks between known locations.
 DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated [@Kranstauber2012]. 
 <!-- Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used. -->
 Window and margin are defined by a number of data points; therefore, to keep the time they represent the same between different tracking frequencies, we changed their values for each tracking frequency. 
@@ -294,25 +284,35 @@ As our most infrequent tracking is 168 hours (1 week), we set the window to the 
 The broader window and margin sizes helped reduce computational costs, a major concern when so many dBBMMs are being calculated.
 <!-- In these instances we will report an NA as a final result. -->
 
+Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
+As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
+This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
+Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
+We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
+[ALSTON newer paper on unifying terms needs to be cited here]
+
 <!-- Type II designs require the availability to the same for all animals. -->
 <!-- To create population-level availability we will use the above described methods for each individual, then combine the areas into a single polygon. -->
 <!-- We will also include a "landscape" description of availability that will include the entire landscape raster. -->
 
-Each of these area estimation methods require a choice to be made regarding the outermost boundary.
-MCPs areas are generated based a percentage of the location points; whereas the KDE, AKDE, and dBBMM methods require a contour to be extracted from the utilisation distribution (occurrence distribution for dBBMMs).
-We will explore the impact of using a 90, 95, and 99% contour for all the methods.
+What is considered available to an animal is not cleanly translated from biological concept to a statistical one.
+While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make –to varying degrees– use of the movement information contained within the dataset they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
+Therefore, the researcher must make a some-what arbitrary choice regarding what is included/excluded and counted as available; Each of these area estimation methods require a choice to be made regarding the outermost boundary.
+We explored the impact of using a 90, 95, and 99% contour for all the methods.
+MCPs areas are generated based a percentage of the location points.
+Whereas the KDE, AKDE, and dBBMM methods require a contour to be extracted from the utilisation distribution (occurrence distribution for dBBMMs).
 AKDEs also provide a 95% confidence interval surrounding any chosen contour; for the purposes of simplicity we only use the point estimate for each % contour.
 
-Once we have a defined availability area, we generate points at which the habitat type is recorded thereby estimating the relative availability.
+Once we had created a defined availability area, we generated points at which the habitat type is recorded to estimate the relative availability.
 How many and in what alignment these availability points are generated poses two additional points of analytical choice.
 For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset: [ADD IN R CODE TO PULL THE CHOICE FROM THE TARGETS SCRIPT].
 For the alignment of the points, points where either random or stratified within the available previously defined.
 
 As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
-In addition the RSF we also explore the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
-There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates [NEED THE FIEBERG CITE HERE]; we include this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
+In addition, for the RSF we also explored the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
+There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates [NEED THE FIEBERG CITE HERE]; we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
 
-Other than the area based methods of Wides and RSF, we also include an exploration of Step Selection Functions (SSF).
+Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF).
 Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
 As a result SSFs have a number of decisions not shared with the area methods.
 
@@ -326,7 +326,7 @@ The standard step selection model is a conditional logistic regression, where we
 The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
 The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artifact of the movements of the animal rather than active habitat preference [CITE HERE].
 
-We have neglected to explore one very expansive aspect of SSFs regarding high resolution data and the use of "bursts".
+We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of "bursts".
 Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
 Such grouping of data deserves investigation, but the myriad of ways bursts can be defined and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
@@ -339,7 +339,15 @@ As such we have restricted this exploration to step selection functions where th
 <!-- Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable. -->
 <!-- This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat. -->
 
-As the three methods described above produce habitat preference values on different scales and have different decisions associated with them, we elected to analyse the impact of the decisions separately.
+## Assessing the multiverse
+
+To generate the multiverse we used a meta-programming approach via the targets and tarchetypes R packages.
+The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing. 
+Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
+We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
+
+Further examination was complicated by the three methods described above producing habitat preference values on different scales with different decisions associated with them.
+We elected to analyse the impact of the decisions separately.
 For each method we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated preference, 2) which decisions best explain the transformed deviation from the median estimated preference.
 The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased noise surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat preference.
 
@@ -347,26 +355,47 @@ We elected to have the model try and predict the median estimate of habitat pref
 Although the simulation is a discrete time model, where the animal makes decisions based upon a number of options, is similar to a step selection model, the decision making of the animal is made on two time frames breaking our ability to directly compare simulation values with step selection outputs.
 Further, the simulated preference of the animal is balanced against other demands such as site fidelity, movement resistance, and avoidance of certain locations.
 The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
-We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioral state switch.
+We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioural state switch.
 These model results, while not strictly comparable to the other outputs, help confirm the animal was correctly preferring the chosen habitat (bare in mind the animal had a no preference exploratory state that would weaken the effect), and support the use of the median estimate to explore the cause behind the most deviant estimates.
 
+We assessed Bayesian model convergence using rhat values, acf, and trace plots.
+Based on these assessments we modified the running parameters [FINAL VALUES HERE]
+
+# Results
+
+<!-- number of datasets -->
+`r length(list.files(here::here("_targets", "objects"), pattern = "sampDuraFreqData"))`
+
+<!-- number of estimates -->
+`r targets::tar_load("ssfResults"); targets::tar_load("areaResults"); dim(ssfResults)[1] + dim(areaResults)[1]`
 
 
-<!-- ### Validation -->
-<!-- comparing estimates to a second year of data -->
+## General patterns
 
-## Hypotheses
+<!-- spec curve wides -->
+<!-- spec curve rsf -->
+<!-- spec curve ssf -->
 
-Although the study is primarily exploratory, with its scope determined by practical consideration of computational time, we register a few broad hypotheses.
-- increases in tracking duration will lead to more consistent habitat selection results
-- the most accurate estimates of habitat selection will come from tracking frequencies that match closest to the frequency of the animal's selection
-- the choice of method will have a larger impact on selection detection than the decisions within methods
-- ISSF will be the most success method as it matches closest to the underlying simulation mechanism
+## Model exploration
 
+<!-- model res wides -->
+<!-- model res rsf -->
+<!-- model res ssf -->
+
+# Discussion
+
+## Limitations of the multiverse approach
+
+## Future directions
 <!-- ## Possible Additional Explorations -->
 <!-- pop level or summary of individuals, the latter would dodge the need to vary sample size -->
 <!-- Sample size impact on population level estimates of preference. -->
 <!-- Exploring the same decisions with different simulations of animal movement. -->
+
+## Conclusions
+
+
+
 
 # Acknowledgements
 
