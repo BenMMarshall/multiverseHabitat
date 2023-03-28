@@ -7,22 +7,26 @@
 #'
 #' @export
 diagnostics_brms <- function(brmsResults){
-  name <- brmsResults[[1]]
-  currMod <- brmsResults[[2]]
 
-  vars <- get_variables(currMod)
-  varsToPlot <- vars[stringr::str_detect(vars, "b_")]
+  for(n in 2:length(brmsResults)){
 
-  traceplot <- mcmc_trace(currMod, pars = varsToPlot)
-  ggsave(traceplot,
-         filename = here("notebook", "modelOutput", paste0(name, "_traceplot.png")),
-         dpi = 300, width = 210, height = 140,
-         units = "mm")
+    name <- brmsResults$modelNames[n-1]
+    currMod <- brmsResults[[n]]
 
-  acfplot <- mcmc_acf(currMod, pars = varsToPlot)
-  ggsave(acfplot,
-         filename = here("notebook", "modelOutput", paste0(name, "_acfplot.png")),
-         dpi = 300, width = 210, height = 140,
-         units = "mm")
+    vars <- get_variables(currMod)
+    varsToPlot <- vars[stringr::str_detect(vars, "b_")]
+
+    traceplot <- mcmc_trace(currMod, pars = varsToPlot)
+    ggsave(traceplot,
+           filename = here("notebook", "modelOutput", paste0(name, "_traceplot.png")),
+           dpi = 300, width = 210, height = 140,
+           units = "mm")
+
+    acfplot <- mcmc_acf(currMod, pars = varsToPlot)
+    ggsave(acfplot,
+           filename = here("notebook", "modelOutput", paste0(name, "_acfplot.png")),
+           dpi = 300, width = 210, height = 140,
+           units = "mm")
+  }
 
 }

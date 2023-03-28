@@ -24,8 +24,8 @@ run_brms <- function(compiledResults, method){
     modelDataRSF <- areaResults %>%
       dplyr::filter(analysis == "rsf") %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    absDeltaEst = abs(Estimate - medEst),
-                    positive = ifelse(Estimate > 0, 1, 0),
+                    rawDeltaEst = abs(Estimate - medEst),
+                    absDeltaEst = abs(rawDeltaEst),
                     area = factor(area,
                                   levels = c("MCP", "dBBMM",
                                              "KDEhref", "AKDE"))
@@ -45,7 +45,7 @@ run_brms <- function(compiledResults, method){
                                       weightingScaled +
                                       (1|species/indi))
 
-    formRSF_binPositive <- brms::bf(positive ~ 1 + tdScaled + tfScaled +
+    formRSF_rawDeltaEst <- brms::bf(rawDeltaEst ~ 1 + tdScaled + tfScaled +
                                       area + area:tdScaled + area:tfScaled +
                                       contourScaled + availPointsPerScaled + samplingPattern +
                                       weightingScaled +
@@ -85,26 +85,26 @@ run_brms <- function(compiledResults, method){
                                 save_model = here::here("notebook", "modelOutput", "absDeltaEstModel_RSF.txt"),
                                 file = here::here("notebook", "modelOutput", "absDeltaEstModel_RSF"))
 
-    # modOUT_bPosRSF <- brms::brm(formula = formRSF_binPositive,
-    #                             data = modelDataRSF,
-    #                             family = brms::bernoulli,
-    #                             prior = brmpriorRSF,
-    #                             warmup = 200, iter = 1000, chains = 4,
-    #                             # warmup = 2000, iter = 5000, chains = 4,
-    #                             cores = 4,
-    #                             thin = 2,
-    #                             # control = list(adapt_delta = 0.90,
-    #                             #                max_treedepth = 15),
-    #                             seed = 1,
-    #                             save_pars = brms::save_pars(all = TRUE),
-    #                             save_model = here::here("notebook", "modelOutput", "binPositiveModel_RSF.txt"),
-    #                             file = here::here("notebook", "modelOutput", "binPositiveModel_RSF"))
+    modOUT_rEstRSF <- brms::brm(formula = formRSF_rawDeltaEst,
+                                data = modelDataRSF,
+                                family = gaussian,
+                                prior = brmpriorRSF,
+                                warmup = 200, iter = 1000, chains = 4,
+                                # warmup = 2000, iter = 5000, chains = 4,
+                                cores = 4,
+                                thin = 2,
+                                # control = list(adapt_delta = 0.90,
+                                #                max_treedepth = 15),
+                                seed = 1,
+                                save_pars = brms::save_pars(all = TRUE),
+                                save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_RSF.txt"),
+                                file = here::here("notebook", "modelOutput", "rawDeltaEstModel_RSF"))
 
+    return(list(modelNames = c("rsf_dEstRSF", "rsf_rEstRSF"),
+                modOUT_dEst = modOUT_dEstRSF,
+                modOUT_rEst = modOUT_rEstRSF))
     # return(list(method = "rsf",
-    #             modOUT_dEst = modOUT_dEstRSF,
-    #             modOUT_bPos = modOUT_bPosRSF))
-    return(list(method = "rsf",
-                modOUT_dEst = modOUT_dEstRSF))
+    #             modOUT_dEst = modOUT_dEstRSF))
 
   } else if(method == "wides"){
     # parse combined results converts tf to points/hour to help interpretation
@@ -114,8 +114,8 @@ run_brms <- function(compiledResults, method){
     modelDataWides <- areaResults %>%
       dplyr::filter(analysis == "wides") %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    absDeltaEst = abs(Estimate - medEst),
-                    positive = ifelse(Estimate > 0, 1, 0),
+                    rawDeltaEst = abs(Estimate - medEst),
+                    absDeltaEst = abs(rawDeltaEst),
                     area = factor(area,
                                   levels = c("MCP", "dBBMM",
                                              "KDEhref", "AKDE"))
@@ -135,7 +135,7 @@ run_brms <- function(compiledResults, method){
                                         area  + area:tdScaled + area:tfScaled + contourScaled + availPointsPerScaled + samplingPattern +
                                         (1|species/indi))
 
-    formWides_binPositive <- brms::bf(positive ~ 1 + tdScaled + tfScaled +
+    formWides_rawDeltaEst <- brms::bf(rawDeltaEst ~ 1 + tdScaled + tfScaled +
                                         area + area:tdScaled + area:tfScaled +
                                         contourScaled + availPointsPerScaled + samplingPattern +
                                         (1|species/indi))
@@ -173,26 +173,26 @@ run_brms <- function(compiledResults, method){
                                   save_model = here::here("notebook", "modelOutput", "absDeltaEstModel_Wides.txt"),
                                   file = here::here("notebook", "modelOutput", "absDeltaEstModel_Wides"))
 
-    # modOUT_bPosWides <- brms::brm(formula = formWides_binPositive,
-    #                               data = modelDataWides,
-    #                               family = brms::bernoulli,
-    #                               prior = brmpriorWides,
-    #                               warmup = 200, iter = 1000, chains = 4,
-    #                               # warmup = 2000, iter = 5000, chains = 4,
-    #                               cores = 4,
-    #                               thin = 2,
-    #                               # control = list(adapt_delta = 0.90,
-    #                               #                max_treedepth = 15),
-    #                               seed = 1,
-    #                               save_pars = brms::save_pars(all = TRUE),
-    #                               save_model = here::here("notebook", "modelOutput", "binPositiveModel_Wides.txt"),
-    #                               file = here::here("notebook", "modelOutput", "binPositiveModel_Wides"))
+    modOUT_rEstWides <- brms::brm(formula = formWides_rawDeltaEst,
+                                  data = modelDataWides,
+                                  family = gaussian,
+                                  prior = brmpriorWides,
+                                  warmup = 200, iter = 1000, chains = 4,
+                                  # warmup = 2000, iter = 5000, chains = 4,
+                                  cores = 4,
+                                  thin = 2,
+                                  # control = list(adapt_delta = 0.90,
+                                  #                max_treedepth = 15),
+                                  seed = 1,
+                                  save_pars = brms::save_pars(all = TRUE),
+                                  save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_Wides.txt"),
+                                  file = here::here("notebook", "modelOutput", "rawDeltaEstModel_Wides"))
 
+    return(list(modelNames = c("wides_dEstWides", "wides_rEstWides"),
+                modOUT_dEst = modOUT_dEstWides,
+                modOUT_rEst = modOUT_rEstWides))
     # return(list(method = "wides",
-    #             modOUT_dEst = modOUT_dEstWides,
-    #             modOUT_bPos = modOUT_bPosWides))
-    return(list(method = "wides",
-                modOUT_dEst = modOUT_dEstWides))
+    #             modOUT_dEst = modOUT_dEstWides))
 
 
   } else if(method == "ssf"){
@@ -202,8 +202,8 @@ run_brms <- function(compiledResults, method){
 
     modelDataSSF <- ssfResults %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    absDeltaEst = abs(Estimate - medEst),
-                    positive = ifelse(Estimate > 0, 1, 0)) %>%
+                    rawDeltaEst = abs(Estimate - medEst),
+                    absDeltaEst = abs(rawDeltaEst)) %>%
       dplyr::mutate(tfScaled = (tf-mean(tf))/sd(tf),
                     tdScaled = (td-mean(td))/sd(td),
                     availablePerStepScaled  = (availablePerStep-mean(availablePerStep))/sd(availablePerStep))
@@ -214,7 +214,7 @@ run_brms <- function(compiledResults, method){
                                       modelForm + stepDist + turnDist + availablePerStepScaled +
                                       (1|species/indi))
 
-    formSSF_binPositive <- brms::bf(positive ~ 1 + tdScaled + tfScaled +
+    formSSF_rawDeltaEst <- brms::bf(rawDeltaEst ~ 1 + tdScaled + tfScaled +
                                       modelForm + stepDist + turnDist + availablePerStepScaled +
                                       (1|species/indi))
     # AKA (1|species) + (1|species:indi) for a nested group effect intercept
@@ -247,25 +247,25 @@ run_brms <- function(compiledResults, method){
                                 save_model = here::here("notebook", "modelOutput", "absDeltaEstModel_SSF.txt"),
                                 file = here::here("notebook", "modelOutput", "absDeltaEstModel_SSF"))
 
-    # modOUT_bPosSSF <- brms::brm(formula = formSSF_binPositive,
-    #                             data = modelDataSSF,
-    #                             family = brms::bernoulli,
-    #                             prior = brmpriorSSF,
-    #                             warmup = 200, iter = 1000, chains = 4,
-    #                             # warmup = 2000, iter = 5000, chains = 4,
-    #                             cores = 4,
-    #                             thin = 2,
-    #                             # control = list(adapt_delta = 0.90,
-    #                             #                max_treedepth = 15),
-    #                             seed = 1,
-    #                             save_pars = brms::save_pars(all = TRUE),
-    #                             save_model = here::here("notebook", "modelOutput", "binPositiveModel_SSF.txt"),
-    #                             file = here::here("notebook", "modelOutput", "binPositiveModel_SSF"))
+    modOUT_rEstSSF <- brms::brm(formula = formSSF_rawDeltaEst,
+                                data = modelDataSSF,
+                                family = gaussian,
+                                prior = brmpriorSSF,
+                                warmup = 200, iter = 1000, chains = 4,
+                                # warmup = 2000, iter = 5000, chains = 4,
+                                cores = 4,
+                                thin = 2,
+                                # control = list(adapt_delta = 0.90,
+                                #                max_treedepth = 15),
+                                seed = 1,
+                                save_pars = brms::save_pars(all = TRUE),
+                                save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_SSF.txt"),
+                                file = here::here("notebook", "modelOutput", "rawDeltaEstModel_SSF"))
 
+    return(list(modelNames = c("ssf_dEstSSF", "ssf_rEstSSF"),
+                modOUT_dEst = modOUT_dEstSSF,
+                modOUT_rEst = modOUT_rEstSSF))
     # return(list(method = "ssf",
-    #             modOUT_dEst = modOUT_dEstSSF,
-    #             modOUT_bPos = modOUT_bPosSSF))
-    return(list(method = "ssf",
-                modOUT_dEst = modOUT_dEstSSF))
+    #             modOUT_dEst = modOUT_dEstSSF))
   }
 }

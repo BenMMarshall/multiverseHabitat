@@ -85,7 +85,7 @@ rsfResultsPlotData <- rsfResults %>%
       variable == "area" ~ "Available Area Method",
       variable == "contour" ~ "Available Area Contour (%)",
       variable == "availPointsPer" ~ "Available Points Multipiler",
-      variable == "weighting" ~ "Weighting of Used Points"
+      variable == "weighting" ~ "Weighting of Available Points"
     ),
     indi = as.factor(indi),
     species = as.factor(species),
@@ -134,6 +134,7 @@ nSummary <- rsfResultsPlotData %>%
       axis.ticks.y.left = element_blank(),
       axis.line.x = element_line(),
       strip.clip = "off",
+      legend.position = "none",
       panel.border = element_blank(),
       panel.spacing = unit(18, "pt"),
       panel.grid = element_blank())
@@ -170,10 +171,6 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
     annotate("segment", x = overallMed$medEst +14, xend = overallMed$medEst,
              y = overallMed$indexLoc, yend = overallMed$indexLoc,
              linewidth = 0.75, colour = palette["coreGrey"]) +
-    # geom_vline(data = directEstimates %>%
-    #              filter(Method == "rsf", scale == "destination"),
-    #            aes(xintercept = Estimate)) +
-    # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
     scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
     labs(y = "", x = "Estimate") +
     theme_bw() +
@@ -187,39 +184,41 @@ overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
         axis.ticks.y.left = element_blank(),
         axis.line.x = element_line(),
         strip.clip = "off",
+        legend.position = "none",
         panel.border = element_blank(),
         panel.spacing = unit(18, "pt"),
         panel.grid = element_blank())
 )
 
-(overallSpecCurve_rsf_flat <- rsfResults %>%
-    arrange(Estimate) %>%
-    mutate(index = row_number(),
-           indi = as.factor(indi),
-           species = as.factor(species),
-           d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
-    ggplot() +
-    geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
-               linetype = 1) +
-    geom_point(aes(x = Estimate, y = 1, colour = d_medEst),
-               size = 1, alpha = 0.2)+
-    scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
-    labs(y = "", x = "Estimate") +
-    theme_bw() +
-    theme(
-      line = element_line(colour = palette["coreGrey"]),
-      text = element_text(colour = palette["coreGrey"]),
-      strip.background = element_blank(),
-      strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-      strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-      axis.text.y.left = element_blank(),
-      axis.ticks.y.left = element_blank(),
-      axis.line.x = element_line(),
-      strip.clip = "off",
-      panel.border = element_blank(),
-      panel.spacing = unit(18, "pt"),
-      panel.grid = element_blank())
-)
+# (overallSpecCurve_rsf_flat <- rsfResults %>%
+#     arrange(Estimate) %>%
+#     mutate(index = row_number(),
+#            indi = as.factor(indi),
+#            species = as.factor(species),
+#            d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
+#     ggplot() +
+#     geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
+#                linetype = 1) +
+#     geom_point(aes(x = Estimate, y = 1, colour = d_medEst),
+#                size = 1, alpha = 0.2)+
+#     scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
+#     labs(y = "", x = "Estimate") +
+#     theme_bw() +
+#     theme(
+#       line = element_line(colour = palette["coreGrey"]),
+#       text = element_text(colour = palette["coreGrey"]),
+#       strip.background = element_blank(),
+#       strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+#       strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+#       axis.text.y.left = element_blank(),
+#       axis.ticks.y.left = element_blank(),
+#       axis.line.x = element_line(),
+#       strip.clip = "off",
+#       legend.position = "none",
+#       panel.border = element_blank(),
+#       panel.spacing = unit(18, "pt"),
+#       panel.grid = element_blank())
+# )
 
 (rsfSpecComplete <- overallSpecCurve_rsf / splitSpecCurve_rsf +
     plot_layout(heights = c(1, 3), guides = "collect"))
