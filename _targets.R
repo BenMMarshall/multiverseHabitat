@@ -13,7 +13,8 @@ tar_option_set(
   packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move",
-               "brms", "bayesplot", "tidybayes", "ggplot2"), # packages that your targets need to run
+               "brms", "bayesplot", "tidybayes",
+               "ggplot2", "ggridges", "reshape2", "patchwork"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -182,6 +183,12 @@ brmsCompiled <- list(
                  method = method),
                priority = 0.71
     ),
+    tar_target(areaSpecCurves,
+               generate_spec_curves(
+                 resultsCompiled = areaResults,
+                 method = method),
+               priority = 0.71
+    ),
     tar_target(summaryBrms,
                diagnostics_brms(
                  brmsResults = areaBrms
@@ -196,11 +203,25 @@ brmsCompiled <- list(
                method = "ssf"),
              priority = 0.72
   ),
+  tar_target(areaSpecCurves,
+             generate_spec_curves(
+               resultsCompiled = ssfResults,
+               method = "ssf"
+             ),
+             priority = 0.72
+  ),
   tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
              diagnostics_brms(
                brmsResults = ssfBrms
              ),
              priority = 0.73
+  ),
+  tar_target(uncertaintyPlot,
+             uncertainty_vs_estimate(
+               aResults = areaResults,
+               sResults = ssfResults
+             ),
+             priority = 0.74
   )
 )
 
