@@ -4,10 +4,10 @@
 \alias{generate_spec_curves}
 \title{Generate specification curves}
 \usage{
-generate_spec_curves(resultsCompiled, method)
+generate_spec_curves(compiledResults, method)
 }
 \arguments{
-\item{resultsCompiled}{output tar_targets resulting in areaCompiled or ssfCompiled}
+\item{compiledResults}{output tar_targets resulting in areaCompiled or ssfCompiled}
 
 \item{method}{c("rsf", "ssf", "wides")}
 }
