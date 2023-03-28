@@ -2,12 +2,12 @@
 #'
 #' @name generate_spec_curves
 #' @description A
-#' @param resultsCompiled output tar_targets resulting in areaCompiled or ssfCompiled
+#' @param compiledResults output tar_targets resulting in areaCompiled or ssfCompiled
 #' @param method c("rsf", "ssf", "wides")
 #' @return a
 #'
 #' @export
-generate_spec_curves <- function(resultsCompiled, method){
+generate_spec_curves <- function(compiledResults, method){
 
   # library(dplyr)
   # library(here)
@@ -29,7 +29,7 @@ generate_spec_curves <- function(resultsCompiled, method){
 
   if(method == "rsf"){
 
-    areaResults <- multiverseHabitat::parse_combined_results(resultsCompiled)
+    areaResults <- multiverseHabitat::parse_combined_results(compiledResults)
 
     rsfResults <- areaResults %>%
       dplyr::filter(analysis == "rsf")
@@ -190,7 +190,7 @@ generate_spec_curves <- function(resultsCompiled, method){
 
   } else if(method == "wides"){
 
-    areaResults <- multiverseHabitat::parse_combined_results(resultsCompiled)
+    areaResults <- multiverseHabitat::parse_combined_results(compiledResults)
 
     widesResults <- areaResults %>%
       dplyr::filter(analysis == "wides")
@@ -325,7 +325,7 @@ generate_spec_curves <- function(resultsCompiled, method){
 
   } else if(method == "ssf"){
 
-    ssfResults <- multiverseHabitat::parse_combined_results(resultsCompiled)
+    ssfResults <- multiverseHabitat::parse_combined_results(compiledResults)
 
     ssfResults$tf <- round(ssfResults$tf, digits = 2)
 

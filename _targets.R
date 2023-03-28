@@ -185,10 +185,18 @@ brmsCompiled <- list(
     ),
     tar_target(areaSpecCurves,
                generate_spec_curves(
-                 resultsCompiled = areaResults,
+                 compiledResults = areaResults,
                  method = method),
                priority = 0.71
     ),
+    ### EFFECT SIZE TARGET HERE
+    # tar_target(effectSizeBrms,
+    #            generate_effect_plots(
+    #              compiledResults = ssfResults,
+    #              method = method
+    #            ),
+    #            priority = 0.71
+    # ),
     tar_target(summaryBrms,
                diagnostics_brms(
                  brmsResults = areaBrms
@@ -205,11 +213,19 @@ brmsCompiled <- list(
   ),
   tar_target(areaSpecCurves,
              generate_spec_curves(
-               resultsCompiled = ssfResults,
+               compiledResults = ssfResults,
                method = "ssf"
              ),
              priority = 0.72
   ),
+  ### SSF EFFECT SIZE TARGET HERE
+  # tar_target(effectSizeBrms_ssf,
+  #            generate_effect_plots(
+  #              compiledResults = ssfResults,
+  #              method = "ssf"
+  #            ),
+  #            priority = 0.73
+  # ),
   tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
              diagnostics_brms(
                brmsResults = ssfBrms
