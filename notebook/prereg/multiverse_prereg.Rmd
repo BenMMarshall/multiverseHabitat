@@ -25,13 +25,14 @@ csl: peerj.csl
 editor_options: 
   markdown: 
     wrap: sentence
-abstract: ---
+abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. Such decisions can be found throughout the process, from study design to publishing. The decisions associated with study design are well investigated and frequently constrained by practical limitations; but what about decisions made during analysis? When you ask 10 researchers to answer the same question with the same dataset, you will receive 10 different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. The advancements in habitat analyses are worthwhile, as modern analysis methods appear to be more reliable than older ratio-based methods. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
 keywords: Movement ecology, simulation
 ---
 
 # Introduction
 
 <!-- Baldwin et al 2022 has some solutions for secondary analysis -->
+<!-- Does analysis choice matter when studying animal movement? -->
 
 Researchers are intrinsically part of the research process [@levins_dialectical_1985; @tang-martinez_history_2020], and our expectations can shape the answers we find [@holman_evidence_2015].
 While we can strive to conduct research objectively, there are frequent moments during research that require judgement calls [@steegen_increasing_2016].
