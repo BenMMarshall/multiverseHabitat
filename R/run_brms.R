@@ -24,7 +24,7 @@ run_brms <- function(compiledResults, method){
     modelDataRSF <- areaResults %>%
       dplyr::filter(analysis == "rsf") %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    rawDeltaEst = abs(Estimate - medEst),
+                    rawDeltaEst = Estimate - medEst,
                     absDeltaEst = abs(rawDeltaEst),
                     area = factor(area,
                                   levels = c("MCP", "dBBMM",
@@ -114,7 +114,7 @@ run_brms <- function(compiledResults, method){
     modelDataWides <- areaResults %>%
       dplyr::filter(analysis == "wides") %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    rawDeltaEst = abs(Estimate - medEst),
+                    rawDeltaEst = Estimate - medEst,
                     absDeltaEst = abs(rawDeltaEst),
                     area = factor(area,
                                   levels = c("MCP", "dBBMM",
@@ -202,7 +202,7 @@ run_brms <- function(compiledResults, method){
 
     modelDataSSF <- ssfResults %>%
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
-                    rawDeltaEst = abs(Estimate - medEst),
+                    rawDeltaEst = Estimate - medEst,
                     absDeltaEst = abs(rawDeltaEst)) %>%
       dplyr::mutate(tfScaled = (tf-mean(tf))/sd(tf),
                     tdScaled = (td-mean(td))/sd(td),
