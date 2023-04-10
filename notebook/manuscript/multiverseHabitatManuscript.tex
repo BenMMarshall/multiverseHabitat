@@ -352,13 +352,61 @@ Based on these assessments we modified the running parameters {[}FINAL VALUES HE
 The completion of the multiverse resulted in 614 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered 3 virtual species, 4 individuals per species, frequencies from 0.006 to 2 locations per hour, and durations from 7 to 240 days.
 Each of these datasets underwent every combination of analysis choices resulting in
-281952 estimates of habitat preference.
+281,952 estimates of habitat preference (Wides: 38,016 , RSF: 228,096 , SSF: 15,840).
 
 \hypertarget{general-patterns}{%
 \subsection{General patterns}\label{general-patterns}}
 
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve {[}CITE HERE{]}.
+In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
+
+Starting with the Wides results, we see a quite gentle \emph{S} shape {[}FIGURE LINK HERE{]}, with most estimates falling in the range of 0.5 to 2.
+While there is a clear agreement of positive selection for habitat 2 as expected, the exact estimate appears relatively sensitive to the choices made.
+Looking at the specific choices, we can see several weak patterns.
+The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations.
+The same is not clear in tracking frequency, because the lower tracking frequency could not be combined with lower tracking durations, resulting in fewer estimates for low frequency scenarios.
+Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher.
+Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
+So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
+Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in {[}LINK TO FIGURE{]}).
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs.
+
+The Resource Selection Function (RSF) specification curve shows a more ideal \emph{S} shape, with the majority of estimates clearly converging on a common answer {[}FIGURE LINK HERE{]}.
+Similar to the Wides analysis the majority of the answers, and medians detected preference for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest preference.
+To best see the changes in variation connected to a given choice, we can look at the rates and position of the outliers (highlighted in purple and orange).
+Although weak patterns, tracking duration, frequency, and multiplier of available points see slight reductions in the number of estimates very high or very low.
+Other patterns are difficult to discern, except for the weighting of used points that has a clear impact on the outlying low estimates.
+The distinct step-like pattern is a result of the logarithmic scale the weighting varies over (required to capture such a wide range of possible values), which can been seen reflected in other choices' groupings of estimates.
+Overall the weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results.
+
+For the RSF analyses we also recovered the range of the 95\% confidence intervals surrounding each estimate.
+When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain.
+
 \hypertarget{model-exploration}{%
 \subsection{Model exploration}\label{model-exploration}}
+
+While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew ones' interpretation of which choices have the largest impact.
+Our Bayesian models cut through the noise displayed in {[}FIGURES XXXXXXX{]} to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity, with increases in tracking duration (\(\beta\) -0.014, 95\% median Highest-Density Continuous Interval CrI -0.016 -- -0.011) being marginally more effective than tracking frequency (\(\beta\) -0.008, 95\% CrI -0.011 -- -0.006).
+Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously (\(\beta\) -0.003, 95\% CrI -0.004 -- -0.002), and it's effect was much smaller than those concerning data quantity.
+Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
+Contour choice increases the absolute deviation from the median estimate \(beta\) 0.007, 95\% CrI 0.006 -- 0.008, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone.
+
+Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference.
+Like the Wides analysis, data quantity is most important.
+The two largest effects are from tracking duration (\(\beta\) -0.819, 95\% CrI -0.863 -- -0.779) and frequency (\(\beta\) -1.499, 95\% CrI -1.535 -- -1.457), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
+
+However, unlike with Wides the other analysis decisions also matter, although to varying extents.
+It appears that larger contours (\(\beta\) -0.253, 95\% CrI -0.272 -- -0.233) and a greater multiplier of available points (\(\beta\) -0.239, 95\% CrI -0.259 -- -0.219) decreases the deviation from the median estimate.
+To a small extent using a stratified available points pattern lead to lower deviation from the median than a purely random available points pattern (\(\beta\) -0.059, 95\% CrI -0.1 -- -0.018).
+Choice of area method can alter results in two ways.
+Compared to using MCPs both AKDE (\(\beta\) -0.236, 95\% CrI -0.292 -- -0.18) and KDEhref (\(\beta\) -0.249, 95\% CrI -0.301 -- -0.192) produce estimates more likely to be closer to the median estimate, and to similar degrees.
+Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs (\(\beta\) 0.307, 95\% CrI 0.249 -- 0.363).
+
+Examining the interactions between tracking duration and frequency with the area methods further reveals the connection between dBBMMs are more variable estimates.
+While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater.
+When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency.
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
