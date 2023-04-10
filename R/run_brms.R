@@ -29,7 +29,7 @@ run_brms <- function(compiledResults, method){
                     area = factor(area,
                                   levels = c("MCP", "dBBMM",
                                              "KDEhref", "AKDE"))
-                    ) %>%
+      ) %>%
       dplyr::mutate(tfScaled = (tf-mean(tf))/sd(tf),
                     tdScaled = (td-mean(td))/sd(td),
                     availPointsPerScaled  = (availPointsPer-mean(availPointsPer))/sd(availPointsPer),
@@ -100,9 +100,16 @@ run_brms <- function(compiledResults, method){
                                 save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_RSF.txt"),
                                 file = here::here("notebook", "modelOutput", "rawDeltaEstModel_RSF"))
 
-    return(list(modelNames = c("rsf_dEstRSF", "rsf_rEstRSF"),
+
+    modOUT_dEst_r2 <- performance::r2_bayes(modOUT_dEstRSF)
+    modOUT_rEst_r2 <- performance::r2_bayes(modOUT_rEstRSF)
+
+    return(list(modelNames = c("rsf_dEstRSF", "rsf_rEstRSF", "dEst_r2", "rEst_r2"),
                 modOUT_dEst = modOUT_dEstRSF,
-                modOUT_rEst = modOUT_rEstRSF))
+                modOUT_rEst = modOUT_rEstRSF,
+                modOUT_dEst_r2 = modOUT_dEst_r2,
+                modOUT_rEst_r2 = modOUT_rEst_r2)
+    )
     # return(list(method = "rsf",
     #             modOUT_dEst = modOUT_dEstRSF))
 
@@ -188,9 +195,16 @@ run_brms <- function(compiledResults, method){
                                   save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_Wides.txt"),
                                   file = here::here("notebook", "modelOutput", "rawDeltaEstModel_Wides"))
 
-    return(list(modelNames = c("wides_dEstWides", "wides_rEstWides"),
-                modOUT_dEst = modOUT_dEstWides,
-                modOUT_rEst = modOUT_rEstWides))
+    modOUT_dEstWides_r2 <- performance::r2_bayes(modOUT_dEstWides)
+    modOUT_rEstWides_r2 <- performance::r2_bayes(modOUT_rEstWides)
+
+    return(list(modelNames = c("wides_dEstWides", "wides_rEstWides", "dEst_r2", "rEst_r2"),
+                modOUT_dEst = modOUT_dEstRSF,
+                modOUT_rEst = modOUT_rEstRSF,
+                modOUT_dEstWides_r2 = modOUT_dEstWides_r2,
+                modOUT_rEstWides_r2 = modOUT_rEstWides_r2)
+    )
+
     # return(list(method = "wides",
     #             modOUT_dEst = modOUT_dEstWides))
 
@@ -262,9 +276,16 @@ run_brms <- function(compiledResults, method){
                                 save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_SSF.txt"),
                                 file = here::here("notebook", "modelOutput", "rawDeltaEstModel_SSF"))
 
-    return(list(modelNames = c("ssf_dEstSSF", "ssf_rEstSSF"),
-                modOUT_dEst = modOUT_dEstSSF,
-                modOUT_rEst = modOUT_rEstSSF))
+    modOUT_dEstSSF_r2 <- performance::r2_bayes(modOUT_dEstSSF)
+    modOUT_rEstSSF_r2 <- performance::r2_bayes(modOUT_rEstSSF)
+
+    return(list(modelNames = c("ssf_dEstSSF", "ssf_rEstSSF", "dEst_r2", "rEst_r2"),
+                modOUT_dEst = modOUT_dEstRSF,
+                modOUT_rEst = modOUT_rEstRSF,
+                modOUT_dEstSSF_r2 = modOUT_dEstSSF_r2,
+                modOUT_rEstSSF_r2 = modOUT_rEstSSF_r2)
+    )
+
     # return(list(method = "ssf",
     #             modOUT_dEst = modOUT_dEstSSF))
   }
