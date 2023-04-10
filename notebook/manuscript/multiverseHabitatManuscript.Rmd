@@ -216,7 +216,7 @@ As the causes and measurement of error, as well as the solutions to, location er
 In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)A).
 
 ```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="..."}
-knitr::include_graphics(here::here("notebook", "prereg", "figures", "preregDecisionTrees.png"))
+# knitr::include_graphics(here::here("notebook", "figures", "preregDecisionTrees.png"))
 ```
 
 ### Analysis
@@ -364,27 +364,58 @@ Based on these assessments we modified the running parameters [FINAL VALUES HERE
 
 # Results
 
-
-The completion of the multiverse resulted in <!-- number of datasets --> `r length(list.files(here::here("_targets", "objects"), pattern = "sampDuraFreqData"))` datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
-<!-- number of estimates -->
-`r targets::tar_load("ssfResults"); targets::tar_load("areaResults"); dim(ssfResults)[1] + dim(areaResults)[1]`
 ```{r targetsParse, echo=FALSE}
-# targets::tar_load(here("_targets", "objects", "areaResults"))
-# targets::tar_load(here("_targets", "objects", "ssfResults"))
+areaResults <- qs::qread(here::here("_targets", "objects", "areaResults"))
+ssfResults <- qs::qread(here::here("_targets", "objects", "ssfResults"))
 areaResults <- multiverseHabitat::parse_combined_results(areaResults)
 ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
 ```
-The datasets covered three virtual species, six individuals per species, frequencies from XX to XX locations per hour, and durations from XX to XX days.
 
-
+The completion of the multiverse resulted in <!-- number of datasets --> `r length(list.files(here::here("_targets", "objects"), pattern = "sampDuraFreqData"))` datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
+The datasets covered `r dplyr::n_distinct(areaResults$species)` virtual species, `r dplyr::n_distinct(areaResults$indi)` individuals per species, frequencies from `r paste(round(range(areaResults$tf), digits = 3), collapse = " to ")` locations per hour, and durations from `r paste(range(areaResults$td), collapse = " to ")` days.
+Each of these datasets underwent every combination of analysis choices resulting in <!-- number of estimates -->
+`r scales::comma(dim(ssfResults)[1] + dim(areaResults)[1])` estimates of habitat preference (`r paste("Wides:", scales::comma(sum(areaResults$analysis == "wides")), ", RSF:", scales::comma(sum(areaResults$analysis == "rsf")), ", SSF:", scales::comma(dim(ssfResults)[1]))`).
 
 ## General patterns
 
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve [CITE HERE].
+In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
+
 <!-- spec curve wides -->
+Starting with the Wides results, we see a quite gentle *S* shape [FIGURE LINK HERE], with most estimates falling in the range of 0.5 to 2.
+While there is a clear agreement of positive selection for habitat 2 as expected, the exact estimate appears relatively sensitive to the choices made. 
+Looking at the specific choices, we can see several weak patterns.
+The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations.
+The same is not clear in tracking frequency, because the lower tracking frequency could not be combined with lower tracking durations, resulting in fewer estimates for low frequency scenarios.
+Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher.
+Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
+So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
+Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in [LINK TO FIGURE]).
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs.
+
 <!-- spec curve rsf -->
+The Resource Selection Function (RSF) specification curve shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer [FIGURE LINK HERE].
+Similar to the Wides analysis the majority of the answers, and medians detected preference for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest preference.
+To best see the changes in variation connected to a given choice, we can look at the rates and position of the outliers (highlighted in purple and orange).
+Although weak patterns, tracking duration, frequency, and multiplier of available points see slight reductions in the number of estimates very high or very low.
+Other patterns are difficult to discern, except for the weighting of used points that has a clear impact on the outlying low estimates.
+The distinct step-like pattern is a result of the logarithmic scale the weighting varies over (required to capture such a wide range of possible values), which can been seen reflected in other choices' groupings of estimates.
+Overall the weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results. 
+
+For the RSF analyses we also recovered the range of the 95% confidence intervals surrounding each estimate.
+When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain.
+
 <!-- spec curve ssf -->
 
+
+
+
+
+
 ## Model exploration
+
+While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew ones' interpretation of which choices have the largest impact.
+Our Bayesian models cut through the noise displayed in [FIGURES XXXXXXX] to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
 
 <!-- model res wides -->
 <!-- model res rsf -->
