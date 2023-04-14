@@ -59,7 +59,7 @@
 
 \begin{abstract}
 
-Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. Such decisions can be found throughout the process, from study design to publishing. The decisions associated with study design are well investigated and frequently constrained by practical limitations; but what about decisions made during analysis? When you ask 10 researchers to answer the same question with the same dataset, you will receive 10 different answers. This variation in answers has been linked to several disciplines' replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. The advancements in habitat analyses are worthwhile, as modern analysis methods appear to be more reliable than older ratio-based methods. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
+Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask 10 researchers to answer the same question with the same dataset, you will receive 10 different answers. This variation in answers has been linked to several disciplines' replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
 
 \end{abstract}
 
@@ -382,6 +382,16 @@ Overall the weighting does not appear to impact the overall median, with weighti
 For the RSF analyses we also recovered the range of the 95\% confidence intervals surrounding each estimate.
 When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain.
 
+The Step Selection Function (SSF) specification curves appears even more successful than the RSF.
+There is a decently clear \emph{S} shape indicating many analysis end points resulting in similar estimates of preference.
+There are also considerably fewer estimates that indicate avoidance of habitat 2.
+The stand out patterns are more easily seen in the outlying high estimates.
+Once again there are indications of fewer outlying high estimates when data quantity increases, both with duration and frequency.
+The number of points per step (or strata) appears to intuitively follow that more available steps leads to more consistent estimations, and also the outliers that exist appear to become less extreme.
+The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not appear to make little difference to the final estimates.
+
+Very much like the RSF explorations of the raw data, the 95\% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate.
+
 \hypertarget{model-exploration}{%
 \subsection{Model exploration}\label{model-exploration}}
 
@@ -408,14 +418,39 @@ Examining the interactions between tracking duration and frequency with the area
 While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater.
 When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency.
 
+The SSF absolute deviation model matches very closely the previous two models, with tracking quantity both in terms of duration (\(\beta\) -1.471, 95\% CrI -1.552 -- -1.398) and frequency (\(\beta\) -1.676, 95\% CrI -1.758 -- -1.6) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
+Unlike the other analysis all other decisions made negligible impact to an estimate's absolute proximity to the median estimate.
+
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-\hypertarget{limitations-of-the-multiverse-approach}{%
-\subsection{Limitations of the multiverse approach}\label{limitations-of-the-multiverse-approach}}
+While the overall pattern shows data quality supremacy, this cannot be used as an excuse to ignore the decisions during analysis.
+Two aspect of the results highlight that complacency is unwise.
+First RSF and SSF approach appear to be more consistent than the more basic and older Wides ratio based approach.
+Both RSF and SSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
+Second is the evidence for conceptual mistakes to have impacts on final results, implying that in some cases there are more correct answers to certain analysis decisions.
+The use of dBBMMs to define availability is not strictly correct as the (confidence) area generated by dBBMMs are reflected of uncertainty surrounding use.
+This renders the down stream analysis of habitat preference a comparison of use (measured by points) to use (measured by area of uncertainty surrounding movement trajectories); as opposed to the desired use versus availability.
+The dBBMM results exemplify the need to maintain a connection between abstractions (e.g., an area) of the data and the intended use.
+A similar argument can be made for data quantity, where mismatches between frequency and desired behaviours or and inadequate duration will obscure answers regardless of the analysis applied.
+Our simulations are are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
+Failure to do this, instead allowing locations to be recorded equally at night and day, would have skewed estimates towards the habitat used for shelter rather than foraging.
+Matching question to analysis approach remains important, but the cost of mistakes may be less dramatic than feared.
 
-\hypertarget{future-directions}{%
-\subsection{Future directions}\label{future-directions}}
+Further good news is that some decisions that are connected to more stable estimates have very little reason not to be maximised.
+For example, the points multipler or points per step decision can be maximised to whatever extent the compuational resources available to the researcher allows.
+While we did not see the improvements in points per step in the SSF analysis, previous work has shown that the benefits of high available steps is more pronounced when working with rare habitat types.
+More available points reduces the chances of missing small areas of rare habitat; our analysis would not have revealed this because of the abundance of the preferred habitat type.
+
+\hypertarget{limitations-of-the-multiverse-approach-and-future-directions}{%
+\subsection{Limitations of the multiverse approach and future directions}\label{limitations-of-the-multiverse-approach-and-future-directions}}
+
+Practical limitations simply prevent from all possible variations of all decisions to be explored.
+Not just because of time and computational limits, but the granularity of decision making examined can be ever increased.
+
+Beyond the aforementioned limitations to the multiverse approach there is scope to expand the exploration.
+Our next step is to reapply the same meta-programming pipeline approach to population targeting habitat analyses.
+A focus on these approaches will allows us to explore the third key component of data quantity --sample size-- as well as how well analyses tackle individual variability either in the analysis itself or during summarising of individual habitat preference estimates.
 
 \hypertarget{conclusions}{%
 \subsection{Conclusions}\label{conclusions}}
