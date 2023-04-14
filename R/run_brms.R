@@ -36,7 +36,7 @@ run_brms <- function(compiledResults, method){
                     weightingScaled = (weighting-mean(weighting))/sd(weighting),
                     contourScaled = (contour-mean(contour))/sd(contour))
 
-    hist(modelDataRSF$absDeltaEst, breaks = 20000)
+    # hist(modelDataRSF$absDeltaEst, breaks = 20000)
     # model formula
     # rsf
     formRSF_absDeltaEst <- brms::bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
@@ -101,14 +101,14 @@ run_brms <- function(compiledResults, method){
                                 file = here::here("notebook", "modelOutput", "rawDeltaEstModel_RSF"))
 
 
-    modOUT_dEst_r2 <- performance::r2_bayes(modOUT_dEstRSF)
-    modOUT_rEst_r2 <- performance::r2_bayes(modOUT_rEstRSF)
+    modOUT_dEstRSF_r2 <- performance::r2_bayes(modOUT_dEstRSF)
+    modOUT_rEstRSF_r2 <- performance::r2_bayes(modOUT_rEstRSF)
 
     return(list(modelNames = c("rsf_dEstRSF", "rsf_rEstRSF", "dEst_r2", "rEst_r2"),
                 modOUT_dEst = modOUT_dEstRSF,
                 modOUT_rEst = modOUT_rEstRSF,
-                modOUT_dEst_r2 = modOUT_dEst_r2,
-                modOUT_rEst_r2 = modOUT_rEst_r2)
+                modOUT_dEst_r2 = modOUT_dEstRSF_r2,
+                modOUT_rEst_r2 = modOUT_rEstRSF_r2)
     )
     # return(list(method = "rsf",
     #             modOUT_dEst = modOUT_dEstRSF))
@@ -133,7 +133,7 @@ run_brms <- function(compiledResults, method){
                     contourScaled = (contour-mean(contour))/sd(contour))
 
 
-    hist(modelDataWides$absDeltaEst, breaks = 20000)
+    # hist(modelDataWides$absDeltaEst, breaks = 20000)
     # 2 % of the wides results are NA
     sum(is.na(modelDataWides$Estimate))/
       nrow(modelDataWides) *100
@@ -199,10 +199,10 @@ run_brms <- function(compiledResults, method){
     modOUT_rEstWides_r2 <- performance::r2_bayes(modOUT_rEstWides)
 
     return(list(modelNames = c("wides_dEstWides", "wides_rEstWides", "dEst_r2", "rEst_r2"),
-                modOUT_dEst = modOUT_dEstRSF,
-                modOUT_rEst = modOUT_rEstRSF,
-                modOUT_dEstWides_r2 = modOUT_dEstWides_r2,
-                modOUT_rEstWides_r2 = modOUT_rEstWides_r2)
+                modOUT_dEst = modOUT_dEstWides,
+                modOUT_rEst = modOUT_rEstWides,
+                modOUT_dEst_r2 = modOUT_dEstWides_r2,
+                modOUT_rEst_r2 = modOUT_rEstWides_r2)
     )
 
     # return(list(method = "wides",
@@ -222,7 +222,7 @@ run_brms <- function(compiledResults, method){
                     tdScaled = (td-mean(td))/sd(td),
                     availablePerStepScaled  = (availablePerStep-mean(availablePerStep))/sd(availablePerStep))
 
-    hist(modelDataSSF$absDeltaEst, breaks = 20000)
+    # hist(modelDataSSF$absDeltaEst, breaks = 20000)
     # ssf
     formSSF_absDeltaEst <- brms::bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
                                       modelForm + stepDist + turnDist + availablePerStepScaled +
@@ -280,10 +280,10 @@ run_brms <- function(compiledResults, method){
     modOUT_rEstSSF_r2 <- performance::r2_bayes(modOUT_rEstSSF)
 
     return(list(modelNames = c("ssf_dEstSSF", "ssf_rEstSSF", "dEst_r2", "rEst_r2"),
-                modOUT_dEst = modOUT_dEstRSF,
-                modOUT_rEst = modOUT_rEstRSF,
-                modOUT_dEstSSF_r2 = modOUT_dEstSSF_r2,
-                modOUT_rEstSSF_r2 = modOUT_rEstSSF_r2)
+                modOUT_dEst = modOUT_dEstSSF,
+                modOUT_rEst = modOUT_rEstSSF,
+                modOUT_dEst_r2 = modOUT_dEstSSF_r2,
+                modOUT_rEst_r2 = modOUT_rEstSSF_r2)
     )
 
     # return(list(method = "ssf",

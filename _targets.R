@@ -257,6 +257,7 @@ list(allIndividualEstimatesList,
 # targets::tar_visnetwork()
 # targets::tar_manifest()
 # targets::tar_make()
+# targets::tar_make("effectSizeBrms_ssf")
 # watch out too many workers can hit ram limits
 # targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
