@@ -46,11 +46,24 @@ generate_effect_plots <- function(brmsResults, method){
   # modelList <- areaBrms_wides
   # modelList <- ssfBrms
 
+  n <- 0
   effectPlotList <- vector("list", 3)
   effectPlotList[[1]] <- brmsResults$modelNames
   for(i in 2:3){
+
     modName <- brmsResults$modelNames[i-1]
     modCurrent <- brmsResults[[i]]
+
+    gradLimits <- modCurrent %>%
+      spread_draws(`b_.*`, regex = TRUE) %>%
+      dplyr::select(-.chain, -.iteration, -.draw) %>%
+      melt() %>%
+      filter(!variable %in% c("b_Intercept"),
+             !str_detect(variable, ":")) %>%
+      summarise(
+        minX = min(value),
+        maxX = max(value)
+      )
 
     if(method == "rsf"){
 
@@ -73,23 +86,13 @@ generate_effect_plots <- function(brmsResults, method){
 
       #################################################################################
 
-      gradLimits <- modCurrent %>%
-        spread_draws(`b_.*`, regex = TRUE) %>%
-        select(-.chain, -.iteration, -.draw) %>%
-        melt() %>%
-        filter(!variable %in% c("b_Intercept"),
-               !str_detect(variable, ":")) %>%
-        summarise(
-          minX = min(value),
-          maxX = max(value)
-        )
 
       # RSF EFFECTS -------------------------------------------------------------
 
 
       rsfEffectsPlot <- modCurrent %>%
         spread_draws(`b_.*`, regex = TRUE) %>%
-        select(-.chain, -.iteration, -.draw) %>%
+        dplyr::select(-.chain, -.iteration, -.draw) %>%
         melt() %>%
         filter(!variable %in% c("b_Intercept"),
                !str_detect(variable, ":")) %>%
@@ -165,7 +168,7 @@ generate_effect_plots <- function(brmsResults, method){
              filename = here("notebook", "figures", paste0(modName, "_effectsPlot.png")),
              dpi = 300, width = 210, height = 140,
              units = "mm")
-
+      n <- n+1
       effectPlotList[[n]] <- rsfEffectsPlot
 
     } else if(method == "wides"){
@@ -175,7 +178,7 @@ generate_effect_plots <- function(brmsResults, method){
 
       (widesEffectPlot <- modCurrent %>%
          spread_draws(`b_.*`, regex = TRUE) %>%
-         select(-.chain, -.iteration, -.draw) %>%
+         dplyr::select(-.chain, -.iteration, -.draw) %>%
          melt() %>%
          filter(!variable %in% c("b_Intercept"),
                 !str_detect(variable, ":")) %>%
@@ -248,7 +251,7 @@ generate_effect_plots <- function(brmsResults, method){
              filename = here("notebook", "figures", paste0(modName, "_effectsPlot.png")),
              dpi = 300, width = 210, height = 130,
              units = "mm")
-
+      n <- n+1
       effectPlotList[[n]] <- widesEffectPlot
 
       # SSF EFFECTS -------------------------------------------------------------
@@ -257,7 +260,7 @@ generate_effect_plots <- function(brmsResults, method){
 
       (ssfEffectPlot <- modCurrent %>%
          spread_draws(`b_.*`, regex = TRUE) %>%
-         select(-.chain, -.iteration, -.draw) %>%
+         dplyr::select(-.chain, -.iteration, -.draw) %>%
          melt() %>%
          filter(!variable %in% c("b_Intercept")) %>%
          mutate(
@@ -327,6 +330,7 @@ generate_effect_plots <- function(brmsResults, method){
              dpi = 300, width = 210, height = 120,
              units = "mm")
 
+      n <- n+1
       effectPlotList[[n]] <- ssfEffectPlot
 
     } # end of if statement
