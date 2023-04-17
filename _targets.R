@@ -58,8 +58,8 @@ values_Sampling <- values_Sampling %>%
   dplyr::select(td, tf)
 
 optionsList_area <- list(
-  # Method_method = c("wides", "rsf", "wRSF"),
-  Method_method = c("wides", "rsf"),
+  Method_method = c("wides", "rsf", "wRSF"),
+  # Method_method = c("wides", "rsf"),
   areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
   areaContour = c(90, 95, 99),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
@@ -259,6 +259,7 @@ list(allIndividualEstimatesList,
 # targets::tar_make()
 # targets::tar_make("effectSizeBrms_ssf")
 # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
