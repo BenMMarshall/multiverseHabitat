@@ -205,13 +205,48 @@ wrapper_indi_area <- function(
 
         } else {
 
-          spPoints <- sp::SpatialPoints(movementData[,c("x", "y")], sp::CRS(SRS_string = "EPSG:32601"))
+          trf <- "Don't Run"
+          # back work td and tf so we can skip a few to save time
+          if(all(c(0, 30) %in% unique(movementData$minute))){
+            trf <- 0.5
+          } else if(all(unique(movementData$minute) == 0) &
+                    length(unique(movementData$hour)) == 12){
+            trf <- 2
+          } else if(all(unique(movementData$minute) == 0) &
+                    all(unique(movementData$hour) %in% c(6, 18))){
+            trf <- 12
+          } else if(all(unique(movementData$minute) == 0) &
+                    all(unique(movementData$hour) %in% c(12)) &
+                    all(unique(movementData$yday) %% 2 == 0)){
+            trf <- 48
+          }
+          trd <- round(as.numeric(difftime(max(movementData$datetime), min(movementData$datetime),
+                                           units = "days"), digits = 0))
+
+          # if we want to skip the given tf and td combo
+          if(trf == "Don't Run" | trd %in% c(7,30,120)){
+            listOUT[[i]] <- data.frame(
+              Estimate = NA,
+              Lower = NA,
+              Upper = NA,
+              analysis = "wRSF",
+              area = NA,
+              contour = NA,
+              availPointsPer = NA,
+              samplingPattern = NA,
+              weighting = NA
+            )
+          }
+
+
+          spPoints <- sp::SpatialPoints(movementData[,c("x", "y")],
+                                        sp::CRS(SRS_string = "EPSG:32601"))
           spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
           movementData$lon <- spLL@coords[,1]
           movementData$lat <- spLL@coords[,2]
           teleObj <- ctmm::as.telemetry(movementData,
                                         timeformat = "%Y-%m-%d %H:%M:%S",
-                                        timezone="UTC",
+                                        timezone = "UTC",
                                         projection = sp::CRS(SRS_string = "EPSG:32601"))
 
           wRSF <- ctmm:::rsf.fit(teleObj,
