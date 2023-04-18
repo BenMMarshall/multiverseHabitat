@@ -9,8 +9,8 @@
 #' @export
 generate_effect_plots <- function(brmsResults, method){
 
-  if(!method %in% c("rsf", "ssf", "wides")){
-    stop("Type must be rsf, ssf, wides")
+  if(!method %in% c("rsf", "ssf", "wides", "wrsf")){
+    stop("Type must be rsf, ssf, wides, wrsf")
   }
 
   # library(dplyr)
@@ -40,17 +40,19 @@ generate_effect_plots <- function(brmsResults, method){
   # targets::tar_load("areaBrms_wides")
   # targets::tar_load("areaBrms_rsf")
   # targets::tar_load("ssfBrms")
+  # targets::tar_load("wrsfBrms")
   # names(areaBrms_rsf)
 
-  # modelList <- areaBrms_rsf
-  # modelList <- areaBrms_wides
-  # modelList <- ssfBrms
+  # brmsResults <- areaBrms_rsf
+  # brmsResults <- areaBrms_wides
+  # brmsResults <- ssfBrms
+  # brmsResults <- wrsfBrms
 
   n <- 0
   effectPlotList <- vector("list", 3)
   effectPlotList[[1]] <- brmsResults$modelNames
   for(i in 2:3){
-
+    # i <- 3
     modName <- brmsResults$modelNames[i-1]
     modCurrent <- brmsResults[[i]]
 
@@ -89,8 +91,7 @@ generate_effect_plots <- function(brmsResults, method){
 
       # RSF EFFECTS -------------------------------------------------------------
 
-
-      rsfEffectsPlot <- modCurrent %>%
+      rsfEffectsData <- modCurrent %>%
         spread_draws(`b_.*`, regex = TRUE) %>%
         dplyr::select(-.chain, -.iteration, -.draw) %>%
         melt() %>%
@@ -109,7 +110,23 @@ generate_effect_plots <- function(brmsResults, method){
             variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified",
             variable == "b_weightingScaled" ~ "\u03B2 Weighting of Available Points"
           )
-        ) %>%
+        )
+
+      if(modName == "rsf_rEstRSF"){
+        labelLocation <- c(-0.6, 1.1)
+        labelLocationText <- c(-0.55, 1.05)
+        labelText <- c("Lower \npreference estimates",
+                       "Higher \npreference estimates")
+        gradAdj <- c(0.01, -0.01)
+      } else {
+        labelLocation <- c(-1.1, 1.2)
+        labelLocationText <- c(-1.05, 1.15)
+        labelText <- c("Closer to median\npreference estimate",
+                       "Farther from median\npreference estimate")
+        gradAdj <- c(1, -0.1)
+      }
+
+      rsfEffectsPlot <- rsfEffectsData %>%
         ggplot(aes(x = value, y = variable)) +
         geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
                    linetype = 1) +
@@ -124,25 +141,30 @@ generate_effect_plots <- function(brmsResults, method){
         # scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
         # scale_fill_gradient(low = palette["BADGER"], high = palette["2"])+
         scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
-                             limits = c(gradLimits[1,1]+1, gradLimits[1,2]-0.1),
+                             limits = c(gradLimits[1,1]+gradAdj[1],
+                                        gradLimits[1,2]+gradAdj[2]),
                              # limits = c(-0.5, 0.35),
                              midpoint = 0,
                              oob = scales::oob_squish_any) +
         scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-        annotate("segment", x = -0.1, xend = -1.55, y = 0.65, yend = 0.65,
+
+        annotate("segment", x = -0.1, xend = labelLocation[1], y = 0.65, yend = 0.65,
                  linewidth = 1.25,
                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
                  colour = palette["BADGER"]) +
-        annotate("text", x = -1.5, y = 0.85, label = "Closer to median\npreference estimate",
+        annotate("text", x = labelLocationText[1], y = 0.85,
+                 label = labelText[1],
                  colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
                  size = 3, fontface = 4) +
-        annotate("segment", x = 0.1, xend = 0.75, y = 0.65, yend = 0.65,
+        annotate("segment", x = 0.1, xend = labelLocation[2], y = 0.65, yend = 0.65,
                  linewidth = 1.25,
                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
                  colour = palette["2"]) +
-        annotate("text", x = 0.7, y = 0.85, label = "Farther from median\npreference estimate",
+        annotate("text", x = labelLocationText[2], y = 0.85,
+                 label = labelText[2],
                  colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
                  size = 3, fontface = 4) +
+
         coord_cartesian(clip = "off", ylim = c(1, NA)) +
         labs(x = "Beta", y = "") +
         theme_bw() +
@@ -175,77 +197,98 @@ generate_effect_plots <- function(brmsResults, method){
 
       # WIDES EFFECTS -----------------------------------------------------------
 
+      widesEffectData <- modCurrent %>%
+        spread_draws(`b_.*`, regex = TRUE) %>%
+        dplyr::select(-.chain, -.iteration, -.draw) %>%
+        melt() %>%
+        filter(!variable %in% c("b_Intercept"),
+               !str_detect(variable, ":")) %>%
+        mutate(
+          variable = case_when(
+            variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+            variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+            variable == "b_areaAKDE" ~ "\u03B2 Available Area: AKDE",
+            variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
+            variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
+            variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
+            variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+            variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
+            variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified"
+          )
+        )
 
-      (widesEffectPlot <- modCurrent %>%
-         spread_draws(`b_.*`, regex = TRUE) %>%
-         dplyr::select(-.chain, -.iteration, -.draw) %>%
-         melt() %>%
-         filter(!variable %in% c("b_Intercept"),
-                !str_detect(variable, ":")) %>%
-         mutate(
-           variable = case_when(
-             variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
-             variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
-             variable == "b_areaAKDE" ~ "\u03B2 Available Area: AKDE",
-             variable == "b_areaMCP" ~ "\u03B2 Available Area: MCP",
-             variable == "b_areadBBMM" ~ "\u03B2 Available Area: dBBMM",
-             variable == "b_areaKDEhref" ~ "\u03B2 Available Area: KDEhref",
-             variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
-             variable == "b_availPointsPerScaled" ~ "\u03B2 Available Points Multipiler",
-             variable == "b_samplingPatternst" ~ "\u03B2 Sampling Pattern: Stratified"
-           )
-         ) %>%
-         ggplot(aes(x = value, y = variable)) +
-         geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-                    linetype = 1) +
-         stat_slab(aes(fill = after_stat(x)), fill_type = "gradient",
-                   alpha = 0.85) +
-         stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
-                            point_interval = median_hdci, .width = c(.66, .95),
-                            stroke = 1.25, colour = palette[c("coreGrey")]) +
-         stat_summary(aes(colour = after_stat(x) > 0),
-                      position = position_dodge(width = 0.2, preserve = "single"),
-                      fun = median, size = 0.25) +
-         # scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
-         scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
-                              limits = c(gradLimits[1,1]+0.01, gradLimits[1,2]),
-                              # limits = c(-0.5, 0.35),
-                              midpoint = 0,
-                              oob = scales::oob_squish_any) +
-         scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-         annotate("segment", x = -0.01, xend = -0.022, y = 0.65, yend = 0.65,
-                  linewidth = 1.25,
-                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-                  colour = palette["BADGER"]) +
-         annotate("text", x = -0.021, y = 0.85, label = "Closer to median\npreference estimate",
-                  colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
-                  size = 3, fontface = 4) +
-         annotate("segment", x = 0.01, xend = 0.022, y = 0.65, yend = 0.65,
-                  linewidth = 1.25,
-                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-                  colour = palette["2"]) +
-         annotate("text", x = 0.021, y = 0.85, label = "Farther from median\npreference estimate",
-                  colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
-                  size = 3, fontface = 4) +
-         coord_cartesian(clip = "off", ylim = c(1, NA)) +
-         labs(x = "Beta", y = "") +
-         theme_bw() +
-         theme(
-           line = element_line(colour = palette["coreGrey"]),
-           text = element_text(colour = palette["coreGrey"]),
-           strip.background = element_blank(),
-           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-           # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-           # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
-           axis.title.x = element_text(margin = margin(5,0,0,0)),
-           axis.ticks.y.left = element_blank(),
-           axis.line.x = element_line(),
-           strip.clip = "off",
-           panel.border = element_blank(),
-           panel.spacing = unit(18, "pt"),
-           panel.grid.major.x = element_blank(),
-           panel.grid.minor.x = element_blank(),
-           legend.position = "none"))
+      if(modName == "wides_rEstWides"){
+        labelLocation <- c(-0.055, 0.05)
+        labelLocationText <- c(-0.052, 0.047)
+        labelText <- c("Lower \npreference estimates",
+                       "Higher \npreference estimates")
+        gradAdj <- c(0.01, -0.01)
+      } else {
+        labelLocation <- c(-0.022, 0.023)
+        labelLocationText <- c(-0.021, 0.022)
+        labelText <- c("Closer to median\npreference estimate",
+                       "Farther from median\npreference estimate")
+        gradAdj <- c(0.01, 0)
+      }
+
+      widesEffectPlot <-
+        widesEffectData %>%
+        ggplot(aes(x = value, y = variable)) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+                   linetype = 1) +
+        stat_slab(aes(fill = after_stat(x)), fill_type = "gradient",
+                  alpha = 0.85) +
+        stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                           point_interval = median_hdci, .width = c(.66, .95),
+                           stroke = 1.25, colour = palette[c("coreGrey")]) +
+        stat_summary(aes(colour = after_stat(x) > 0),
+                     position = position_dodge(width = 0.2, preserve = "single"),
+                     fun = median, size = 0.25) +
+        # scale_fill_manual(values = unname(palette[c("BADGER", "2")])) +
+        scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
+                             limits = c(gradLimits[1,1]+gradAdj[1],
+                                        gradLimits[1,2]+gradAdj[2]),
+                             # limits = c(-0.5, 0.35),
+                             midpoint = 0,
+                             oob = scales::oob_squish_any) +
+        scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+
+        annotate("segment", x = -0.01, xend = labelLocation[1], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["BADGER"]) +
+        annotate("text", x = labelLocationText[1], y = 0.85,
+                 label = labelText[1],
+                 colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+        annotate("segment", x = 0.01, xend = labelLocation[2], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["2"]) +
+        annotate("text", x = labelLocationText[2], y = 0.85,
+                 label = labelText[2],
+                 colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+
+        coord_cartesian(clip = "off", ylim = c(1, NA)) +
+        labs(x = "Beta", y = "") +
+        theme_bw() +
+        theme(
+          line = element_line(colour = palette["coreGrey"]),
+          text = element_text(colour = palette["coreGrey"]),
+          strip.background = element_blank(),
+          strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+          # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+          axis.title.x = element_text(margin = margin(5,0,0,0)),
+          axis.ticks.y.left = element_blank(),
+          axis.line.x = element_line(),
+          strip.clip = "off",
+          panel.border = element_blank(),
+          panel.spacing = unit(18, "pt"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          legend.position = "none")
 
       ggsave(widesEffectPlot,
              filename = here("notebook", "figures", paste0(modName, "_effectsPlot.png")),
@@ -258,72 +301,92 @@ generate_effect_plots <- function(brmsResults, method){
 
     } else if(method == "ssf"){
 
-      (ssfEffectPlot <- modCurrent %>%
-         spread_draws(`b_.*`, regex = TRUE) %>%
-         dplyr::select(-.chain, -.iteration, -.draw) %>%
-         melt() %>%
-         filter(!variable %in% c("b_Intercept")) %>%
-         mutate(
-           variable = case_when(
-             variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
-             variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
-             variable == "b_modelFormmf.ss" ~ "\u03B2 Model Formula: Not Integrated",
-             variable == "b_stepDistgamma" ~ "\u03B2 Step Distribution: Gamma",
-             variable == "b_turnDistvonmises" ~ "\u03B2 Turn Distribution: Von Mises",
-             variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
-             variable == "b_availablePerStepScaled" ~ "\u03B2 Available Points Per Step"
-           )
-         ) %>%
-         ggplot(aes(x = value, y = variable)) +
-         geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-                    linetype = 1) +
-         stat_slab(aes(fill = after_stat(x)), fill_type = "gradient",
-                   alpha = 0.85) +
-         stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
-                            point_interval = median_hdci, .width = c(.66, .95),
-                            stroke = 1.25, colour = palette[c("coreGrey")]) +
-         stat_summary(aes(colour = after_stat(x) > 0),
-                      position = position_dodge(width = 0.2, preserve = "single"),
-                      fun = median, size = 0.25) +
-         scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
-                              limits = c(gradLimits[1,1], gradLimits[1,2]),
-                              # limits = c(-0.5, 0.35),
-                              midpoint = 0,
-                              oob = scales::oob_squish_any) +
-         scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
-         annotate("segment", x = -0.1, xend = -1.75, y = 0.65, yend = 0.65,
-                  linewidth = 1.25,
-                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-                  colour = palette["BADGER"]) +
-         annotate("text", x = -1.7, y = 0.85, label = "Closer to median\npreference estimate",
-                  colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
-                  size = 3, fontface = 4) +
-         annotate("segment", x = 0.1, xend = 0.85, y = 0.65, yend = 0.65,
-                  linewidth = 1.25,
-                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
-                  colour = palette["2"]) +
-         annotate("text", x = 0.8, y = 0.85, label = "Farther from median\npreference estimate",
-                  colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
-                  size = 3, fontface = 4) +
-         coord_cartesian(clip = "off", ylim = c(1, NA)) +
-         labs(x = "Beta", y = "") +
-         theme_bw() +
-         theme(
-           line = element_line(colour = palette["coreGrey"]),
-           text = element_text(colour = palette["coreGrey"]),
-           strip.background = element_blank(),
-           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
-           # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-           # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
-           axis.title.x = element_text(margin = margin(5,0,0,0)),
-           axis.ticks.y.left = element_blank(),
-           axis.line.x = element_line(),
-           strip.clip = "off",
-           panel.border = element_blank(),
-           panel.spacing = unit(18, "pt"),
-           panel.grid.major.x = element_blank(),
-           panel.grid.minor.x = element_blank(),
-           legend.position = "none"))
+      ssfEffectData <- modCurrent %>%
+        spread_draws(`b_.*`, regex = TRUE) %>%
+        dplyr::select(-.chain, -.iteration, -.draw) %>%
+        melt() %>%
+        filter(!variable %in% c("b_Intercept")) %>%
+        mutate(
+          variable = case_when(
+            variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+            variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency",
+            variable == "b_modelFormmf.ss" ~ "\u03B2 Model Formula: Not Integrated",
+            variable == "b_stepDistgamma" ~ "\u03B2 Step Distribution: Gamma",
+            variable == "b_turnDistvonmises" ~ "\u03B2 Turn Distribution: Von Mises",
+            variable == "b_contourScaled" ~ "\u03B2 Available Area Contour",
+            variable == "b_availablePerStepScaled" ~ "\u03B2 Available Points Per Step"
+          )
+        )
+
+      if(modName == "ssf_rEstSSF"){
+        labelLocation <- c(-1.75, 0.9)
+        labelLocationText <- c(-1.7, 0.85)
+        labelText <- c("Lower \npreference estimates",
+                       "Higher \npreference estimates")
+        gradAdj <- c(0, 0)
+      } else {
+        labelLocation <- c(-1.75, 0.9)
+        labelLocationText <- c(-1.7, 0.85)
+        labelText <- c("Closer to median\npreference estimate",
+                       "Farther from median\npreference estimate")
+        gradAdj <- c(0, 0)
+      }
+
+      ssfEffectPlot <-
+        ssfEffectData %>%
+        ggplot(aes(x = value, y = variable)) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+                   linetype = 1) +
+        stat_slab(aes(fill = after_stat(x)), fill_type = "gradient",
+                  alpha = 0.85) +
+        stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                           point_interval = median_hdci, .width = c(.66, .95),
+                           stroke = 1.25, colour = palette[c("coreGrey")]) +
+        stat_summary(aes(colour = after_stat(x) > 0),
+                     position = position_dodge(width = 0.2, preserve = "single"),
+                     fun = median, size = 0.25) +
+        scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
+                             limits = c(gradLimits[1,1]+gradAdj[1],
+                                        gradLimits[1,2]+gradAdj[2]),
+                             # limits = c(-0.5, 0.35),
+                             midpoint = 0,
+                             oob = scales::oob_squish_any) +
+        scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+        annotate("segment", x = -0.1, xend = labelLocation[1], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["BADGER"]) +
+        annotate("text", x = labelLocationText[1], y = 0.85,
+                 label = labelText[1],
+                 colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+        annotate("segment", x = 0.1, xend = labelLocation[2], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["2"]) +
+        annotate("text", x = labelLocationText[2], y = 0.85,
+                 label = labelText[2],
+                 colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+        coord_cartesian(clip = "off", ylim = c(1, NA)) +
+        labs(x = "Beta", y = "") +
+        theme_bw() +
+        theme(
+          line = element_line(colour = palette["coreGrey"]),
+          text = element_text(colour = palette["coreGrey"]),
+          strip.background = element_blank(),
+          strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+          # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+          axis.title.x = element_text(margin = margin(5,0,0,0)),
+          axis.ticks.y.left = element_blank(),
+          axis.line.x = element_line(),
+          strip.clip = "off",
+          panel.border = element_blank(),
+          panel.spacing = unit(18, "pt"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          legend.position = "none")
 
       ggsave(ssfEffectPlot,
              filename = here("notebook", "figures", paste0(modName, "_effectsPlot.png")),
@@ -333,7 +396,101 @@ generate_effect_plots <- function(brmsResults, method){
       n <- n+1
       effectPlotList[[n]] <- ssfEffectPlot
 
-    } # end of if statement
+      # WRSF EFFECTS -------------------------------------------------------------
+
+    } else if(method == "wrsf"){
+
+      wrsfEffectData <- modCurrent %>%
+        spread_draws(`b_.*`, regex = TRUE) %>%
+        dplyr::select(-.chain, -.iteration, -.draw) %>%
+        melt() %>%
+        filter(!variable %in% c("b_Intercept")) %>%
+        mutate(
+          variable = case_when(
+            variable == "b_tdScaled" ~ "\u03B2 Tracking Duration",
+            variable == "b_tfScaled" ~ "\u03B2 Tracking Frequency"
+          )
+        )
+
+      if(modName == "wrsf_rEstwrsf"){
+        labelLocation <- c(-0.75, 0.32)
+        labelLocationText <- c(-0.72, 0.3)
+        labelText <- c("Lower \npreference estimates",
+                       "Higher \npreference estimates")
+        gradAdj <- c(0, 0)
+      } else {
+        labelLocation <- c(-0.75, 0.32)
+        labelLocationText <- c(-0.72, 0.3)
+        labelText <- c("Closer to median\npreference estimate",
+                       "Farther from median\npreference estimate")
+        gradAdj <- c(0, 0)
+      }
+
+      wrsfEffectPlot <-
+        wrsfEffectData %>%
+        ggplot(aes(x = value, y = variable)) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+                   linetype = 1) +
+        stat_slab(aes(fill = after_stat(x)), fill_type = "gradient",
+                  alpha = 0.85) +
+        stat_pointinterval(position = position_dodge(width = 0.4, preserve = "single"),
+                           point_interval = median_hdci, .width = c(.66, .95),
+                           stroke = 1.25, colour = palette[c("coreGrey")]) +
+        stat_summary(aes(colour = after_stat(x) > 0),
+                     position = position_dodge(width = 0.2, preserve = "single"),
+                     fun = median, size = 0.25) +
+        scale_fill_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"],
+                             limits = c(gradLimits[1,1]+gradAdj[1],
+                                        gradLimits[1,2]+gradAdj[2]),
+                             # limits = c(-0.5, 0.35),
+                             midpoint = 0,
+                             oob = scales::oob_squish_any) +
+        scale_colour_manual(values = unname(palette[c("BADGER", "2")])) +
+        annotate("segment", x = -0.05, xend = labelLocation[1], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["BADGER"]) +
+        annotate("text", x = labelLocationText[1], y = 0.7,
+                 label = labelText[1],
+                 colour = palette["BADGER"], hjust = 0, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+        annotate("segment", x = 0.05, xend = labelLocation[2], y = 0.65, yend = 0.65,
+                 linewidth = 1.25,
+                 arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
+                 colour = palette["2"]) +
+        annotate("text", x = labelLocationText[2], y = 0.7,
+                 label = labelText[2],
+                 colour = palette["2"], hjust = 1, vjust = 0, lineheight = 0.95,
+                 size = 3, fontface = 4) +
+        coord_cartesian(clip = "off", ylim = c(1, NA)) +
+        labs(x = "Beta", y = "") +
+        theme_bw() +
+        theme(
+          line = element_line(colour = palette["coreGrey"]),
+          text = element_text(colour = palette["coreGrey"]),
+          strip.background = element_blank(),
+          strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+          # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+          axis.title.x = element_text(margin = margin(5,0,0,0)),
+          axis.ticks.y.left = element_blank(),
+          axis.line.x = element_line(),
+          strip.clip = "off",
+          panel.border = element_blank(),
+          panel.spacing = unit(18, "pt"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          legend.position = "none")
+
+      ggsave(wrsfEffectPlot,
+             filename = here("notebook", "figures", paste0(modName, "_effectsPlot.png")),
+             dpi = 300, width = 210, height = 100,
+             units = "mm")
+
+      n <- n+1
+      effectPlotList[[n]] <- wrsfEffectPlot
+
+    }
 
   } # end of for loop
 

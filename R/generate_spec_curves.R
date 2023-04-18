@@ -16,8 +16,8 @@ generate_spec_curves <- function(compiledResults, method){
   # library(reshape2)
   # library(patchwork)
 
-  if(!method %in% c("rsf", "ssf", "wides")){
-    stop("Type must be rsf, ssf, wides")
+  if(!method %in% c("rsf", "ssf", "wides", "wrsf")){
+    stop("Type must be rsf, ssf, wides, wrsf")
   }
 
   # spec curve adaptation ---------------------------------------------------
@@ -464,5 +464,145 @@ generate_spec_curves <- function(compiledResults, method){
 
     return(ssfSpecComplete)
 
-  } # end of if
+  } else if(method == "wrsf"){
+
+    wrsfResults <- multiverseHabitat::parse_combined_results(compiledResults[!is.na(compiledResults$Estimate),])
+
+    wrsfResults$tf <- round(wrsfResults$tf, digits = 2)
+
+    levelOrdering <- unique(c(sort(unique(wrsfResults$td)),
+                              sort(unique(wrsfResults$tf))))
+
+    wrsfResultsPlotData <- wrsfResults %>%
+      dplyr::select(Estimate, Lower, Upper, indi, species,
+                    td,  tf) %>%
+      reshape2::melt(c("Estimate", "Lower", "Upper", "indi", "species")) %>%
+      dplyr::mutate(
+        variable = case_when(
+          variable == "td" ~ "Tracking Duration (days)",
+          variable == "tf" ~ "Tracking Frequency (points/hour)"
+        ),
+        indi = as.factor(indi),
+        species = as.factor(species),
+        value = factor(value, levels = levelOrdering)
+      ) %>%
+      dplyr::group_by(variable, value) %>%
+      dplyr::mutate(d_medEst = Estimate - median(wrsfResults$Estimate, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+
+    medData <- wrsfResultsPlotData %>%
+      dplyr::group_by(variable, value) %>%
+      dplyr::summarise(medEst = median(Estimate, na.rm = TRUE))
+
+    nSummary <- wrsfResultsPlotData %>%
+      dplyr::mutate(bunch = case_when(
+        Estimate > 7.5 ~ 18.5,
+        Estimate < -7.5 ~ -33,
+        TRUE ~ -8
+      )) %>%
+      dplyr::group_by(bunch, variable, value) %>%
+      dplyr::summarise(n = n())
+
+    (splitSpecCurve_wrsf <- wrsfResultsPlotData %>%
+        ggplot() +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
+                   linetype = 1) +
+        # geom_point(aes(x = Estimate, y = value, colour = d_medEst),
+        #            position = position_jitter(width = 0, height = 0.2), alpha = 0.05) +
+        geom_point(aes(x = Estimate, y = value, colour = d_medEst),
+                   position = position_jitter(width = 0, height = 0.2), alpha = 0.25,
+                   pch = 3, size = 0.75) +
+        geom_point(data = medData, aes(x = medEst, y = value),
+                   alpha = 1, size = 1.5, colour = "#FFFFFF") +
+        geom_point(data = medData, aes(x = medEst, y = value),
+                   alpha = 1, size = 1, colour = "#403F41") +
+        geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
+                   linetype = 2) +
+        facet_grid(variable~., scales = "free_y", space = "free", switch = "y") +
+        labs(y = "", x = "Estimate") +
+        # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+        scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
+        theme_bw() +
+        theme(
+          line = element_line(colour = palette["coreGrey"]),
+          text = element_text(colour = palette["coreGrey"]),
+          strip.background = element_blank(),
+          strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.y.left = element_text(angle = 0, margin = margin(-8.5,12,0,0)),
+          axis.text.y.left = element_text(margin = margin(0,-165,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+          axis.ticks.y.left = element_blank(),
+          axis.line.x = element_line(),
+          strip.clip = "off",
+          legend.position = "none",
+          panel.border = element_blank(),
+          panel.spacing = unit(18, "pt"),
+          panel.grid = element_blank())
+    )
+
+    splitSpecCurve_wrsf_numbers <- splitSpecCurve_wrsf +
+      geom_text(data = nSummary, aes(x = bunch, y = value, label = n), fontface = 3)
+
+    overallMed <- data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
+                             "indexLoc" = round(nrow(wrsfResults)/2, digits = 0))
+
+    (overallSpecCurve_wrsf <- wrsfResults %>%
+        dplyr::arrange(Estimate) %>%
+        dplyr::mutate(index = row_number(),
+                      indi = as.factor(indi),
+                      species = as.factor(species),
+                      d_medEst = Estimate - median(wrsfResults$Estimate, na.rm = TRUE)) %>%
+        ggplot() +
+        geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
+                   linetype = 1) +
+        # geom_errorbarh(aes(xmin = Lower, xmax = Upper, y = index, colour = d_medEst),
+        #               alpha = 0.005, linewidth = 0.2) +
+        # coord_cartesian(xlim = c(-35, 20)) +
+        # geom_point(aes(x = Estimate, y = index, colour = d_medEst),
+        #            size = 1, alpha = 0.2)+
+        geom_point(aes(x = Estimate, y = index, colour = d_medEst), alpha = 0.25,
+                   pch = 3, size = 0.75)+
+        geom_point(data = data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
+                                     "indexLoc" = round(nrow(wrsfResults)/2, digits = 0)),
+                   aes(x = medEst, y = indexLoc),
+                   alpha = 1, size = 2.5, colour = "#FFFFFF") +
+        geom_point(data = data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
+                                     "indexLoc" = round(nrow(wrsfResults)/2, digits = 0)),
+                   aes(x = medEst, y = indexLoc),
+                   alpha = 1, size = 2, colour = "#403F41") +
+        annotate("text", x = overallMed$medEst +6, y = overallMed$indexLoc,
+                 label = "Median",
+                 fontface = 4, size = 5, colour = palette["coreGrey"],
+                 hjust = 1, vjust = -0.2) +
+        annotate("segment", x = overallMed$medEst +6, xend = overallMed$medEst,
+                 y = overallMed$indexLoc, yend = overallMed$indexLoc,
+                 linewidth = 0.75, colour = palette["coreGrey"]) +
+        scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
+        labs(y = "", x = "Estimate") +
+        theme_bw() +
+        theme(
+          line = element_line(colour = palette["coreGrey"]),
+          text = element_text(colour = palette["coreGrey"]),
+          strip.background = element_blank(),
+          strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
+          axis.text.y.left = element_blank(),
+          axis.ticks.y.left = element_blank(),
+          axis.line.x = element_line(),
+          strip.clip = "off",
+          legend.position = "none",
+          panel.border = element_blank(),
+          panel.spacing = unit(18, "pt"),
+          panel.grid = element_blank())
+    )
+
+    (wrsfSpecComplete <- overallSpecCurve_wrsf / splitSpecCurve_wrsf +
+        plot_layout(heights = c(1, 3), guides = "collect"))
+
+    ggsave(filename = here("notebook", "figures", "wrsfSpecCurve.png"),
+           plot = wrsfSpecComplete,
+           width = 360, height = 200, units = "mm", dpi = 300)
+
+    return(wrsfSpecComplete)
+
+  }
 }

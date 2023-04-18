@@ -58,8 +58,8 @@ values_Sampling <- values_Sampling %>%
   dplyr::select(td, tf)
 
 optionsList_area <- list(
-  Method_method = c("wides", "rsf", "wRSF"),
-  # Method_method = c("wides", "rsf"),
+  # Method_method = c("wides", "rsf", "wRSF"),
+  Method_method = c("wides", "rsf"),
   areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
   areaContour = c(90, 95, 99),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
@@ -69,6 +69,16 @@ optionsList_area <- list(
   Method_we = exp(seq(log(1), log(10000000), length.out = 6))
   # Method_we = 1
 )
+
+optionsList_area_wRSFSplit <-
+  list(
+    Method_method = c("wRSF"),
+    areaMethod = c("AKDE"),
+    areaContour = c(95),
+    Method_ap = 999,
+    Method_sp = "rd",
+    Method_we = 999
+  )
 
 optionsList_sff <- list(
   Method_method = c("ssf"),
@@ -127,6 +137,14 @@ allIndividualEstimatesList <- list(
                      optionsList = optionsList_area
                    ),
                    priority = 0.91),
+        ## WRSF
+        tar_target(wrsfMethodsOUT,
+                   wrapper_indi_area(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_area_wRSFSplit
+                   ),
+                   priority = 0.01),
         ## SSF
         tar_target(ssfOUT,
                    wrapper_indi_ssf(
@@ -146,6 +164,13 @@ areaCompiled <- tar_combine(
   # command = list(!!!.x),
   command = rbind(!!!.x),
   priority = 0.8
+)
+wrsfCompiled <- tar_combine(
+  wrsfResults,
+  allIndividualEstimatesList[[1]][grep("wrsfMethodsOUT", names(allIndividualEstimatesList[[1]]))],
+  # command = list(!!!.x),
+  command = rbind(!!!.x),
+  priority = 0.1
 )
 ssfCompiled <- tar_combine(
   ssfResults,
@@ -211,7 +236,7 @@ brmsCompiled <- list(
                method = "ssf"),
              priority = 0.72
   ),
-  tar_target(areaSpecCurves,
+  tar_target(ssfSpecCurves,
              generate_spec_curves(
                compiledResults = ssfResults,
                method = "ssf"
@@ -232,10 +257,39 @@ brmsCompiled <- list(
              ),
              priority = 0.73
   ),
+  #wrsf models
+  tar_target(wrsfBrms,
+             run_brms(
+               compiledResults = wrsfResults,
+               method = "wrsf"),
+             priority = 0.71
+  ),
+  tar_target(wrsfpecCurves,
+             generate_spec_curves(
+               compiledResults = wrsfResults,
+               method = "wrsf"
+             ),
+             priority = 0.71
+  ),
+  ### WRSF EFFECT SIZE TARGET HERE
+  tar_target(effectSizeBrms_wrsf,
+             generate_effect_plots(
+               brmsResults = wrsfBrms,
+               method = "wrsf"
+             ),
+             priority = 0.70
+  ),
+  tar_target(summaryBrms_wrsf, ## added _ssf to match name style of the area methods
+             diagnostics_brms(
+               brmsResults = wrsfBrms
+             ),
+             priority = 0.70
+  ),
   tar_target(uncertaintyPlot,
              uncertainty_vs_estimate(
                aResults = areaResults,
-               sResults = ssfResults
+               sResults = ssfResults,
+               wResults = wrsfResults
              ),
              priority = 0.74
   )
@@ -243,6 +297,7 @@ brmsCompiled <- list(
 
 list(allIndividualEstimatesList,
      areaCompiled,
+     wrsfCompiled,
      ssfCompiled,
      simsCompiled,
      brmsCompiled,
@@ -261,7 +316,7 @@ list(allIndividualEstimatesList,
 # watch out too many workers can hit ram limits
 # targets::tar_make_clustermq(workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
-# targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
+# targets::tar_make_clustermq("wrsfResults", workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives", log_worker = TRUE)
