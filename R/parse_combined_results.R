@@ -12,8 +12,14 @@ parse_combined_results <- function(combResults){
 
   # branches contain all info
   combResults$branches <- rownames(combResults)
-  # remove the unique numbers added cos they were rownames
-  combResults$branches <- sub("\\..[^\\.]*$", "", combResults$branches)
+
+  # if statement to catch wRSF results that won't have the rowname numbers on the end
+  if(!is.na(as.numeric(substr(combResults$branches[1],
+                              nchar(combResults$branches[1]),
+                              nchar(combResults$branches[1]))))){
+    # remove the unique numbers added cos they were rownames
+    combResults$branches <- sub("\\..[^\\.]*$", "", combResults$branches)
+  }
 
   # species
   combResults$species <- stringr::str_extract(combResults$branches, "BADGER|VULTURE|KINGCOBRA")

@@ -288,5 +288,75 @@ run_brms <- function(compiledResults, method){
 
     # return(list(method = "ssf",
     #             modOUT_dEst = modOUT_dEstSSF))
+  } else if(method == "wrsf"){
+
+    wrsfResults <- multiverseHabitat::parse_combined_results(compiledResults[!is.na(compiledResults$Estimate),])
+    wrsfResults$tf <- round(wrsfResults$tf, digits = 2)
+
+    modelDatawrsf <- wrsfResults %>%
+      dplyr::mutate(medEst = median(Estimate, na.rm = TRUE),
+                    rawDeltaEst = Estimate - medEst,
+                    absDeltaEst = abs(rawDeltaEst)) %>%
+      dplyr::mutate(tfScaled = (tf-mean(tf))/sd(tf),
+                    tdScaled = (td-mean(td))/sd(td))
+
+    # hist(modelDatawrsf$absDeltaEst, breaks = 20000)
+    # wrsf
+    formwrsf_absDeltaEst <- brms::bf(absDeltaEst ~ 1 + tdScaled + tfScaled +
+                                      (1|species/indi))
+
+    formwrsf_rawDeltaEst <- brms::bf(rawDeltaEst ~ 1 + tdScaled + tfScaled +
+                                      (1|species/indi))
+    # AKA (1|species) + (1|species:indi) for a nested group effect intercept
+    # brms::get_prior(formwrsf_absDeltaEst, data = modelDatawrsf)
+    # brms::get_prior(formwrsf_binPositive, data = modelDatawrsf)
+    brmpriorwrsf <- c(
+      brms::set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
+      brms::set_prior("cauchy(0.1, 3)", coef = "tfScaled")
+    )
+    # ggplot(data.frame("x" = rcauchy(2000, location = 0.1, scale = 1))) +
+    #   geom_density(aes(x = x)) +
+    #   coord_cartesian(xlim = c(-100, 100))
+
+    modOUT_dEstwrsf <- brms::brm(formula = formwrsf_absDeltaEst,
+                                data = modelDatawrsf,
+                                family = gaussian,
+                                prior = brmpriorwrsf,
+                                warmup = 200, iter = 1000, chains = 4,
+                                # warmup = 2000, iter = 5000, chains = 4,
+                                cores = 4,
+                                thin = 2,
+                                # control = list(adapt_delta = 0.90,
+                                #                max_treedepth = 15),
+                                seed = 1,
+                                save_pars = brms::save_pars(all = TRUE),
+                                save_model = here::here("notebook", "modelOutput", "absDeltaEstModel_wrsf.txt"),
+                                file = here::here("notebook", "modelOutput", "absDeltaEstModel_wrsf"))
+
+    modOUT_rEstwrsf <- brms::brm(formula = formwrsf_rawDeltaEst,
+                                data = modelDatawrsf,
+                                family = gaussian,
+                                prior = brmpriorwrsf,
+                                warmup = 200, iter = 1000, chains = 4,
+                                # warmup = 2000, iter = 5000, chains = 4,
+                                cores = 4,
+                                thin = 2,
+                                # control = list(adapt_delta = 0.90,
+                                #                max_treedepth = 15),
+                                seed = 1,
+                                save_pars = brms::save_pars(all = TRUE),
+                                save_model = here::here("notebook", "modelOutput", "rawDeltaEstModel_wrsf.txt"),
+                                file = here::here("notebook", "modelOutput", "rawDeltaEstModel_wrsf"))
+
+    modOUT_dEstwrsf_r2 <- performance::r2_bayes(modOUT_dEstwrsf)
+    modOUT_rEstwrsf_r2 <- performance::r2_bayes(modOUT_rEstwrsf)
+
+    return(list(modelNames = c("wrsf_dEstwrsf", "wrsf_rEstwrsf", "dEst_r2", "rEst_r2"),
+                modOUT_dEst = modOUT_dEstwrsf,
+                modOUT_rEst = modOUT_rEstwrsf,
+                modOUT_dEst_r2 = modOUT_dEstwrsf_r2,
+                modOUT_rEst_r2 = modOUT_rEstwrsf_r2)
+    )
+
   }
 }
