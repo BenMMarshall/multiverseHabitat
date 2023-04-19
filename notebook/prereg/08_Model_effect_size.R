@@ -52,6 +52,7 @@ if(method == "rsf"){
     set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
     set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
     set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "samplingPattern"),
     set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
     set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
     set_prior("cauchy(0.1, 3)", coef = "tfScaled"),
@@ -104,6 +105,7 @@ if(method == "rsf"){
     set_prior("cauchy(0.1, 3)", coef = "areaKDEhref"),
     set_prior("cauchy(0.1, 3)", coef = "areaMCP"),
     set_prior("cauchy(0.1, 3)", coef = "contourScaled"),
+    set_prior("cauchy(0.1, 3)", coef = "samplingPattern"),
     set_prior("cauchy(0.1, 3)", coef = "availPointsPerScaled"),
     set_prior("cauchy(0.1, 3)", coef = "tdScaled"),
     set_prior("cauchy(0.1, 3)", coef = "tfScaled")
