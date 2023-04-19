@@ -225,12 +225,13 @@ For the analysis decisions we focused entirely on decisions that result from an 
 R presents the number one tool for analysing animal movement data [@joo_recent_2022].
 @joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
 Specifically, we explored a subset of decisions made during the workflows using adehabitatHS `r paste0("v.", packageVersion("adehabitatHS"))` [@adehabitatHS], and amt `r paste0("v.", packageVersion("amt"))` [@amt] R packages.
+During the writing of this paper, a new method was described as part of the ctmm package <!-- add version and cite here-->, which we also preliminarily investigate.
 
-Combined the packages offer many options for habitat analysis, we focus on three that tackle individual habitat selection.
+Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
-<!-- Three from the adehabitatHS package: resource selection ratios (Wides), Compositional Analysis of Habitat Use (Compana), Eigenanalysis of Selection Ratios (Eisera). -->
-And two from the amt package: resource selection function (RSF), step selection function (SSF)
-Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)B). 
+Two from the amt package: resource selection function (RSF), step selection function (SSF)
+And the newly described Weighted Resource Selection Function (wRSF) from the ctmm package.
+Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)B).
 
 <!-- #### adeHabaitatHS -->
 <!-- - define available area -->
@@ -313,7 +314,8 @@ As mentioned resource selection function (RSF) share the above decisions on avai
 In addition, for the RSF we also explored the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
 There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates [NEED THE FIEBERG CITE HERE]; we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
 
-Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF).
+Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
+
 Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
 As a result SSFs have a number of decisions not shared with the area methods.
 
@@ -331,6 +333,12 @@ We have neglected to explore an expansive aspect of SSFs regarding high resoluti
 Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
 Such grouping of data deserves investigation, but the myriad of ways bursts can be defined and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
+
+Compared to the other methods, Weighted Resource Selection Functions do not have many associated choices.
+Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat preference.
+This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on –potentially arbitrary– decisions with regards to how to mitigate any biasing effects the structures produce.
+As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model.
+Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
 
 <!-- The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path. -->
 <!-- We will vary the spacing of the knots, the times at which the imputed path is sampled, and the precision matrix used during the path imputation. -->
