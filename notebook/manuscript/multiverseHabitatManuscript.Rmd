@@ -391,7 +391,7 @@ Despite this, we do see a slight reduction in estimate variation from frequencie
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
 Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in [LINK TO FIGURE]).
-The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs.
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
 
 <!-- spec curve rsf -->
 The Resource Selection Function (RSF) specification curve shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer [FIGURE LINK HERE].
@@ -417,6 +417,12 @@ The decisions concerning the distributions used to model step lengths and turn a
 
 Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate.
 
+<!-- spec curve wrsf -->
+
+The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates. 
+The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals.
+The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
+
 ## Model exploration
 
 ```{r targetsBRMS, echo=FALSE, message=FALSE}
@@ -428,6 +434,8 @@ ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew ones' interpretation of which choices have the largest impact.
 Our Bayesian models cut through the noise displayed in [FIGURES XXXXXXX] to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+
+<!-- WIDES MODELS -->
 
 ```{r widesModelEffects, echo=FALSE, message=FALSE}
 library(dplyr)
@@ -443,15 +451,34 @@ brmWides_dEst_avpEffect <- areaBrms_wides$modOUT_dEst %>%
 brmWides_dEst_csEffect <- areaBrms_wides$modOUT_dEst %>%
   tidybayes::spread_draws(b_contourScaled) %>%
   ggdist::median_hdci(.width = c(0.95))
+
+brmWides_rEst_tdEffect <- areaBrms_wides$modOUT_rEst %>%
+  tidybayes::spread_draws(b_tdScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmWides_rEst_tfEffect <- areaBrms_wides$modOUT_rEst %>%
+  tidybayes::spread_draws(b_tfScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmWides_rEst_avpEffect <- areaBrms_wides$modOUT_rEst %>%
+  tidybayes::spread_draws(b_availPointsPerScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmWides_rEst_spEffect <- areaBrms_wides$modOUT_rEst %>%
+  tidybayes::spread_draws(b_samplingPattern) %>%
+  ggdist::median_hdci(.width = c(0.95))
 ```
 
 <!-- model res wides absolute -->
 For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity, with increases in tracking duration ($\beta$ `r paste0(round(brmWides_dEst_tdEffect[1], digits = 3), ", 95% median Highest-Density Continuous Interval CrI ", round(brmWides_dEst_tdEffect[2], digits = 3), " – ", round(brmWides_dEst_tdEffect[3], digits = 3))`) being marginally more effective than tracking frequency ($\beta$ `r paste0(round(brmWides_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_tfEffect[2], digits = 3), " – ", round(brmWides_dEst_tfEffect[3], digits = 3))`).
 Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$ `r paste0(round(brmWides_dEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_avpEffect[2], digits = 3), " – ", round(brmWides_dEst_avpEffect[3], digits = 3))`), and it's effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
-Contour choice increases the absolute deviation from the median estimate `r paste0("$beta$ ", round(brmWides_dEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_csEffect[2], digits = 3), " – ", round(brmWides_dEst_csEffect[3], digits = 3))`, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
+Contour choice increases the absolute deviation from the median estimate $\beta$ `r paste0(round(brmWides_dEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_csEffect[2], digits = 3), " – ", round(brmWides_dEst_csEffect[3], digits = 3))`, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
 
 <!-- model res wides raw -->
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r paste0(round(brmWides_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_tfEffect[2], digits = 3), " – ", round(brmWides_rEst_tfEffect[3], digits = 3))` and tracking duration $\beta$ `r paste0(round(brmWides_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_tdEffect[2], digits = 3), " – ", round(brmWides_rEst_tdEffect[3], digits = 3))`, with the former leading to greater estimates of preference.
+<!-- Likely a result of the higher frequencies matching more accurately with the time-scale of selection, whereas duration tends to buffer against the extremes regardless. -->
+The impact of stratified versus random available point positioning $\beta$ `r paste0(round(brmWides_rEst_spEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_spEffect[2], digits = 3), " – ", round(brmWides_rEst_spEffect[3], digits = 3))` and the available points multiplier $\beta$ `r paste0(round(brmWides_rEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_avpEffect[2], digits = 3), " – ", round(brmWides_rEst_avpEffect[3], digits = 3))` have little impact mirror the lack of impact in the absolute deviation model. 
+All area related choices do not move relative to each other, and reveal that MCPs as an area method to to lead to lower estimates of preference in this scenario, mirroring the lower median displayed in [FIGURE XX].
+
+<!-- RSF MODELS -->
 
 ```{r rsfModelEffects, echo=FALSE, message=FALSE}
 library(dplyr)
@@ -479,6 +506,25 @@ brmrsf_dEst_kdeEffect <- areaBrms_rsf$modOUT_dEst %>%
 brmrsf_dEst_dbmEffect <- areaBrms_rsf$modOUT_dEst %>%
   tidybayes::spread_draws(b_areadBBMM) %>%
   ggdist::median_hdci(.width = c(0.95))
+
+brmrsf_rEst_tdEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_tdScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_tfEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_tfScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_spEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_samplingPatternst) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_avpEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_availPointsPerScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_dbmEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_areadBBMM) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_csEffect <- areaBrms_rsf$modOUT_rEst %>%
+  tidybayes::spread_draws(b_contourScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
 ```
 
 <!-- model res rsf absolute -->
@@ -500,8 +546,25 @@ When interacting with tracking frequency the sensitivity is less pronounced, ins
 
 
 <!-- model res rsf raw -->
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration $\beta$ `r paste0(round(brmrsf_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_tdEffect[2], digits = 3), " – ", round(brmrsf_rEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmrsf_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_tfEffect[2], digits = 3), " – ", round(brmrsf_rEst_tfEffect[3], digits = 3))`). 
+While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median <!--[NEED LINK TO SUPP MAT HERE]-->) are more likely to be the correct estimation of simulated preference via RSF.
+This matches the absolute deviation model where more data leads to less deviant estimations.
+
+Stratified available point sampling was associated with more positive estimates of preference ($\beta$ `r paste0(round(brmrsf_rEst_spEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_spEffect[2], digits = 3), " – ", round(brmrsf_rEst_spEffect[3], digits = 3))`), but also those closer to the median (as indicated by the previous model).
+This suggests that random point sampling, by contrast, leads to more variable estimates that tend to be lower.
+The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$ `r paste0(round(brmrsf_rEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_avpEffect[2], digits = 3), " – ", round(brmrsf_rEst_avpEffect[3], digits = 3))`).
+
+The area method choices reveal a similar pattern.
+Dynamic Brownian Bridge Movement models were connected to the more variable estimates, but this model reveals that the variability did not tend towards a particular direction ($\beta$ `r paste0(round(brmrsf_rEst_dbmEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_dbmEffect[2], digits = 3), " – ", round(brmrsf_rEst_dbmEffect[3], digits = 3))`).
+Whereas the other methods are connected to lower deviation from the median estimate, but higher raw estimates.
+The area contour selected also reflects this ($\beta$ `r paste0(round(brmrsf_rEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_csEffect[2], digits = 3), " – ", round(brmrsf_rEst_csEffect[3], digits = 3))`).
+Taken together it appears methods that capture a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of preference.
+The dBBMMs by contrast are more vulnerable to variation in other decisions, a trait reflected in the interaction with data quantity measures.
+
+Overall there does not appear to be a decision that leads to great deviation from the median estimate in one direction.
 
 
+<!-- SSF MODELS -->
 
 ```{r ssfModelEffects, echo=FALSE, message=FALSE}
 library(dplyr)
@@ -511,6 +574,10 @@ brmssf_dEst_tdEffect <- ssfBrms$modOUT_dEst %>%
 brmssf_dEst_tfEffect <- ssfBrms$modOUT_dEst %>%
   tidybayes::spread_draws(b_tfScaled) %>%
   ggdist::median_hdci(.width = c(0.95))
+
+brmssf_rEst_sdEffect <- ssfBrms$modOUT_rEst %>%
+  tidybayes::spread_draws(b_stepDistgamma) %>%
+  ggdist::median_hdci(.width = c(0.95))
 ```
 
 <!-- model res ssf absolute -->
@@ -519,7 +586,32 @@ The SSF absolute deviation model matches very closely the previous two models, w
 Unlike the other analysis all other decisions made negligible impact to an estimate's absolute proximity to the median estimate.
 
 <!-- model res ssf raw -->
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly. 
+The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r paste0(round(brmssf_rEst_sdEffect[1], digits = 3), ", 95% CrI ", round(brmssf_rEst_sdEffect[2], digits = 3), " – ", round(brmssf_rEst_sdEffect[3], digits = 3))`).
+However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
+<!-- WRSF MODELS -->
+
+```{r wrsfModelEffects, echo=FALSE, message=FALSE}
+library(dplyr)
+brmwrsf_dEst_tdEffect <- wrsfBrms$modOUT_dEst %>%
+  tidybayes::spread_draws(b_tdScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmwrsf_dEst_tfEffect <- wrsfBrms$modOUT_dEst %>%
+  tidybayes::spread_draws(b_tfScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+
+brmwrsf_rEst_tdEffect <- wrsfBrms$modOUT_eEst %>%
+  tidybayes::spread_draws(b_tdScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+brmwrsf_rEst_tfEffect <- wrsfBrms$modOUT_rEst %>%
+  tidybayes::spread_draws(b_tfScaled) %>%
+  ggdist::median_hdci(.width = c(0.95))
+```
+
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions.
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r paste0(round(brmwrsf_dEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_dEst_tdEffect[2], digits = 3), " – ", round(brmwrsf_dEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmwrsf_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_dEst_tfEffect[2], digits = 3), " – ", round(brmwrsf_dEst_tfEffect[3], digits = 3))`), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r paste0(round(brmwrsf_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_rEst_tdEffect[2], digits = 3), " – ", round(brmwrsf_rEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmwrsf_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_rEst_tfEffect[2], digits = 3), " – ", round(brmwrsf_rEst_tfEffect[3], digits = 3))`).
+The only difference, although both effects overlap considerably, is that increased tracking duration tended to be linked more strongly with lower preference estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 # Discussion
 
