@@ -1,0 +1,16 @@
+
+Street et al 2021 - variation in landscape and selection strength impact data required
+Street et al 2021 - better sampling of availability aids estimation of RSF power
+Street et al 2021 - RSF selection may be more uncertain depending on definition of available
+Street et al 2021 - suggest regular sampling to ensure availability is accurate
+Street et al 2021 - availability is key to proper estimates of selection, mirrored here that choices do matter
+Street et al 2021 - say "Similarly, editors and reviewers should abandon preconceived notions of what makes a sufficient sample size in RSF in favour of evaluating the sensitivity of findings to sample size based on the mathematical rules identified here"
+
+https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/12-1688.1 - bigger sample better, agreed
+https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/12-1688.1 - availability definition is key
+
+[Thurfjell] - future expansion like not straight lines for availability - we avoided cos it isn't implemented in R package. Also mention behaviour being added to SSF, this may increase the decisions as HMM and other methods to ID behaviour have their own suite of decisions in them
+
+
+https://doi.org/10.1890/14-2241.1
+"Models fitted at large spatial scales, will tend to average across the responses of different individuals that happen to be in regions with contrasting habitat compositions. We suggest that such models may fail to capture local extremes (hotspots and coldspots) in animal usage and call this potential problem, homogenization. "
