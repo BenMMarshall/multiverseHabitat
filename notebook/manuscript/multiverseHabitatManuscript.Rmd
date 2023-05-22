@@ -230,7 +230,7 @@ During the writing of this paper, a new method was described as part of the ctmm
 Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
 Two from the amt package: resource selection function (RSF), step selection function (SSF)
-And the newly described Weighted Resource Selection Function (wRSF) from the ctmm package.
+And the newly described Weighted Resource Selection Function [wRSF @alston_mitigating_2023] from the ctmm package.
 Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)B).
 
 <!-- #### adeHabaitatHS -->
@@ -312,7 +312,7 @@ For the alignment of the points, points where either random or stratified within
 
 As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
 In addition, for the RSF we also explored the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
-There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates [NEED THE FIEBERG CITE HERE]; we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
+There are suggestions that altering the weighing can improve model convergence and decrease the uncertainty surrounding habitat preference estimates [@fieberg_how_2021]; we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
 
 Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
 
@@ -327,7 +327,7 @@ Step lengths were tested with a Gamma and Exponential distributions, while turn 
 The other decisions we explored in SSFs was whether to run the model as a standard step selection or an integrated step selection function.
 The standard step selection model is a conditional logistic regression, where we aim to estimate the used/non-used by the habitat values (case_ ~ values + strata(step_id_)).
 The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
-The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artifact of the movements of the animal rather than active habitat preference [CITE HERE].
+The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artefact of the movements of the animal rather than active habitat preference [@avgar_integrated_2016].
 
 We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of "bursts".
 Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
@@ -335,9 +335,9 @@ Such grouping of data deserves investigation, but the myriad of ways bursts can 
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
 
 Compared to the other methods, Weighted Resource Selection Functions do not have many associated choices.
-Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat preference.
+Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat preference [@alston_mitigating_2023].
 This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on –potentially arbitrary– decisions with regards to how to mitigate any biasing effects the structures produce.
-As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model.
+As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model [@alston_mitigating_2023].
 Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
 
 <!-- The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path. -->
@@ -625,44 +625,76 @@ The only difference, although both effects overlap considerably, is that increas
 
 <!-- overall data matters most -->
 <!-- duration most important for wides, frequency for rsf and ssf, but really data quantity is important for reliability -->
+Our multiverse exploration of individual habitat selection analysis methods reveals the importance of data quantity in generating consistent results. 
+Regardless of the approach used, data quantity resulted in estimates of habitat preference closer to the median estimate and more consistently in line with the underlying simulated habitat selection.
+There appeared to be an reduction in deviation from the median estimate when using newer methods (e.g., SSF and wRSF).
+This suggests that advancements in habitat selection analysis methods are not only worthwhile, but actively counter reproducibility issues that may stem from research choice.
+
+<!-- reproducibility implications - no crisis any bigger than any other field - good news not need to immediately panic, the habitat pref looks similar to over fields - point towards other processes under way to improve other fields, same apply nothing dramatic -->
+<!-- ie bad incentives will not be having a disproportionate impact on move eco if the results here hold true -->
+The overall pattern in estimates mirror those seen in other fields, where the bulk of answers converge but outliers remain. 
+<!-- [EXAMPLES HERE OF OTHER FIELDS] -->
+While the incentives for findings exciting results remain in the publishing system <!-- [CITES] -->, using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of the extreme estimates is relatively low compared to the majority of estimates that agree near the median.
+Therefore, we can be as confident in past studies findings as we would those from <!-- [EXAMPLE FIELDS HERE] -->.
+If the past habitat preference studies report extreme findings there is a general tendency for these to be paired with very wide confidence intervals; if the studies have reported the confidence intervals, this provides an additional safeguard against over interpretation of potentially incorrect extreme results.
+
+While the goal of this study was not to review and provide direct guidance to the most effective ways of undertaking habitat selection, our findings show several key patterns that fit into previous guidance in the literature.
+In particular the benefits of larger datasets and the importance of defining availability [@street_solving_2021; @northrup_practical_2013], latter particularly key because of the potential for subjective definitions [@beyer_interpretation_2010]. 
+One specific example would be the tendency for larger area methods, and wider contours leading to more stable (nearer the median) estimates; this mirrors previously reveals patterns connecting broader spatial scales and transferability [@paton_defining_2015].
 
 <!-- does not provide an excuse for not caring about analysis choices, as newer methods appear better, progress is progress it seems -->
-While the overall pattern shows data quality supremacy, this cannot be used as an excuse to ignore the decisions during analysis.
+The overall pattern shows data quality supremacy, but this cannot be used as an excuse to ignore the decisions during analysis.
 Two aspect of the results highlight that complacency is unwise.
-First RSF and SSF approach appear to be more consistent than the more basic and older Wides ratio based approach.
-Both RSF and SSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
+First RSF, SSF, and wRSF approaches appear to be more consistent than the more basic and older Wides ratio based approach.
+Both RSF, SSF, and wRSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
 <!-- and some choices are worse - dBBMMs are a mis conceptualisation that does impact results, and is more sensitive to lower data levels that other analysis methods -->
 Second is the evidence for conceptual mistakes to have impacts on final results, implying that in some cases there are more correct answers to certain analysis decisions.
 The use of dBBMMs to define availability is not strictly correct as the (confidence) area generated by dBBMMs are reflected of uncertainty surrounding use.
 This renders the down stream analysis of habitat preference a comparison of use (measured by points) to use (measured by area of uncertainty surrounding movement trajectories); as opposed to the desired use versus availability.
 The dBBMM results exemplify the need to maintain a connection between abstractions (e.g., an area) of the data and the intended use.
 A similar argument can be made for data quantity, where mismatches between frequency and desired behaviours or and inadequate duration will obscure answers regardless of the analysis applied.
-Our simulations are are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
+Our simulations are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
 Failure to do this, instead allowing locations to be recorded equally at night and day, would have skewed estimates towards the habitat used for shelter rather than foraging.
 Matching question to analysis approach remains important, but the cost of mistakes may be less dramatic than feared.
 
 <!-- computational limits for points multiplier - aim to maximise within reason -->
 Further good news is that some decisions that are connected to more stable estimates have very little reason not to be maximised.
-For example, the points multipler or points per step decision can be maximised to whatever extent the compuational resources available to the researcher allows.
+For example, the points multiplier or points per step decision can be maximised to whatever extent allowed by the computational resources available to the researcher.
+Increases in the number of available points will improve the accuracy when defining available habitats; [@street_solving_2021], indicates that the systematic sampling with high numbers of points is preferable to capture a complete unbiased availability.
+[@fieberg_how_2021] states that available points should be high enough to ensure stable coefficient estimates, that is also aided by increased weighting of available points in the logistic regression.
 <!-- ssf steps per strata key to rare habitat - we had a common one -->
-While we did not see the improvements in points per step in the SSF analysis, previous work has shown that the benefits of high available steps is more pronounced when working with rare habitat types.
+While we did not see the improvements in points per step in the SSF analysis, the benefits of high available steps is more pronounced when working with rare habitat types [@thurfjell_applications_2014].
 More available points reduces the chances of missing small areas of rare habitat; our analysis would not have revealed this because of the abundance of the preferred habitat type.
+
+We did not see large improvements using different step or turn angle distributions, this has been shown to play an increasingly important role in mitigating biased estimates in scenarios with stronger selection strengths [@forester_accounting_2009]. 
+The limited cost of integrating step and turn into SSF formula would suggest iSSF formulation is likely always preferable.
 
 <!-- interactions between method and data - and choice and choice? -->
 <!-- broader contour can have differing impacts depending on analysis -->
 
 <!-- we did not have explicitly simulated variation in step length:habitat type so integrated makes little difference -->
 
-<!-- reproducibility implications - no crisis any bigger than any other field - good news not need to immediately panic, the habitat pref looks similar to over fields - point towards other processes under way to improve other fields, same apply nothing dramatic -->
-<!-- ie bad incentives will not be having a disproportionate impact on move eco if the results here hold true -->
+<!-- sclae is important always because of interactions between sampling and question/behaviour. Thurfjell -->
 
 ## Limitations of the multiverse approach and future directions
 
+Study does helps demonstrate the impact of researcher choice in habitat selection studies; the true number of choices is impractical to explore and ever growing.
 <!-- not all options are covered -->
-Practical limitations simply prevent from all possible variations of all decisions to be explored.
-Not just because of time and computational limits, but the granularity of decision making examined can be ever increased.
+Time and computational limits compound with the infinite granularity of decision connected to continuous variables (e.g., tracking frequency) to ensure that all choices cannot be completely explored.
 
 <!-- random data loss, how does inconsistent tracking impact -->
+The relationship between tracking regime, the data quantity produced, and the resulting habitat selection results is a complex area to assess.
+We focused on systematic controlled changes to tracking frequency, but in field scenarios data quantity can be impacted by practical and logistical constraints that results in stochastic data loss.
+Newer methods help alleviate the problems with inconsistent tracking [@alston_mitigating_2023; @fleming_correcting_2018; @silva_autocorrelationinformed_2022], providing an additional reason why analysis decisions should not be ignored.
+
+Ultimately the multiverse approach cannot reveal the true answer; the multiverse's mean result describes the mean of the analysis pathways and does not necessarily converge towards a true effect.
+We attempted to make our findings more generalisable by simulating three distinct animal species that move in different fashions and that face differing level of habitat connectivity.
+We cannot discount scenarios with different movement characteristics that interact with particular analysis choices to bias habitat selection estimates –scale remains a key consideration for any study [@thurfjell_applications_2014; @northrup_conceptual_2022], and context-specific selection remains difficult to translate [@avgar_habitat_2020].
+The difficulty in generalising a "one-size fits all" approach highlights the benefits of methods that can be parametrised by the underlying characteristics of the data (e.g., wRSF [@alston_mitigating_2023]), and where the uncertainty stemming from sampling can be carried forward to the final estimates.
+
+Despite the inherit limitations of multiverses, the exploration of analysis choice presents an important consideration for any researcher looking to know the reliability of their findings.
+More formal and mathematically based estimates of reliability are available for specific approaches, for example RSFs [@street_solving_2021], and these present an important component when reporting RSFs. 
+However, they still require some level of *a priori* decision making (e.g., landscape and availability definition) [@northrup_conceptual_2022]; therefore, researcher choice remains.
 <!-- not all animal movement types are covered, different modes of movement can interact with analyses in different ways -->
 <!-- Exploring the same decisions with different simulations of animal movement. -->
 
@@ -670,11 +702,11 @@ Beyond the aforementioned limitations to the multiverse approach there is scope 
 Our next step is to reapply the same meta-programming pipeline approach to population targeting habitat analyses.
 <!-- Sample size impact on population level estimates of preference. -->
 A focus on these approaches will allows us to explore the third key component of data quantity –sample size– as well as how well analyses tackle individual variability either in the analysis itself or during summarising of individual habitat preference estimates.
-
+There are already methods for assessing require sample size to detected a given selection for RSFs [@street_solving_2021].
 
 ## Conclusions
 
-
+<!-- helps highlight the variation that may be present but hidden in past studies -->
 
 
 # Acknowledgements
