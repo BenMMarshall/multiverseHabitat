@@ -45,7 +45,7 @@ These bodies can influence what research is conducted; they are in a position to
 The use of impact factor (and other similar metrics) is an example of citations being used as a measure of quality or research worth.
 But when examined closer, the impact factor appears detached from the robustness or reliability of the research [@Brembs2018].
 This decrease in robustness can be seen in the increases in effect sizes inflation, p-value misreporting, among a number of other measures of quality [@Brembs2018].
-Similarly, novelty has been fetishised by journals to the detriment of replications studies [@forstmeier_detecting_2017; @vinkers_use_2015; @brembs_reliable_2019], despite widespread agreement on the importance of replications [@fraser_role_2020].
+Similarly, novelty has been promoted by journals to the detriment of replications studies [@forstmeier_detecting_2017; @vinkers_use_2015; @brembs_reliable_2019], despite widespread agreement on the importance of replications [@fraser_role_2020].
 There is a bias towards positive, statistically significant results [@cassey_survey_2004; @jennions_publication_2002].
 Due to the nature of frequentist statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates [@albers_problem_2019; @forstmeier_cryptic_2011]. 
 
@@ -632,10 +632,9 @@ This suggests that advancements in habitat selection analysis methods are not on
 
 <!-- reproducibility implications - no crisis any bigger than any other field - good news not need to immediately panic, the habitat pref looks similar to over fields - point towards other processes under way to improve other fields, same apply nothing dramatic -->
 <!-- ie bad incentives will not be having a disproportionate impact on move eco if the results here hold true -->
-The overall pattern in estimates mirror those seen in other fields, where the bulk of answers converge but outliers remain. 
-<!-- [EXAMPLES HERE OF OTHER FIELDS] -->
-While the incentives for findings exciting results remain in the publishing system <!-- [CITES] -->, using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of the extreme estimates is relatively low compared to the majority of estimates that agree near the median.
-Therefore, we can be as confident in past studies findings as we would those from <!-- [EXAMPLE FIELDS HERE] -->.
+The overall pattern in estimates mirror those seen in other fields, where the bulk of answers converge but outliers remain [@silberzahn_many_2018; @simonsohn_specification_2020].
+While the incentives for findings positive results remain in the publishing system [@fanelli_positive_2010; @fanelli_negative_2012], using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of the extreme estimates is relatively low compared to the majority of estimates that agree near the median.
+Therefore, we can be as confident in past studies findings as we would those from.
 If the past habitat preference studies report extreme findings there is a general tendency for these to be paired with very wide confidence intervals; if the studies have reported the confidence intervals, this provides an additional safeguard against over interpretation of potentially incorrect extreme results.
 
 While the goal of this study was not to review and provide direct guidance to the most effective ways of undertaking habitat selection, our findings show several key patterns that fit into previous guidance in the literature.
@@ -707,7 +706,9 @@ There are already methods for assessing require sample size to detected a given 
 ## Conclusions
 
 <!-- helps highlight the variation that may be present but hidden in past studies -->
-
+We show, using a multiverse of analysis pathways, that data quantity is an important safeguard against extreme outlying results in individual habitat preference analyses.
+The indications that analysis choices are less important than data quantity improves our confidence in previously published habitat preference studies as there is no more scope to mine a desired result than in other disciplines.
+Newer methods of habitat preference analysis appear to reduce variation from researcher choice further, indicating that future studies are more likely to be robust that those before. 
 
 # Acknowledgements
 
