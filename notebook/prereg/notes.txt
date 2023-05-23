@@ -1,4 +1,10 @@
 
+<!-- The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path. -->
+<!-- We will vary the spacing of the knots, the times at which the imputed path is sampled, and the precision matrix used during the path imputation. -->
+<!-- We will also vary the method used to convert the imputed path to a continuous-time discrete-space path. -->
+<!-- We will explore the impact of Linear Interpretation versus Shortest Path, and Rook's neighbourhood versus King's neighbourhood. -->
+
+
 Street et al 2021 - variation in landscape and selection strength impact data required
 Street et al 2021 - better sampling of availability aids estimation of RSF power
 Street et al 2021 - RSF selection may be more uncertain depending on definition of available

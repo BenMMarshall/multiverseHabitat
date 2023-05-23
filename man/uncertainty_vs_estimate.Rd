@@ -4,7 +4,7 @@
 \alias{uncertainty_vs_estimate}
 \title{Generate uncertainty plots}
 \usage{
-uncertainty_vs_estimate(aResults, sResults)
+uncertainty_vs_estimate(aResults, sResults, wResults)
 }
 \arguments{
 \item{aResults}{output tar_targets resulting in areaResults}

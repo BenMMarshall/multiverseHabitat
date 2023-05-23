@@ -225,7 +225,7 @@ For the analysis decisions we focused entirely on decisions that result from an 
 R presents the number one tool for analysing animal movement data [@joo_recent_2022].
 @joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
 Specifically, we explored a subset of decisions made during the workflows using adehabitatHS `r paste0("v.", packageVersion("adehabitatHS"))` [@adehabitatHS], and amt `r paste0("v.", packageVersion("amt"))` [@amt] R packages.
-During the writing of this paper, a new method was described as part of the ctmm package <!-- add version and cite here-->, which we also preliminarily investigate.
+During the writing of this paper, a new method was described as part of the ctmm package `r paste0("v.", packageVersion("ctmm"))` [@ctmm], which we also preliminarily investigate.
 
 Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
@@ -291,7 +291,7 @@ As dBBMMs are estimating the uncertainty surrounding potential movement pathways
 This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
 Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
 We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
-[ALSTON newer paper on unifying terms needs to be cited here]
+<!-- [ALSTON newer paper on unifying terms needs to be cited here] -->
 
 <!-- Type II designs require the availability to the same for all animals. -->
 <!-- To create population-level availability we will use the above described methods for each individual, then combine the areas into a single polygon. -->
@@ -340,17 +340,12 @@ This contrasts to the other methods that either ignore the confounding effect of
 As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model [@alston_mitigating_2023].
 Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
 
-<!-- The ctmc approach requires a number of decisions regarding the fitting of the quasi-continuous path model, and how that is imputed to a discrete space path. -->
-<!-- We will vary the spacing of the knots, the times at which the imputed path is sampled, and the precision matrix used during the path imputation. -->
-<!-- We will also vary the method used to convert the imputed path to a continuous-time discrete-space path. -->
-<!-- We will explore the impact of Linear Interpretation versus Shortest Path, and Rook's neighbourhood versus King's neighbourhood. -->
-
 <!-- Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable. -->
 <!-- This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat. -->
 
 ## Assessing the multiverse
 
-To generate the multiverse we used a meta-programming approach via the targets and tarchetypes R packages.
+To generate the multiverse we used a meta-programming approach via the targets `r paste0("v.", packageVersion("targets"))` and tarchetypes `r paste0("v.", packageVersion("tarchetypes"))` R packages [@targets; @tarchetypes].
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing. 
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
@@ -386,7 +381,7 @@ Each of these datasets underwent every combination of analysis choices resulting
 
 ## General patterns
 
-We can get an initial impression of the pattern of the final estimates of preference using a specification curve [CITE HERE].
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve <!-- [CITE HERE] -->.
 In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
 
 <!-- spec curve wides -->
@@ -437,6 +432,7 @@ The bulk of the estimates agree and are tightly concentrated around the median w
 areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
 areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
 ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
+wrsfBrms <- qs::qread(here::here("_targets", "objects", "wrsfBrms"))
 
 ```
 
@@ -470,7 +466,7 @@ brmWides_rEst_avpEffect <- areaBrms_wides$modOUT_rEst %>%
   tidybayes::spread_draws(b_availPointsPerScaled) %>%
   ggdist::median_hdci(.width = c(0.95))
 brmWides_rEst_spEffect <- areaBrms_wides$modOUT_rEst %>%
-  tidybayes::spread_draws(b_samplingPattern) %>%
+  tidybayes::spread_draws(b_samplingPatternst) %>%
   ggdist::median_hdci(.width = c(0.95))
 ```
 
@@ -609,7 +605,7 @@ brmwrsf_dEst_tfEffect <- wrsfBrms$modOUT_dEst %>%
   tidybayes::spread_draws(b_tfScaled) %>%
   ggdist::median_hdci(.width = c(0.95))
 
-brmwrsf_rEst_tdEffect <- wrsfBrms$modOUT_eEst %>%
+brmwrsf_rEst_tdEffect <- wrsfBrms$modOUT_dEst %>%
   tidybayes::spread_draws(b_tdScaled) %>%
   ggdist::median_hdci(.width = c(0.95))
 brmwrsf_rEst_tfEffect <- wrsfBrms$modOUT_rEst %>%
@@ -714,7 +710,24 @@ Newer methods of habitat preference analysis appear to reduce variation from res
 
 # Software availablity
 
-We used R `r paste0("v.", version$major, ".", version$minor)` [@base] via RStudio v.`r rstudioapi::versionInfo()$version` [@rstudio], and used rmarkdown `r paste0("v.", packageVersion("rmarkdown"))` [@rmarkdown2022; @rmarkdown2018; @rmarkdown2020], bookdown `r paste0("v.", packageVersion("bookdown"))` [@bookdown2016; @R-bookdown], tinytex `r paste0("v.", packageVersion("tinytex"))` [@tinytex2019; @tinytex2022], and knitr `r paste0("v.", packageVersion("knitr"))` [@knitr2015; @knitr2014; @knitr2022] packages to generate type-set outputs.
+In addition to packages already mentioned in the methods we also used the following.
+
+We used *R* `r paste0("v.", version$major, ".", version$minor)` [@base] via *RStudio* v.`r rstudioapi::versionInfo()$version` [@rstudio].
+We used *here* `r paste0("v.", packageVersion("here"))` [@here] and *qs* `r paste0("v.", packageVersion("qs"))` [@qs] to manage directory addresses and saved objects.
+
+We used *raster* `r paste0("v.", packageVersion("raster"))` [@raster] and *RandomFields* `r paste0("v.", packageVersion("RandomFields"))` [@RandomFields] to aid landscape raster creation alongside NLMR `r paste0("v.", packageVersion("NLMR"))` [@NLMR].
+
+We used *ggplot2* `r paste0("v.", packageVersion("ggplot2"))` for creating figures [@ggplot2], with the expansions: *patchwork* `r paste0("v.", packageVersion("patchwork"))` [@patchwork], *ggridges* `r paste0("v.", packageVersion("ggridges"))` [@ggridges], and *ggdist* `r paste0("v.", packageVersion("ggdist"))` [@ggdist].
+
+We used *brms* `r paste0("v.", packageVersion("brms"))` [@brms] to run Bayesian models, with dianogistics generated used *bayesplot* `r paste0("v.", packageVersion("bayesplot"))` [@bayesplot], *tidybayes* `r paste0("v.", packageVersion("tidybayes"))` [@tidybayes], and *performance* `r paste0("v.", packageVersion("performance"))` [@performance].
+
+We used the *dplyr* `r paste0("v.", packageVersion("dplyr"))` [@dplyr], *tibble* `r paste0("v.", packageVersion("tibble"))` [@tibble], *reshape2* `r paste0("v.", packageVersion("reshape2"))` [@reshape2], and *stringr* `r paste0("v.", packageVersion("stringr"))` [@stringr] packages for data manipulation.
+
+We used *sp* `r paste0("v.", packageVersion("sp"))` [@sp], *adehabitatHR* `r paste0("v.", packageVersion("adehabitatHR"))` [@adehabitatHR], *move* `r paste0("v.", packageVersion("move"))` [@move] for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
+
+We used rmarkdown `r paste0("v.", packageVersion("rmarkdown"))` [@rmarkdown2023; @rmarkdown2018; @rmarkdown2020], bookdown `r paste0("v.", packageVersion("bookdown"))` [@bookdown2016; @R-bookdown], tinytex `r paste0("v.", packageVersion("tinytex"))` [@tinytex2019; @tinytex2023], and knitr `r paste0("v.", packageVersion("knitr"))` [@knitr2015; @knitr2014; @knitr2023] packages to generate type-set outputs.
+
+We generated R package citations with the aid of *grateful* `r paste0("v.", packageVersion("grateful"))` [@grateful].
 
 @osfr
 
