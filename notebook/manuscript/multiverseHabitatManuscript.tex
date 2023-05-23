@@ -84,7 +84,7 @@ These bodies can influence what research is conducted; they are in a position to
 The use of impact factor (and other similar metrics) is an example of citations being used as a measure of quality or research worth.
 But when examined closer, the impact factor appears detached from the robustness or reliability of the research (\protect\hyperlink{ref-Brembs2018}{Brembs, 2018}).
 This decrease in robustness can be seen in the increases in effect sizes inflation, p-value misreporting, among a number of other measures of quality (\protect\hyperlink{ref-Brembs2018}{Brembs, 2018}).
-Similarly, novelty has been fetishised by journals to the detriment of replications studies (\protect\hyperlink{ref-vinkers_use_2015}{Vinkers, Tijdink \& Otte, 2015}; \protect\hyperlink{ref-forstmeier_detecting_2017}{Forstmeier, Wagenmakers \& Parker, 2017}; \protect\hyperlink{ref-brembs_reliable_2019}{Brembs, 2019}), despite widespread agreement on the importance of replications (\protect\hyperlink{ref-fraser_role_2020}{Fraser et al., 2020}).
+Similarly, novelty has been promoted by journals to the detriment of replications studies (\protect\hyperlink{ref-vinkers_use_2015}{Vinkers, Tijdink \& Otte, 2015}; \protect\hyperlink{ref-forstmeier_detecting_2017}{Forstmeier, Wagenmakers \& Parker, 2017}; \protect\hyperlink{ref-brembs_reliable_2019}{Brembs, 2019}), despite widespread agreement on the importance of replications (\protect\hyperlink{ref-fraser_role_2020}{Fraser et al., 2020}).
 There is a bias towards positive, statistically significant results (\protect\hyperlink{ref-jennions_publication_2002}{Jennions \& Møller, 2002}; \protect\hyperlink{ref-cassey_survey_2004}{Cassey et al., 2004}).
 Due to the nature of frequentist statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates (\protect\hyperlink{ref-forstmeier_cryptic_2011}{Forstmeier \& Schielzeth, 2011}; \protect\hyperlink{ref-albers_problem_2019}{Albers, 2019}).
 
@@ -241,11 +241,13 @@ In summary, the sampling decisions will cover variation in species, tracking fre
 For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
 R presents the number one tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
-Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.16 (\protect\hyperlink{ref-adehabitatHS}{Calenge, 2006}), and amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
+Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.17 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.2.1.0 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
+During the writing of this paper, a new method was described as part of the ctmm package v.1.1.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigate.
 
-Combined the packages offer many options for habitat analysis, we focus on three that tackle individual habitat selection.
+Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
-And two from the amt package: resource selection function (RSF), step selection function (SSF)
+Two from the amt package: resource selection function (RSF), step selection function (SSF)
+And the newly described Weighted Resource Selection Function (wRSF \protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}) from the ctmm package.
 Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection (Fig. \ref{fig:decisionTrees}B).
 
 The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
@@ -266,7 +268,7 @@ However, we avoided the LSCV method for two reasons: 1) the LSCV method can fail
 The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}) that better account for the non-independence and autocorrelative structures within animal movement data (\protect\hyperlink{ref-Noonan2018}{Noonan et al., 2019}).
 We used two of these methods to define availability.
 
-First is the Autocorrelated Kernel Density Estimations (AKDEs) (\protect\hyperlink{ref-Fleming2015}{Fleming et al., 2015}; \protect\hyperlink{ref-Fleming2017}{Fleming \& Calabrese, 2017}) from the ctmm package (\protect\hyperlink{ref-Calabrese2016}{Calabrese, Fleming \& Gurarie, 2016}; \protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2021}).
+First is the Autocorrelated Kernel Density Estimations (AKDEs) (\protect\hyperlink{ref-Fleming2015}{Fleming et al., 2015}; \protect\hyperlink{ref-Fleming2017}{Fleming \& Calabrese, 2017}) from the ctmm package (\protect\hyperlink{ref-Calabrese2016}{Calabrese, Fleming \& Gurarie, 2016}; \protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}).
 The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
 The movement models include different levels of autocorrelative structure: Ornstein-Uhlenbeck (OU) models account for central tendency, the Ornstein--Uhlenbeck Foraging (OUF) build on this by also accounting for autocorrelation in movement speed, while the Independent Identically Distributed (IID) models assume location independence meaning they are similar to traditional kernel density approaches.
 Each model type is also fitted in isotropic (circular) or anisotropic (elliptical) forms.
@@ -274,7 +276,7 @@ The movement model used would constitute a decision during analysis; however, th
 Therefore, we use the guidance from (\protect\hyperlink{ref-silva_autocorrelationinformed_2022}{Silva et al., 2022}) to generate weighted AKDEs using perturbative hybrid residual maximum likelihood method (pHREML), and select the best performing by AICc for inclusion in further analysis.
 Using weighted AKDEs means the area estimates better address gaps between locations (\protect\hyperlink{ref-silva_autocorrelationinformed_2022}{Silva et al., 2022}), with no apparent drawbacks nor large computational cost.
 
-The second movement-specific method we used was dynamic Brownian Bridge Movement Models (dBBMMs) (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}) from the move package (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2022}), which estimates movement capacity of the animal to calibrate repeated random walks between known locations.
+The second movement-specific method we used was dynamic Brownian Bridge Movement Models (dBBMMs) (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}) from the move package (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}), which estimates movement capacity of the animal to calibrate repeated random walks between known locations.
 DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}).
 Window and margin are defined by a number of data points; therefore, to keep the time they represent the same between different tracking frequencies, we changed their values for each tracking frequency.
 As our most infrequent tracking is 168 hours (1 week), we set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
@@ -285,7 +287,6 @@ As dBBMMs are estimating the uncertainty surrounding potential movement pathways
 This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
 Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
 We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
-{[}ALSTON newer paper on unifying terms needs to be cited here{]}
 
 What is considered available to an animal is not cleanly translated from biological concept to a statistical one.
 While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make --to varying degrees-- use of the movement information contained within the dataset they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
@@ -302,9 +303,10 @@ For the alignment of the points, points where either random or stratified within
 
 As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
 In addition, for the RSF we also explored the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
-There are suggestions that altering the weighing can improve model performance and decrease the uncertainty surrounding habitat preference estimates {[}NEED THE FIEBERG CITE HERE{]}; we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
+There are suggestions that altering the weighing can improve model convergence and decrease the uncertainty surrounding habitat preference estimates (\protect\hyperlink{ref-fieberg_how_2021}{Fieberg et al., 2021}); we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
 
-Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF).
+Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
+
 Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
 As a result SSFs have a number of decisions not shared with the area methods.
 
@@ -316,17 +318,23 @@ Step lengths were tested with a Gamma and Exponential distributions, while turn 
 The other decisions we explored in SSFs was whether to run the model as a standard step selection or an integrated step selection function.
 The standard step selection model is a conditional logistic regression, where we aim to estimate the used/non-used by the habitat values (case\_ \textasciitilde{} values + strata(step\_id\_)).
 The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
-The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artifact of the movements of the animal rather than active habitat preference {[}CITE HERE{]}.
+The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artefact of the movements of the animal rather than active habitat preference (\protect\hyperlink{ref-avgar_integrated_2016}{Avgar et al., 2016}).
 
 We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of ``bursts''.
 Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
 Such grouping of data deserves investigation, but the myriad of ways bursts can be defined and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
 
+Compared to the other methods, Weighted Resource Selection Functions do not have many associated choices.
+Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat preference (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}).
+This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on --potentially arbitrary-- decisions with regards to how to mitigate any biasing effects the structures produce.
+As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}).
+Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
+
 \hypertarget{assessing-the-multiverse}{%
 \subsection{Assessing the multiverse}\label{assessing-the-multiverse}}
 
-To generate the multiverse we used a meta-programming approach via the targets and tarchetypes R packages.
+To generate the multiverse we used a meta-programming approach via the targets v.1.1.2 and tarchetypes v.0.7.6 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},b).
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing.
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
@@ -349,7 +357,7 @@ Based on these assessments we modified the running parameters {[}FINAL VALUES HE
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-The completion of the multiverse resulted in 614 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
+The completion of the multiverse resulted in 594 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered 3 virtual species, 4 individuals per species, frequencies from 0.006 to 2 locations per hour, and durations from 7 to 240 days.
 Each of these datasets underwent every combination of analysis choices resulting in
 281,952 estimates of habitat preference (Wides: 38,016 , RSF: 228,096 , SSF: 15,840).
@@ -357,7 +365,7 @@ Each of these datasets underwent every combination of analysis choices resulting
 \hypertarget{general-patterns}{%
 \subsection{General patterns}\label{general-patterns}}
 
-We can get an initial impression of the pattern of the final estimates of preference using a specification curve {[}CITE HERE{]}.
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve .
 In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
 
 Starting with the Wides results, we see a quite gentle \emph{S} shape {[}FIGURE LINK HERE{]}, with most estimates falling in the range of 0.5 to 2.
@@ -369,7 +377,7 @@ Despite this, we do see a slight reduction in estimate variation from frequencie
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
 Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in {[}LINK TO FIGURE{]}).
-The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs.
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
 
 The Resource Selection Function (RSF) specification curve shows a more ideal \emph{S} shape, with the majority of estimates clearly converging on a common answer {[}FIGURE LINK HERE{]}.
 Similar to the Wides analysis the majority of the answers, and medians detected preference for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest preference.
@@ -392,6 +400,10 @@ The decisions concerning the distributions used to model step lengths and turn a
 
 Very much like the RSF explorations of the raw data, the 95\% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate.
 
+The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates.
+The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals.
+The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
+
 \hypertarget{model-exploration}{%
 \subsection{Model exploration}\label{model-exploration}}
 
@@ -401,59 +413,125 @@ Our Bayesian models cut through the noise displayed in {[}FIGURES XXXXXXX{]} to 
 For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity, with increases in tracking duration (\(\beta\) -0.014, 95\% median Highest-Density Continuous Interval CrI -0.016 -- -0.011) being marginally more effective than tracking frequency (\(\beta\) -0.008, 95\% CrI -0.011 -- -0.006).
 Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously (\(\beta\) -0.003, 95\% CrI -0.004 -- -0.002), and it's effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
-Contour choice increases the absolute deviation from the median estimate \(beta\) 0.007, 95\% CrI 0.006 -- 0.008, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone.
+Contour choice increases the absolute deviation from the median estimate \(\beta\) 0.007, 95\% CrI 0.006 -- 0.008, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone.
+
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency \(\beta\) 0.039, 95\% CrI 0.036 -- 0.042 and tracking duration \(\beta\) -0.054, 95\% CrI -0.057 -- -0.051, with the former leading to greater estimates of preference.
+The impact of stratified versus random available point positioning \(\beta\) -0.001, 95\% CrI -0.004 -- 0.002 and the available points multiplier \(\beta\) -0.003, 95\% CrI -0.004 -- -0.001 have little impact mirror the lack of impact in the absolute deviation model.
+All area related choices do not move relative to each other, and reveal that MCPs as an area method to to lead to lower estimates of preference in this scenario, mirroring the lower median displayed in {[}FIGURE XX{]}.
 
 Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference.
 Like the Wides analysis, data quantity is most important.
-The two largest effects are from tracking duration (\(\beta\) -0.819, 95\% CrI -0.863 -- -0.779) and frequency (\(\beta\) -1.499, 95\% CrI -1.535 -- -1.457), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
+The two largest effects are from tracking duration (\(\beta\) -0.819, 95\% CrI -0.863 -- -0.779) and frequency (\(\beta\) -1.499, 95\% CrI -1.536 -- -1.458), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
 
 However, unlike with Wides the other analysis decisions also matter, although to varying extents.
-It appears that larger contours (\(\beta\) -0.253, 95\% CrI -0.272 -- -0.233) and a greater multiplier of available points (\(\beta\) -0.239, 95\% CrI -0.259 -- -0.219) decreases the deviation from the median estimate.
-To a small extent using a stratified available points pattern lead to lower deviation from the median than a purely random available points pattern (\(\beta\) -0.059, 95\% CrI -0.1 -- -0.018).
+It appears that larger contours (\(\beta\) -0.253, 95\% CrI -0.272 -- -0.233) and a greater multiplier of available points (\(\beta\) -0.239, 95\% CrI -0.258 -- -0.218) decreases the deviation from the median estimate.
+To a small extent using a stratified available points pattern lead to lower deviation from the median than a purely random available points pattern (\(\beta\) -0.059, 95\% CrI -0.1 -- -0.019).
 Choice of area method can alter results in two ways.
 Compared to using MCPs both AKDE (\(\beta\) -0.236, 95\% CrI -0.292 -- -0.18) and KDEhref (\(\beta\) -0.249, 95\% CrI -0.301 -- -0.192) produce estimates more likely to be closer to the median estimate, and to similar degrees.
-Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs (\(\beta\) 0.307, 95\% CrI 0.249 -- 0.363).
+Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs (\(\beta\) 0.307, 95\% CrI 0.249 -- 0.364).
 
 Examining the interactions between tracking duration and frequency with the area methods further reveals the connection between dBBMMs are more variable estimates.
 While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater.
 When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency.
 
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration \(\beta\) -0.429, 95\% CrI -0.479 -- -0.387 and tracking frequency \(\beta\) -0.149, 95\% CrI -0.195 -- -0.102).
+While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median ) are more likely to be the correct estimation of simulated preference via RSF.
+This matches the absolute deviation model where more data leads to less deviant estimations.
+
+Stratified available point sampling was associated with more positive estimates of preference (\(\beta\) 0.114, 95\% CrI 0.071 -- 0.159), but also those closer to the median (as indicated by the previous model).
+This suggests that random point sampling, by contrast, leads to more variable estimates that tend to be lower.
+The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher (\(\beta\) 0.527, 95\% CrI 0.504 -- 0.55).
+
+The area method choices reveal a similar pattern.
+Dynamic Brownian Bridge Movement models were connected to the more variable estimates, but this model reveals that the variability did not tend towards a particular direction (\(\beta\) -0.047, 95\% CrI -0.107 -- 0.019).
+Whereas the other methods are connected to lower deviation from the median estimate, but higher raw estimates.
+The area contour selected also reflects this (\(\beta\) 0.538, 95\% CrI 0.515 -- 0.563).
+Taken together it appears methods that capture a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of preference.
+The dBBMMs by contrast are more vulnerable to variation in other decisions, a trait reflected in the interaction with data quantity measures.
+
+Overall there does not appear to be a decision that leads to great deviation from the median estimate in one direction.
+
 The SSF absolute deviation model matches very closely the previous two models, with tracking quantity both in terms of duration (\(\beta\) -1.471, 95\% CrI -1.552 -- -1.398) and frequency (\(\beta\) -1.676, 95\% CrI -1.758 -- -1.6) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis all other decisions made negligible impact to an estimate's absolute proximity to the median estimate.
+
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly.
+The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive (\(\beta\) 0.015, 95\% CrI -0.144 -- 0.186).
+However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
+
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions.
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.321, 95\% CrI -0.474 -- -0.172 and tracking frequency \(\beta\) -0.404, 95\% CrI -0.569 -- -0.25), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.321, 95\% CrI -0.474 -- -0.172 and tracking frequency \(\beta\) -0.232, 95\% CrI -0.418 -- -0.072).
+The only difference, although both effects overlap considerably, is that increased tracking duration tended to be linked more strongly with lower preference estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-While the overall pattern shows data quality supremacy, this cannot be used as an excuse to ignore the decisions during analysis.
+Our multiverse exploration of individual habitat selection analysis methods reveals the importance of data quantity in generating consistent results.
+Regardless of the approach used, data quantity resulted in estimates of habitat preference closer to the median estimate and more consistently in line with the underlying simulated habitat selection.
+There appeared to be an reduction in deviation from the median estimate when using newer methods (e.g., SSF and wRSF).
+This suggests that advancements in habitat selection analysis methods are not only worthwhile, but actively counter reproducibility issues that may stem from research choice.
+
+The overall pattern in estimates mirror those seen in other fields, where the bulk of answers converge but outliers remain (\protect\hyperlink{ref-silberzahn_many_2018}{Silberzahn et al., 2018}; \protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020}).
+While the incentives for findings positive results remain in the publishing system (\protect\hyperlink{ref-fanelli_positive_2010}{Fanelli, 2010b}, \protect\hyperlink{ref-fanelli_negative_2012}{2012}), using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of the extreme estimates is relatively low compared to the majority of estimates that agree near the median.
+Therefore, we can be as confident in past studies findings as we would those from.
+If the past habitat preference studies report extreme findings there is a general tendency for these to be paired with very wide confidence intervals; if the studies have reported the confidence intervals, this provides an additional safeguard against over interpretation of potentially incorrect extreme results.
+
+While the goal of this study was not to review and provide direct guidance to the most effective ways of undertaking habitat selection, our findings show several key patterns that fit into previous guidance in the literature.
+In particular the benefits of larger datasets and the importance of defining availability (\protect\hyperlink{ref-northrup_practical_2013}{Northrup et al., 2013}; \protect\hyperlink{ref-street_solving_2021}{Street et al., 2021}), latter particularly key because of the potential for subjective definitions (\protect\hyperlink{ref-beyer_interpretation_2010}{Beyer et al., 2010}).
+One specific example would be the tendency for larger area methods, and wider contours leading to more stable (nearer the median) estimates; this mirrors previously reveals patterns connecting broader spatial scales and transferability (\protect\hyperlink{ref-paton_defining_2015}{Paton \& Matthiopoulos, 2015}).
+
+The overall pattern shows data quality supremacy, but this cannot be used as an excuse to ignore the decisions during analysis.
 Two aspect of the results highlight that complacency is unwise.
-First RSF and SSF approach appear to be more consistent than the more basic and older Wides ratio based approach.
-Both RSF and SSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
+First RSF, SSF, and wRSF approaches appear to be more consistent than the more basic and older Wides ratio based approach.
+Both RSF, SSF, and wRSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
 Second is the evidence for conceptual mistakes to have impacts on final results, implying that in some cases there are more correct answers to certain analysis decisions.
 The use of dBBMMs to define availability is not strictly correct as the (confidence) area generated by dBBMMs are reflected of uncertainty surrounding use.
 This renders the down stream analysis of habitat preference a comparison of use (measured by points) to use (measured by area of uncertainty surrounding movement trajectories); as opposed to the desired use versus availability.
 The dBBMM results exemplify the need to maintain a connection between abstractions (e.g., an area) of the data and the intended use.
 A similar argument can be made for data quantity, where mismatches between frequency and desired behaviours or and inadequate duration will obscure answers regardless of the analysis applied.
-Our simulations are are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
+Our simulations are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
 Failure to do this, instead allowing locations to be recorded equally at night and day, would have skewed estimates towards the habitat used for shelter rather than foraging.
 Matching question to analysis approach remains important, but the cost of mistakes may be less dramatic than feared.
 
 Further good news is that some decisions that are connected to more stable estimates have very little reason not to be maximised.
-For example, the points multipler or points per step decision can be maximised to whatever extent the compuational resources available to the researcher allows.
-While we did not see the improvements in points per step in the SSF analysis, previous work has shown that the benefits of high available steps is more pronounced when working with rare habitat types.
+For example, the points multiplier or points per step decision can be maximised to whatever extent allowed by the computational resources available to the researcher.
+Increases in the number of available points will improve the accuracy when defining available habitats; (\protect\hyperlink{ref-street_solving_2021}{Street et al., 2021}), indicates that the systematic sampling with high numbers of points is preferable to capture a complete unbiased availability.
+(\protect\hyperlink{ref-fieberg_how_2021}{Fieberg et al., 2021}) states that available points should be high enough to ensure stable coefficient estimates, that is also aided by increased weighting of available points in the logistic regression.
+While we did not see the improvements in points per step in the SSF analysis, the benefits of high available steps is more pronounced when working with rare habitat types (\protect\hyperlink{ref-thurfjell_applications_2014}{Thurfjell, Ciuti \& Boyce, 2014}).
 More available points reduces the chances of missing small areas of rare habitat; our analysis would not have revealed this because of the abundance of the preferred habitat type.
+
+We did not see large improvements using different step or turn angle distributions, this has been shown to play an increasingly important role in mitigating biased estimates in scenarios with stronger selection strengths (\protect\hyperlink{ref-forester_accounting_2009}{Forester, Im \& Rathouz, 2009}).
+The limited cost of integrating step and turn into SSF formula would suggest iSSF formulation is likely always preferable.
 
 \hypertarget{limitations-of-the-multiverse-approach-and-future-directions}{%
 \subsection{Limitations of the multiverse approach and future directions}\label{limitations-of-the-multiverse-approach-and-future-directions}}
 
-Practical limitations simply prevent from all possible variations of all decisions to be explored.
-Not just because of time and computational limits, but the granularity of decision making examined can be ever increased.
+Study does helps demonstrate the impact of researcher choice in habitat selection studies; the true number of choices is impractical to explore and ever growing.
+Time and computational limits compound with the infinite granularity of decision connected to continuous variables (e.g., tracking frequency) to ensure that all choices cannot be completely explored.
+
+The relationship between tracking regime, the data quantity produced, and the resulting habitat selection results is a complex area to assess.
+We focused on systematic controlled changes to tracking frequency, but in field scenarios data quantity can be impacted by practical and logistical constraints that results in stochastic data loss.
+Newer methods help alleviate the problems with inconsistent tracking (\protect\hyperlink{ref-fleming_correcting_2018}{Fleming et al., 2018}; \protect\hyperlink{ref-silva_autocorrelationinformed_2022}{Silva et al., 2022}; \protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}), providing an additional reason why analysis decisions should not be ignored.
+
+Ultimately the multiverse approach cannot reveal the true answer; the multiverse's mean result describes the mean of the analysis pathways and does not necessarily converge towards a true effect.
+We attempted to make our findings more generalisable by simulating three distinct animal species that move in different fashions and that face differing level of habitat connectivity.
+We cannot discount scenarios with different movement characteristics that interact with particular analysis choices to bias habitat selection estimates --scale remains a key consideration for any study (\protect\hyperlink{ref-thurfjell_applications_2014}{Thurfjell, Ciuti \& Boyce, 2014}; \protect\hyperlink{ref-northrup_conceptual_2022}{Northrup et al., 2022}), and context-specific selection remains difficult to translate (\protect\hyperlink{ref-avgar_habitat_2020}{Avgar, Betini \& Fryxell, 2020}).
+The difficulty in generalising a ``one-size fits all'' approach highlights the benefits of methods that can be parametrised by the underlying characteristics of the data (e.g., wRSF (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023})), and where the uncertainty stemming from sampling can be carried forward to the final estimates.
+
+Despite the inherit limitations of multiverses, the exploration of analysis choice presents an important consideration for any researcher looking to know the reliability of their findings.
+More formal and mathematically based estimates of reliability are available for specific approaches, for example RSFs (\protect\hyperlink{ref-street_solving_2021}{Street et al., 2021}), and these present an important component when reporting RSFs.
+However, they still require some level of \emph{a priori} decision making (e.g., landscape and availability definition) (\protect\hyperlink{ref-northrup_conceptual_2022}{Northrup et al., 2022}); therefore, researcher choice remains.
 
 Beyond the aforementioned limitations to the multiverse approach there is scope to expand the exploration.
 Our next step is to reapply the same meta-programming pipeline approach to population targeting habitat analyses.
 A focus on these approaches will allows us to explore the third key component of data quantity --sample size-- as well as how well analyses tackle individual variability either in the analysis itself or during summarising of individual habitat preference estimates.
+There are already methods for assessing require sample size to detected a given selection for RSFs (\protect\hyperlink{ref-street_solving_2021}{Street et al., 2021}).
 
 \hypertarget{conclusions}{%
 \subsection{Conclusions}\label{conclusions}}
+
+We show, using a multiverse of analysis pathways, that data quantity is an important safeguard against extreme outlying results in individual habitat preference analyses.
+The indications that analysis choices are less important than data quantity improves our confidence in previously published habitat preference studies as there is no more scope to mine a desired result than in other disciplines.
+Newer methods of habitat preference analysis appear to reduce variation from researcher choice further, indicating that future studies are more likely to be robust that those before.
 
 \hypertarget{acknowledgements}{%
 \section{Acknowledgements}\label{acknowledgements}}
@@ -461,11 +539,28 @@ A focus on these approaches will allows us to explore the third key component of
 \hypertarget{software-availablity}{%
 \section{Software availablity}\label{software-availablity}}
 
-We used R v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2022}) via RStudio v.2023.3.0.386 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}), and used rmarkdown v.2.19 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2022}{Allaire et al., 2022}), bookdown v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022a}), tinytex v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2022}{2022b}), and knitr v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2022}{2022c}) packages to generate type-set outputs.
+In addition to packages already mentioned in the methods we also used the following.
+
+We used \emph{R} v.4.3.0 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2022.7.2.576 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
+We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}) and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
+
+We used \emph{raster} v.3.6.20 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
+
+We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), and \emph{ggdist} v.3.3.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
+
+We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.4 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.3 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
+
+We used the \emph{dplyr} v.1.1.2 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
+
+We used \emph{sp} v.1.6.0 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.21 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
+
+We used rmarkdown v.2.21 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.34 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.45 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.42 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
+
+We generated R package citations with the aid of \emph{grateful} v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 Wolen et al. (\protect\hyperlink{ref-osfr}{2020})
 
-We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyperlink{ref-grateful}{Rodríguez-Sánchez, Jackson \& Hutchins, 2022}).
+We generated R package citations with the aid of grateful v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 \hypertarget{data-availabilty}{%
 \section{Data availabilty}\label{data-availabilty}}
@@ -479,8 +574,11 @@ We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyp
 \leavevmode\vadjust pre{\hypertarget{ref-albers_problem_2019}{}}%
 Albers C. 2019. The problem with unadjusted multiple and sequential statistical testing. \emph{Nature Communications} 10:1921. DOI: \href{https://doi.org/10.1038/s41467-019-09941-0}{10.1038/s41467-019-09941-0}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-rmarkdown2022}{}}%
-Allaire J, Xie Y, McPherson J, Luraschi J, Ushey K, Atkins A, Wickham H, Cheng J, Chang W, Iannone R. 2022. \emph{\href{https://github.com/rstudio/rmarkdown}{Rmarkdown: Dynamic documents for r}}.
+\leavevmode\vadjust pre{\hypertarget{ref-rmarkdown2023}{}}%
+Allaire J, Xie Y, Dervieux C, McPherson J, Luraschi J, Ushey K, Atkins A, Wickham H, Cheng J, Chang W, Iannone R. 2023. \emph{\href{https://github.com/rstudio/rmarkdown}{{rmarkdown}: Dynamic documents for r}}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-alston_mitigating_2023}{}}%
+Alston JM, Fleming CH, Kays R, Streicher JP, Downs CT, Ramesh T, Reineking B, Calabrese JM. 2023. Mitigating pseudoreplication and bias in resource selection functions with autocorrelation‐informed weighting. \emph{Methods in Ecology and Evolution} 14:643--654. DOI: \href{https://doi.org/10.1111/2041-210X.14025}{10.1111/2041-210X.14025}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-anderson_perverse_2007}{}}%
 Anderson MS, Ronning EA, De Vries R, Martinson BC. 2007. The {Perverse} {Effects} of {Competition} on {Scientists}' {Work} and {Relationships}. \emph{Science and Engineering Ethics} 13:437--461. DOI: \href{https://doi.org/10.1007/s11948-007-9042-5}{10.1007/s11948-007-9042-5}.
@@ -491,14 +589,26 @@ Anvari F, Lakens D. 2018. The replicability crisis and public trust in psycholog
 \leavevmode\vadjust pre{\hypertarget{ref-auspurg_has_2021}{}}%
 Auspurg K, Brüderl J. 2021. Has the {Credibility} of the {Social} {Sciences} {Been} {Credibly} {Destroyed}? {Reanalyzing} the {``{Many} {Analysts}, {One} {Data} {Set}''} {Project}. \emph{Socius: Sociological Research for a Dynamic World} 7:237802312110244. DOI: \href{https://doi.org/10.1177/23780231211024421}{10.1177/23780231211024421}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-avgar_habitat_2020}{}}%
+Avgar T, Betini GS, Fryxell JM. 2020. Habitat selection patterns are density dependent under the ideal free distribution. \emph{Journal of Animal Ecology} 89:2777--2787. DOI: \href{https://doi.org/10.1111/1365-2656.13352}{10.1111/1365-2656.13352}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-avgar_integrated_2016}{}}%
+Avgar T, Potts JR, Lewis MA, Boyce MS. 2016. Integrated step selection analysis: Bridging the gap between resource selection and animal movement. \emph{Methods in Ecology and Evolution} 7:619--630. DOI: \href{https://doi.org/10.1111/2041-210X.12528}{10.1111/2041-210X.12528}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-barto_dissemination_2012}{}}%
 Barto EK, Rillig MC. 2012. Dissemination biases in ecology: Effect sizes matter more than quality. \emph{Oikos} 121:228--235. DOI: \href{https://doi.org/10.1111/j.1600-0706.2011.19401.x}{10.1111/j.1600-0706.2011.19401.x}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-bastiaansen_time_2020}{}}%
 Bastiaansen JA, Kunkels YK, Blaauw FJ, Boker SM, Ceulemans E, Chen M, Chow S-M, Jonge P de, Emerencia AC, Epskamp S, Fisher AJ, Hamaker EL, Kuppens P, Lutz W, Meyer MJ, Moulder R, Oravecz Z, Riese H, Rubel J, Ryan O, Servaas MN, Sjobeck G, Snippe E, Trull TJ, Tschacher W, Veen DC van der, Wichers M, Wood PK, Woods WC, Wright AGC, Albers CJ, Bringmann LF. 2020. Time to get personal? {The} impact of researchers choices on the selection of treatment targets using the experience sampling methodology. \emph{Journal of Psychosomatic Research} 137:110211. DOI: \href{https://doi.org/10.1016/j.jpsychores.2020.110211}{10.1016/j.jpsychores.2020.110211}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-beyer_interpretation_2010}{}}%
+Beyer HL, Haydon DT, Morales JM, Frair JL, Hebblewhite M, Mitchell M, Matthiopoulos J. 2010. The interpretation of habitat preference metrics under use--availability designs. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences} 365:2245--2254. DOI: \href{https://doi.org/10.1098/rstb.2010.0083}{10.1098/rstb.2010.0083}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-bishop_rein_2019}{}}%
 Bishop D. 2019. Rein in the four horsemen of irreproducibility. \emph{Nature} 568:435--435. DOI: \href{https://doi.org/10.1038/d41586-019-01307-2}{10.1038/d41586-019-01307-2}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-sp}{}}%
+Bivand RS, Pebesma E, Gomez-Rubio V. 2013. \emph{\href{https://asdar-book.org/}{Applied spatial data analysis with {R}, second edition}}. Springer, NY.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Brembs2018}{}}%
 Brembs B. 2018. Prestigious {Science} {Journals} {Struggle} to {Reach} {Even} {Average} {Reliability}. \emph{Frontiers in Human Neuroscience} 12:1--7. DOI: \href{https://doi.org/10.3389/fnhum.2018.00037}{10.3389/fnhum.2018.00037}.
@@ -512,14 +622,23 @@ Breznau N, Rinke EM, Wuttke A, Adem M, Adriaans J, Alvarez-Benjumea A, Andersen 
 \leavevmode\vadjust pre{\hypertarget{ref-bryan_replicator_2019}{}}%
 Bryan CJ, Yeager DS, O'Brien JM. 2019. Replicator degrees of freedom allow publication of misleading failures to replicate. \emph{Proceedings of the National Academy of Sciences} 116:25535--25545. DOI: \href{https://doi.org/10.1073/pnas.1910951116}{10.1073/pnas.1910951116}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-brms}{}}%
+Bürkner P-C. 2021. Bayesian item response modeling in {R} with {brms} and {Stan}. \emph{Journal of Statistical Software} 100:1--54. DOI: \href{https://doi.org/10.18637/jss.v100.i05}{10.18637/jss.v100.i05}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Calabrese2016}{}}%
 Calabrese JM, Fleming CH, Gurarie E. 2016. Ctmm: An {R} {Package} for {Analyzing} {Animal} {Relocation} {Data} {As} a {Continuous}-{Time} {Stochastic} {Process}. \emph{Methods in Ecology and Evolution} 7:1124--1132. DOI: \href{https://doi.org/10.1111/2041-210X.12559}{10.1111/2041-210X.12559}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-adehabitatHS}{}}%
-Calenge C. 2006. The package adehabitat for the r software: Tool for the analysis of space and habitat use by animals. \emph{Ecological Modelling} 197:1035.
+Calenge C, Mathieu Basille contributions from. 2023. \emph{\href{https://CRAN.R-project.org/package=adehabitatHS}{{adehabitatHS}: Analysis of habitat selection by animals}}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-adehabitatHR}{}}%
+Calenge C, Scott Fortmann-Roe contributions from. 2023. \emph{\href{https://CRAN.R-project.org/package=adehabitatHR}{{adehabitatHR}: Home range estimation}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-cassey_survey_2004}{}}%
 Cassey P, Ewen JG, Blackburn TM, Møller AP. 2004. A survey of publication bias within evolutionary ecology. \emph{Proceedings of the Royal Society of London. Series B: Biological Sciences} 271. DOI: \href{https://doi.org/10.1098/rsbl.2004.0218}{10.1098/rsbl.2004.0218}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-qs}{}}%
+Ching T. 2023. \emph{\href{https://CRAN.R-project.org/package=qs}{{qs}: Quick serialization of r objects}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-clark_ocean_2020}{}}%
 Clark TD, Raby GD, Roche DG, Binning SA, Speers-Roesch B, Jutfelt F, Sundin J. 2020. Ocean acidification does not impair the behaviour of coral reef fishes. \emph{Nature} 577:370--375. DOI: \href{https://doi.org/10.1038/s41586-019-1903-y}{10.1038/s41586-019-1903-y}.
@@ -545,20 +664,32 @@ Fanelli D. 2010a. Do {Pressures} to {Publish} {Increase} {Scientists}' {Bias}? {
 \leavevmode\vadjust pre{\hypertarget{ref-fanelli_negative_2012}{}}%
 Fanelli D. 2012. Negative results are disappearing from most disciplines and countries. \emph{Scientometrics} 90:891--904. DOI: \href{https://doi.org/10.1007/s11192-011-0494-7}{10.1007/s11192-011-0494-7}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-fieberg_how_2021}{}}%
+Fieberg J, Signer J, Smith B, Avgar T. 2021. A {``{How} to''} guide for interpreting parameters in habitat‐selection analyses. \emph{Journal of Animal Ecology} 90:1027--1043. DOI: \href{https://doi.org/10.1111/1365-2656.13441}{10.1111/1365-2656.13441}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Fleming2017}{}}%
 Fleming CH, Calabrese JM. 2017. A new kernel density estimator for accurate home-range and species-range area estimation. \emph{Methods in Ecology and Evolution} 8:571--579. DOI: \href{https://doi.org/10.1111/2041-210X.12673}{10.1111/2041-210X.12673}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-ctmm}{}}%
-Fleming CH, Calabrese JM. 2021. \emph{\href{https://CRAN.R-project.org/package=ctmm}{Ctmm: Continuous-time movement modeling}}.
+Fleming CH, Calabrese JM. 2023. \emph{{ctmm}: Continuous-time movement modeling}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Fleming2015}{}}%
 Fleming CH, Fagan WF, Mueller T, Olson KA, Leimgruber P, Calabrese JM. 2015. Rigorous home range estimation with movement data: {A} new autocorrelated kernel density estimator. \emph{Ecology} 96:1182--1188.
+
+\leavevmode\vadjust pre{\hypertarget{ref-fleming_correcting_2018}{}}%
+Fleming CH, Sheldon D, Fagan WF, Leimgruber P, Mueller T, Nandintsetseg D, Noonan MJ, Olson KA, Setyawan E, Sianipar A, Calabrese JM. 2018. Correcting for missing and irregular data in home-range estimation. \emph{Ecological Applications} 28:1003--1010. DOI: \href{https://doi.org/10.1002/eap.1704}{10.1002/eap.1704}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-forester_accounting_2009}{}}%
+Forester JD, Im HK, Rathouz PJ. 2009. Accounting for animal movement in estimation of resource selection functions: Sampling and data analysis. \emph{Ecology} 90:3554--3565. DOI: \href{https://doi.org/10.1890/08-0874.1}{10.1890/08-0874.1}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-forstmeier_cryptic_2011}{}}%
 Forstmeier W, Schielzeth H. 2011. Cryptic multiple hypotheses testing in linear models: Overestimated effect sizes and the winner's curse. \emph{Behavioral Ecology and Sociobiology} 65:47--55. DOI: \href{https://doi.org/10.1007/s00265-010-1038-5}{10.1007/s00265-010-1038-5}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-forstmeier_detecting_2017}{}}%
 Forstmeier W, Wagenmakers E-J, Parker TH. 2017. Detecting and avoiding likely false-positive findings -- a practical guide: {Avoiding} false-positive findings. \emph{Biological Reviews} 92:1941--1968. DOI: \href{https://doi.org/10.1111/brv.12315}{10.1111/brv.12315}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-grateful}{}}%
+Francisco Rodríguez-Sánchez, Connor P. Jackson, Shaurita D. Hutchins. 2023. \emph{\href{https://github.com/Pakillo/grateful}{{grateful}: Facilitate citation of r packages}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-fraser_role_2020}{}}%
 Fraser H, Barnett A, Parker TH, Fidler F. 2020. The role of replication studies in ecology. \emph{Ecology and Evolution} 10:5197--5207. DOI: \href{https://doi.org/10.1002/ece3.6330}{10.1002/ece3.6330}.
@@ -569,6 +700,9 @@ Fraser H, Parker T, Nakagawa S, Barnett A, Fidler F. 2018. Questionable research
 \leavevmode\vadjust pre{\hypertarget{ref-freedman_economics_2015}{}}%
 Freedman LP, Cockburn IM, Simcoe TS. 2015. The {Economics} of {Reproducibility} in {Preclinical} {Research}. \emph{PLOS Biology} 13:e1002165. DOI: \href{https://doi.org/10.1371/journal.pbio.1002165}{10.1371/journal.pbio.1002165}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-bayesplot}{}}%
+Gabry J, Simpson D, Vehtari A, Betancourt M, Gelman A. 2019. Visualization in bayesian workflow. \emph{J. R. Stat. Soc. A} 182:389--402. DOI: \href{https://doi.org/10.1111/rssa.12378}{10.1111/rssa.12378}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-gelman_garden_2013}{}}%
 Gelman A, Loken E. 2013. \href{http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf}{The garden of forking paths: {Why} multiple comparisons can be a problem, even when there is no "fishing expedition" or "p-hacking" and the research hypothesis was posited ahead of time}. :17.
 
@@ -577,6 +711,9 @@ Grainger M, Bolam FC, stewart G, Nilsen EB. 2019. Evidence synthesis for tacklin
 
 \leavevmode\vadjust pre{\hypertarget{ref-head_extent_2015}{}}%
 Head ML, Holman L, Lanfear R, Kahn AT, Jennions MD. 2015. The {Extent} and {Consequences} of {P}-{Hacking} in {Science}. \emph{PLOS Biology} 13:e1002106. DOI: \href{https://doi.org/10.1371/journal.pbio.1002106}{10.1371/journal.pbio.1002106}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-raster}{}}%
+Hijmans RJ. 2023. \emph{\href{https://CRAN.R-project.org/package=raster}{{raster}: Geographic data analysis and modeling}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-hoffmann_multiplicity_2021}{}}%
 Hoffmann S, Schönbrodt F, Elsas R, Wilson R, Strasser U, Boulesteix A-L. 2021. The multiplicity of analysis strategies jeopardizes replicability: Lessons learned across disciplines. \emph{Royal Society Open Science} 8:rsos.201925, 201925. DOI: \href{https://doi.org/10.1098/rsos.201925}{10.1098/rsos.201925}.
@@ -599,6 +736,12 @@ Joo R, Picardi S, Boone ME, Clay TA, Patrick SC, Romero-Romero VS, Basille M. 20
 \leavevmode\vadjust pre{\hypertarget{ref-kaplan_likelihood_2015}{}}%
 Kaplan RM, Irvin VL. 2015. Likelihood of {Null} {Effects} of {Large} {NHLBI} {Clinical} {Trials} {Has} {Increased} over {Time}. \emph{PLOS ONE} 10:e0132382. DOI: \href{https://doi.org/10.1371/journal.pone.0132382}{10.1371/journal.pone.0132382}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-ggdist}{}}%
+Kay M. 2023a. \emph{{ggdist}: Visualizations of distributions and uncertainty}. DOI: \href{https://doi.org/10.5281/zenodo.3879620}{10.5281/zenodo.3879620}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tidybayes}{}}%
+Kay M. 2023b. \emph{{tidybayes}: Tidy data and geoms for {Bayesian} models}. DOI: \href{https://doi.org/10.5281/zenodo.1308151}{10.5281/zenodo.1308151}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-kelly_rate_2019}{}}%
 Kelly CD. 2019. Rate and success of study replication in ecology and evolution. \emph{PeerJ} 7:e7654. DOI: \href{https://doi.org/10.7717/peerj.7654}{10.7717/peerj.7654}.
 
@@ -606,10 +749,16 @@ Kelly CD. 2019. Rate and success of study replication in ecology and evolution. 
 Kranstauber B, Kays R, Lapoint SD, Wikelski M, Safi K. 2012. A dynamic {Brownian} bridge movement model to estimate utilization distributions for heterogeneous animal movement. \emph{Journal of Animal Ecology} 81:738--746. DOI: \href{https://doi.org/10.1111/j.1365-2656.2012.01955.x}{10.1111/j.1365-2656.2012.01955.x}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-move}{}}%
-Kranstauber B, Smolla M, Scharf AK. 2022. \emph{\href{https://CRAN.R-project.org/package=move}{Move: Visualizing and analyzing animal track data}}.
+Kranstauber B, Smolla M, Scharf AK. 2023. \emph{\href{https://CRAN.R-project.org/package=move}{{move}: Visualizing and analyzing animal track data}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-lakens_justify_2018}{}}%
 Lakens D, Adolfi FG, Albers CJ, Anvari F, Apps MAJ, Argamon SE, Baguley T, Becker RB, Benning SD, Bradford DE, Buchanan EM, Caldwell AR, Van Calster B, Carlsson R, Chen S-C, Chung B, Colling LJ, Collins GS, Crook Z, Cross ES, Daniels S, Danielsson H, DeBruine L, Dunleavy DJ, Earp BD, Feist MI, Ferrell JD, Field JG, Fox NW, Friesen A, Gomes C, Gonzalez-Marquez M, Grange JA, Grieve AP, Guggenberger R, Grist J, Harmelen A-L van, Hasselman F, Hochard KD, Hoffarth MR, Holmes NP, Ingre M, Isager PM, Isotalus HK, Johansson C, Juszczyk K, Kenny DA, Khalil AA, Konat B, Lao J, Larsen EG, Lodder GMA, Lukavský J, Madan CR, Manheim D, Martin SR, Martin AE, Mayo DG, McCarthy RJ, McConway K, McFarland C, Nio AQX, Nilsonne G, Oliveira CL de, Xivry J-JO de, Parsons S, Pfuhl G, Quinn KA, Sakon JJ, Saribay SA, Schneider IK, Selvaraju M, Sjoerds Z, Smith SG, Smits T, Spies JR, Sreekumar V, Steltenpohl CN, Stenhouse N, Świątkowski W, Vadillo MA, Van Assen MALM, Williams MN, Williams SE, Williams DR, Yarkoni T, Ziano I, Zwaan RA. 2018. Justify your alpha. \emph{Nature Human Behaviour} 2:168--171. DOI: \href{https://doi.org/10.1038/s41562-018-0311-x}{10.1038/s41562-018-0311-x}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tarchetypes}{}}%
+Landau WM. 2021b. \emph{Tarchetypes: Archetypes for targets}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-targets}{}}%
+Landau WM. 2021a. \href{https://doi.org/10.21105/joss.02959}{The targets r package: A dynamic make-like function-oriented pipeline toolkit for reproducibility and high-performance computing}. \emph{Journal of Open Source Software} 6:2959.
 
 \leavevmode\vadjust pre{\hypertarget{ref-lemoine_underappreciated_2016}{}}%
 Lemoine NP, Hoffman A, Felton AJ, Baur L, Chaves F, Gray J, Yu Q, Smith MD. 2016. Underappreciated problems of low replication in ecological field studies. \emph{Ecology} 97:2554--2561. DOI: \href{https://doi.org/10.1002/ecy.1506}{10.1002/ecy.1506}.
@@ -620,8 +769,11 @@ Levins R, Lewontin R. 1985. \emph{The dialectical biologist}. Harvard University
 \leavevmode\vadjust pre{\hypertarget{ref-liu_paths_2020}{}}%
 Liu Y, Althoff T, Heer J. 2020. Paths {Explored}, {Paths} {Omitted}, {Paths} {Obscured}: {Decision} {Points} \& {Selective} {Reporting} in {End}-to-{End} {Data} {Analysis}. In: \emph{Proceedings of the 2020 {CHI} {Conference} on {Human} {Factors} in {Computing} {Systems}}. Honolulu HI USA: ACM, 1--14. DOI: \href{https://doi.org/10.1145/3313831.3376533}{10.1145/3313831.3376533}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-performance}{}}%
+Lüdecke D, Ben-Shachar MS, Patil I, Waggoner P, Makowski D. 2021. {performance}: An {R} package for assessment, comparison and testing of statistical models. \emph{Journal of Open Source Software} 6:3139. DOI: \href{https://doi.org/10.21105/joss.03139}{10.21105/joss.03139}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-abmAnimalMovement}{}}%
-Marshall BM, Duthie AB. 2022. \href{https://0}{abmAnimalMovement: An r package for simulating animal movement using an agent-based model}. \emph{F1000} 0:0.
+Marshall BM, Duthie AB. 2022. \href{https://0}{{abmAnimalMovement}: An r package for simulating animal movement using an agent-based model}. \emph{F1000} 0:0.
 
 \leavevmode\vadjust pre{\hypertarget{ref-minchin_simulation_1987}{}}%
 Minchin PR. 1987. Simulation of multidimensional community patterns: Towards a comprehensive model. \emph{Vegetatio} 71:145--156.
@@ -629,11 +781,23 @@ Minchin PR. 1987. Simulation of multidimensional community patterns: Towards a c
 \leavevmode\vadjust pre{\hypertarget{ref-miyakawa_no_2020}{}}%
 Miyakawa T. 2020. No raw data, no science: Another possible source of the reproducibility crisis. \emph{Molecular Brain} 13:24, s13041-020-0552-2. DOI: \href{https://doi.org/10.1186/s13041-020-0552-2}{10.1186/s13041-020-0552-2}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-here}{}}%
+Müller K. 2020. \emph{\href{https://CRAN.R-project.org/package=here}{{here}: A simpler way to find your files}}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tibble}{}}%
+Müller K, Wickham H. 2023. \emph{\href{https://CRAN.R-project.org/package=tibble}{{tibble}: Simple data frames}}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-nakagawa_replicating_2015}{}}%
 Nakagawa S, Parker TH. 2015. Replicating research in ecology and evolution: Feasibility, incentives, and the cost-benefit conundrum. \emph{BMC Biology} 13:88. DOI: \href{https://doi.org/10.1186/s12915-015-0196-3}{10.1186/s12915-015-0196-3}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Noonan2018}{}}%
 Noonan MJ, Tucker MA, Fleming CH, Akre T, Alberts SC, Ali AH, Altmann J, Antunes PC, Belant JL, Beyer D, Blaum N, Böhning-Gaese K, Cullen L, Paula RC de, Dekker J, Drescher-Lehman J, Farwig N, Fichtel C, Fischer C, Ford A, Goheen JR, Janssen R, Jeltsch F, Kauffman M, Kappeler PM, Koch F, LaPoint S, Catherine Markham A, Medici EP, Morato RG, Nathan R, Oliveira-Santos LGR, Olson KA, Patterson BD, Paviolo A, Ramalho EE, Roesner S, Schabo D, Selva N, Sergiel A, Xavier da Silva M, Spiegel O, Thompson P, Ullmann W, Zieba F, Zwijacz-Kozica T, Fagan WF, Mueller T, Calabrese JM. 2019. A comprehensive analysis of autocorrelation and bias in home range estimation. \emph{Ecological Monographs}. DOI: \href{https://doi.org/10.1002/ecm.1344}{10.1002/ecm.1344}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-northrup_practical_2013}{}}%
+Northrup JM, Hooten MB, Anderson CR, Wittemyer G. 2013. Practical guidance on characterizing availability in resource selection functions under a use--availability design. \emph{Ecology} 94:1456--1463. DOI: \href{https://doi.org/10.1890/12-1688.1}{10.1890/12-1688.1}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-northrup_conceptual_2022}{}}%
+Northrup JM, Vander Wal E, Bonar M, Fieberg J, Laforge MP, Leclerc M, Prokopenko CM, Gerber BD. 2022. Conceptual and methodological advances in habitat‐selection modeling: Guidelines for ecology and evolution. \emph{Ecological Applications} 32. DOI: \href{https://doi.org/10.1002/eap.2470}{10.1002/eap.2470}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-nuijten_verify_2018}{}}%
 Nuijten MB, Bakker M, Maassen E, Wicherts JM. 2018. Verify original results through reanalysis before replicating. \emph{Behavioral and Brain Sciences} 41:e143. DOI: \href{https://doi.org/10.1017/S0140525X18000791}{10.1017/S0140525X18000791}.
@@ -653,8 +817,14 @@ Parsons S. 2020. Exploring reliability heterogeneity with multiverse analyses: {
 \leavevmode\vadjust pre{\hypertarget{ref-patel_assessment_2015}{}}%
 Patel CJ, Burford B, Ioannidis JPA. 2015. Assessment of vibration of effects due to model specification can demonstrate the instability of observational associations. \emph{Journal of Clinical Epidemiology} 68:1046--1058. DOI: \href{https://doi.org/10.1016/j.jclinepi.2015.05.029}{10.1016/j.jclinepi.2015.05.029}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-paton_defining_2015}{}}%
+Paton RS, Matthiopoulos J. 2015. Defining the scale of habitat availability for models of habitat selection. \emph{Ecology}:14--2241.1. DOI: \href{https://doi.org/10.1890/14-2241.1}{10.1890/14-2241.1}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-patchwork}{}}%
+Pedersen TL. 2022. \emph{\href{https://CRAN.R-project.org/package=patchwork}{Patchwork: The composer of plots}}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-base}{}}%
-R Core Team. 2022. \emph{\href{https://www.R-project.org/}{R: A language and environment for statistical computing}}. Vienna, Austria: R Foundation for Statistical Computing.
+R Core Team. 2023. \emph{\href{https://www.R-project.org/}{R: A language and environment for statistical computing}}. Vienna, Austria: R Foundation for Statistical Computing.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Reinert1982}{}}%
 Reinert HK, Cundall D. 1982. An {Improved} {Surgical} {Implantation} {Method} for {Radio}-{Tracking} {Snakes}. \emph{Copeia} 1982:702. DOI: \href{https://doi.org/10.2307/1444674}{10.2307/1444674}.
@@ -665,11 +835,8 @@ Rijnhart JJM, Twisk JWR, Deeg DJH, Heymans MW. 2021. Assessing the {Robustness} 
 \leavevmode\vadjust pre{\hypertarget{ref-roche_behavioural_2020}{}}%
 Roche DG, Amcoff M, Morgan R, Sundin J, Finnøen MH, Lawrence MJ, Henderson E, Speers-Roesch B, Brown C, Clark TD, Bshary R, Jutfelt F, Binning SA. 2020. Behavioural lateralisation in a detour test is not repeatable in fishes. \emph{EcoEvoRxiv}:62. DOI: \href{https://doi.org/10.32942/osf.io/6kcwa}{10.32942/osf.io/6kcwa}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-grateful}{}}%
-Rodríguez-Sánchez F, Jackson CP, Hutchins SD. 2022. \emph{\href{https://github.com/Pakillo/grateful}{Grateful: Facilitate citation of r packages}}.
-
 \leavevmode\vadjust pre{\hypertarget{ref-rstudio}{}}%
-RStudio Team. 2022. \emph{\href{http://www.rstudio.com/}{RStudio: Integrated development environment for r}}. Boston, MA: RStudio, PBC.
+RStudio Team. 2022. \emph{\href{http://www.rstudio.com/}{{RStudio}: Integrated development environment for r}}. Boston, MA: RStudio, PBC.
 
 \leavevmode\vadjust pre{\hypertarget{ref-salis_how_2021}{}}%
 Salis A, Lena J-P, Lengagne T. 2021. How {Subtle} {Protocol} {Choices} {Can} {Affect} {Biological} {Conclusions}: {Great} {Tits}' {Response} to {Allopatric} {Mobbing} {Calls}. \emph{Animal Behavior and Cognition} 8:152--165. DOI: \href{https://doi.org/10.26451/abc.08.02.05.2021}{10.26451/abc.08.02.05.2021}.
@@ -680,6 +847,9 @@ Sánchez-Tójar A, Nakagawa S, Sánchez-Fortún M, Martin DA, Ramani S, Girndt A
 \leavevmode\vadjust pre{\hypertarget{ref-scheel_excess_2021}{}}%
 Scheel AM, Schijen MRMJ, Lakens D. 2021. An {Excess} of {Positive} {Results}: {Comparing} the {Standard} {Psychology} {Literature} {With} {Registered} {Reports}. \emph{Advances in Methods and Practices in Psychological Science} 4:251524592110074. DOI: \href{https://doi.org/10.1177/25152459211007467}{10.1177/25152459211007467}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-RandomFields}{}}%
+Schlather M, Malinowski A, Menck PJ, Oesting M, Strokorb K. 2015. \href{https://www.jstatsoft.org/v63/i08/}{Analysis, simulation and prediction of multivariate random fields with package {RandomFields}}. \emph{Journal of Statistical Software} 63:1--25.
+
 \leavevmode\vadjust pre{\hypertarget{ref-schnitzer_would_2016}{}}%
 Schnitzer SA, Carson WP. 2016. Would {Ecology} {Fail} the {Repeatability} {Test}? \emph{BioScience} 66:98--99. DOI: \href{https://doi.org/10.1093/biosci/biv176}{10.1093/biosci/biv176}.
 
@@ -687,7 +857,7 @@ Schnitzer SA, Carson WP. 2016. Would {Ecology} {Fail} the {Repeatability} {Test}
 Sciaini M, Fritsch M, Scherer C, Simpkins CE. 2018. \href{https://doi.org/10.1111/2041-210X.13076}{NLMR and landscapetools: An integrated environment for simulating and modifying neutral landscape models in r}. \emph{Methods in Ecololgy and Evolution} 00:1--9.
 
 \leavevmode\vadjust pre{\hypertarget{ref-amt}{}}%
-Signer J, Fieberg J, Avgar T. 2019. \href{https://doi.org/10.1002/ece3.4823}{Animal movement tools (amt): R package for managing tracking data and conducting habitat selection analyses}. \emph{Ecology and Evolution} 9:880--890.
+Signer J, Fieberg J, Avgar T. 2019. Animal movement tools (amt): R package for managing tracking data and conducting habitat selection analyses. \emph{Ecology and Evolution} 9:880--890.
 
 \leavevmode\vadjust pre{\hypertarget{ref-silberzahn_many_2018}{}}%
 Silberzahn R, Uhlmann EL, Martin DP, Anselmi P, Aust F, Awtrey E, Bahník Š, Bai F, Bannard C, Bonnier E, Carlsson R, Cheung F, Christensen G, Clay R, Craig MA, Dalla Rosa A, Dam L, Evans MH, Flores Cervantes I, Fong N, Gamez-Djokic M, Glenz A, Gordon-McKeon S, Heaton TJ, Hederos K, Heene M, Hofelich Mohr AJ, Högden F, Hui K, Johannesson M, Kalodimos J, Kaszubowski E, Kennedy DM, Lei R, Lindsay TA, Liverani S, Madan CR, Molden D, Molleman E, Morey RD, Mulder LB, Nijstad BR, Pope NG, Pope B, Prenoveau JM, Rink F, Robusto E, Roderique H, Sandberg A, Schlüter E, Schönbrodt FD, Sherman MF, Sommer SA, Sotak K, Spain S, Spörlein C, Stafford T, Stefanutti L, Tauber S, Ullrich J, Vianello M, Wagenmakers E-J, Witkowiak M, Yoon S, Nosek BA. 2018. Many {Analysts}, {One} {Data} {Set}: {Making} {Transparent} {How} {Variations} in {Analytic} {Choices} {Affect} {Results}. \emph{Advances in Methods and Practices in Psychological Science} 1:337--356. DOI: \href{https://doi.org/10.1177/2515245917747646}{10.1177/2515245917747646}.
@@ -713,11 +883,17 @@ Smaldino PE, McElreath R. 2016. The natural selection of bad science. \emph{Roya
 \leavevmode\vadjust pre{\hypertarget{ref-steegen_increasing_2016}{}}%
 Steegen S, Tuerlinckx F, Gelman A, Vanpaemel W. 2016. Increasing {Transparency} {Through} a {Multiverse} {Analysis}. \emph{Perspectives on Psychological Science} 11:702--712. DOI: \href{https://doi.org/10.1177/1745691616658637}{10.1177/1745691616658637}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-street_solving_2021}{}}%
+Street GM, Potts JR, Börger L, Beasley JC, Demarais S, Fryxell JM, McLoughlin PD, Monteith KL, Prokopenko CM, Ribeiro MC, Rodgers AR, Strickland BK, Beest FM, Bernasconi DA, Beumer LT, Dharmarajan G, Dwinnell SP, Keiter DA, Keuroghlian A, Newediuk LJ, Oshima JEF, Rhodes O, Schlichting PE, Schmidt NM, Vander Wal E. 2021. Solving the sample size problem for resource selection functions. \emph{Methods in Ecology and Evolution} 12:2421--2431. DOI: \href{https://doi.org/10.1111/2041-210X.13701}{10.1111/2041-210X.13701}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-tang-martinez_history_2020}{}}%
 Tang-Martínez Z. 2020. The history and impact of women in animal behaviour and the {ABS}: A {North} {American} perspective. \emph{Animal Behaviour} 164:251--260. DOI: \href{https://doi.org/10.1016/j.anbehav.2019.12.011}{10.1016/j.anbehav.2019.12.011}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-tedersoo_data_2021}{}}%
 Tedersoo L, Küngas R, Oras E, Köster K, Eenmaa H, Leijen Ä, Pedaste M, Raju M, Astapova A, Lukner H, Kogermann K, Sepp T. 2021. Data sharing practices and data availability upon request differ across scientific disciplines. \emph{Scientific Data} 8:192. DOI: \href{https://doi.org/10.1038/s41597-021-00981-0}{10.1038/s41597-021-00981-0}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-thurfjell_applications_2014}{}}%
+Thurfjell H, Ciuti S, Boyce MS. 2014. Applications of step-selection functions in ecology and conservation. \emph{Movement Ecology} 2. DOI: \href{https://doi.org/10.1186/2051-3933-2-4}{10.1186/2051-3933-2-4}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-vines_availability_2014}{}}%
 Vines TH, Albert AYK, Andrew RL, Débarre F, Bock DG, Franklin MT, Gilbert KJ, Moore J-S, Renaut S, Rennison DJ. 2014. The {Availability} of {Research} {Data} {Declines} {Rapidly} with {Article} {Age}. \emph{Current Biology} 24:94--97. DOI: \href{https://doi.org/10.1016/j.cub.2013.11.014}{10.1016/j.cub.2013.11.014}.
@@ -737,6 +913,21 @@ Weaver SJ, Westphal MF, Taylor EN. 2021. Technology wish lists and the significa
 \leavevmode\vadjust pre{\hypertarget{ref-webb_multiverse_2021}{}}%
 Webb SS, Demeyere N. 2021. Multiverse {Analysis}: {A} {Method} to {Determine} {Researcher} {Degrees} of {Freedom} in {Test} {Validation}. \emph{PsyArXiv}. DOI: \href{https://doi.org/10.31234/osf.io/nhrwq}{10.31234/osf.io/nhrwq}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-reshape2}{}}%
+Wickham H. 2007. \href{http://www.jstatsoft.org/v21/i12/}{Reshaping data with the {reshape} package}. \emph{Journal of Statistical Software} 21:1--20.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ggplot2}{}}%
+Wickham H. 2016. \emph{\href{https://ggplot2.tidyverse.org}{ggplot2: Elegant graphics for data analysis}}. Springer-Verlag New York.
+
+\leavevmode\vadjust pre{\hypertarget{ref-stringr}{}}%
+Wickham H. 2022. \emph{\href{https://CRAN.R-project.org/package=stringr}{{stringr}: Simple, consistent wrappers for common string operations}}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-dplyr}{}}%
+Wickham H, François R, Henry L, Müller K, Vaughan D. 2023. \emph{\href{https://CRAN.R-project.org/package=dplyr}{{dplyr}: A grammar of data manipulation}}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ggridges}{}}%
+Wilke CO. 2022. \emph{\href{https://CRAN.R-project.org/package=ggridges}{Ggridges: Ridgeline plots in 'ggplot2'}}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Winne2006}{}}%
 Winne CT, Willson JD, Andrews KM, Reed RN. 2006. Efficacy of marking snakes with disposable medical cautery units. \emph{Herpetological Review} 37:52--54.
 
@@ -744,25 +935,25 @@ Winne CT, Willson JD, Andrews KM, Reed RN. 2006. Efficacy of marking snakes with
 Wolen AR, Hartgerink CHJ, Hafen R, Richards BG, Soderberg CK, York TP. 2020. {osfr}: An {R} interface to the open science framework. \emph{Journal of Open Source Software} 5:2071. DOI: \href{https://doi.org/10.21105/joss.02071}{10.21105/joss.02071}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-knitr2014}{}}%
-Xie Y. 2014. \href{http://www.crcpress.com/product/isbn/9781466561595}{Knitr: A comprehensive tool for reproducible research in {R}}. In: Stodden V, Leisch F, Peng RD eds. \emph{Implementing reproducible computational research}. Chapman; Hall/CRC,.
+Xie Y. 2014. {knitr}: A comprehensive tool for reproducible research in {R}. In: Stodden V, Leisch F, Peng RD eds. \emph{Implementing reproducible computational research}. Chapman; Hall/CRC,.
 
 \leavevmode\vadjust pre{\hypertarget{ref-knitr2015}{}}%
 Xie Y. 2015. \emph{\href{https://yihui.org/knitr/}{Dynamic documents with {R} and knitr}}. Boca Raton, Florida: Chapman; Hall/CRC.
 
 \leavevmode\vadjust pre{\hypertarget{ref-bookdown2016}{}}%
-Xie Y. 2016. \emph{\href{https://bookdown.org/yihui/bookdown}{Bookdown: Authoring books and technical documents with {R} markdown}}. Boca Raton, Florida: Chapman; Hall/CRC.
+Xie Y. 2016. \emph{\href{https://bookdown.org/yihui/bookdown}{{bookdown}: Authoring books and technical documents with {R} markdown}}. Boca Raton, Florida: Chapman; Hall/CRC.
 
 \leavevmode\vadjust pre{\hypertarget{ref-tinytex2019}{}}%
-Xie Y. 2019. \href{https://tug.org/TUGboat/Contents/contents40-1.html}{TinyTeX: A lightweight, cross-platform, and easy-to-maintain LaTeX distribution based on TeX live}. \emph{TUGboat}:30--32.
+Xie Y. 2019. \href{https://tug.org/TUGboat/Contents/contents40-1.html}{{TinyTeX}: A lightweight, cross-platform, and easy-to-maintain LaTeX distribution based on TeX live}. \emph{TUGboat} 40:30--32.
 
 \leavevmode\vadjust pre{\hypertarget{ref-R-bookdown}{}}%
-Xie Y. 2022a. \emph{\href{https://CRAN.R-project.org/package=bookdown}{Bookdown: Authoring books and technical documents with r markdown}}.
+Xie Y. 2022. \emph{\href{https://CRAN.R-project.org/package=bookdown}{Bookdown: Authoring books and technical documents with r markdown}}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-knitr2022}{}}%
-Xie Y. 2022c. \emph{\href{https://yihui.org/knitr/}{Knitr: A general-purpose package for dynamic report generation in r}}.
+\leavevmode\vadjust pre{\hypertarget{ref-knitr2023}{}}%
+Xie Y. 2023b. \emph{\href{https://yihui.org/knitr/}{{knitr}: A general-purpose package for dynamic report generation in r}}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-tinytex2022}{}}%
-Xie Y. 2022b. \emph{\href{https://github.com/rstudio/tinytex}{Tinytex: Helper functions to install and maintain TeX live, and compile LaTeX documents}}.
+\leavevmode\vadjust pre{\hypertarget{ref-tinytex2023}{}}%
+Xie Y. 2023a. \emph{\href{https://github.com/rstudio/tinytex}{{tinytex}: Helper functions to install and maintain TeX live, and compile LaTeX documents}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-rmarkdown2018}{}}%
 Xie Y, Allaire JJ, Grolemund G. 2018. \emph{\href{https://bookdown.org/yihui/rmarkdown}{R markdown: The definitive guide}}. Boca Raton, Florida: Chapman; Hall/CRC.

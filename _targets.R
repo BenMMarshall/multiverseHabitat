@@ -13,7 +13,7 @@ tar_option_set(
   packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
                "amt", "adehabitatHR", "move",
-               "brms", "bayesplot", "tidybayes",
+               "brms", "bayesplot", "tidybayes", "performance",
                "ggplot2", "ggridges", "reshape2", "patchwork"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
@@ -295,13 +295,26 @@ brmsCompiled <- list(
   )
 )
 
+extrasForRMD <- list(
+  tar_target(
+    extractedValues,
+    multiverseHabitat::extract_values_rmd()
+  ),
+  tar_target(
+    iteractionPlot,
+    multiverseHabitat::generate_iteraction_plot()
+  )
+)
+
 list(allIndividualEstimatesList,
      areaCompiled,
      wrsfCompiled,
      ssfCompiled,
      simsCompiled,
      brmsCompiled,
-     directCompiled)
+     directCompiled,
+     extrasForRMD)
+
 
 # Launch the app in a background process.
 # tar_watch(seconds = 60, outdated = FALSE, targets_only = TRUE)

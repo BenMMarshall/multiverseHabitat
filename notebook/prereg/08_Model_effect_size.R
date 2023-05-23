@@ -351,10 +351,16 @@ endLabelstd <- tdAreaData$`tdScaled:area` %>%
 (tdAreaPlot <- tdAreaData$`tdScaled:area` %>%
     ggplot() +
     geom_line(aes(x = tdScaled, y = estimate__, colour = area)) +
-    geom_text(data = endLabelstd, aes(x = maxx, y = miny,
-                                    label = area, colour = area),
-              vjust = 0.5, hjust = 0) +
-    labs(y = "Estimated effect", x = "Tracking Duration (scaled)") +
+    geom_ribbon(aes(x = tdScaled,
+                    ymin = lower__, ymax = upper__,
+                    fill = area), alpha = 0.1) +
+    # geom_text(data = endLabelstd, aes(x = maxx, y = miny,
+    #                                 label = area, colour = area),
+    #           vjust = 0.5, hjust = 0) +
+    labs(y = "Estimated effect", x = "Tracking Duration (scaled)",
+         fill = "Area method", colour = "Area method") +
+    scale_colour_manual(values = unname(palette[c("2", "BADGER", "1", "KINGCOBRA")])) +
+    scale_fill_manual(values = unname(palette[c("2", "BADGER", "1", "KINGCOBRA")])) +
     coord_cartesian(ylim = c(-0.25,4))+
     theme_bw() +
     theme(
@@ -367,9 +373,9 @@ endLabelstd <- tdAreaData$`tdScaled:area` %>%
       strip.clip = "off",
       panel.border = element_blank(),
       panel.spacing = unit(18, "pt"),
+      panel.grid.minor.y = element_blank(),
       panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      legend.position = "none")
+      panel.grid.minor.x = element_blank())
 )
 
 tfAreaData <- conditional_effects(modOUT_dEstRSF, effects = "tfScaled:area",
@@ -383,15 +389,23 @@ endLabelstf <- tfAreaData$`tfScaled:area` %>%
 (tfAreaPlot <- tfAreaData$`tfScaled:area` %>%
     ggplot() +
     geom_line(aes(x = tfScaled, y = estimate__, colour = area)) +
-    geom_text(data = endLabelstf, aes(x = maxx, y = miny,
-                                    label = area, colour = area),
-              vjust = 0.5, hjust = 0) +
-    labs(y = "Estimated effect", x = "Tracking Frequency (scaled)") +
+    geom_ribbon(aes(x = tfScaled,
+                    ymin = lower__, ymax = upper__,
+                    fill = area), alpha = 0.1) +
+    # geom_text(data = endLabelstf, aes(x = maxx, y = miny,
+    #                                 label = area, colour = area),
+    #           vjust = 0.5, hjust = 0) +
+    labs(y = "Estimated effect", x = "Tracking Frequency (scaled)",
+         fill = "Area method", colour = "Area method") +
+    scale_colour_manual(values = unname(palette[c("2", "BADGER", "1", "KINGCOBRA")])) +
+    scale_fill_manual(values = unname(palette[c("2", "BADGER", "1", "KINGCOBRA")])) +
     coord_cartesian(ylim = c(-0.25,4))+
     theme_bw() +
     theme(
       line = element_line(colour = palette["coreGrey"]),
       text = element_text(colour = palette["coreGrey"]),
+      axis.title.y = element_blank(),
+      axis.text.y = element_blank(),
       strip.background = element_blank(),
       strip.text = element_text(face = 4, hjust = 1, vjust = 1),
       axis.line.x = element_line(),
@@ -399,20 +413,21 @@ endLabelstf <- tfAreaData$`tfScaled:area` %>%
       strip.clip = "off",
       panel.border = element_blank(),
       panel.spacing = unit(18, "pt"),
+      panel.grid.minor.y = element_blank(),
       panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      legend.position = "none")
+      panel.grid.minor.x = element_blank())
 )
 
-(bothIterations <- tdAreaPlot + tfAreaPlot)
+(bothIterations <- patchwork::wrap_plots(tdAreaPlot + tfAreaPlot) +
+  patchwork::plot_layout(guides = "collect"))
 
 ggsave(bothIterations,
        filename = here("notebook", "figures", "rsfEffectPlot_iterations.png"),
-       dpi = 300, width = 210, height = 140,
+       dpi = 300, width = 210, height = 100,
        units = "mm")
 ggsave(bothIterations,
        filename = here("notebook", "figures", "rsfEffectPlot_iterations.pdf"),
-       width = 210, height = 140,
+       width = 210, height = 100,
        units = "mm", device = cairo_pdf)
 
 ##
