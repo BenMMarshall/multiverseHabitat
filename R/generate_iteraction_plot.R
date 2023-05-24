@@ -97,11 +97,11 @@ generate_iteraction_plot <- function(){
       patchwork::plot_layout(guides = "collect"))
 
   ggsave(bothIterations,
-         filename = here("notebook", "figures", "rsfEffectPlot_iterations.png"),
+         filename = here("notebook", "figures", "rsfEffectPlot_iteractions.png"),
          dpi = 300, width = 210, height = 100,
          units = "mm")
   ggsave(bothIterations,
-         filename = here("notebook", "figures", "rsfEffectPlot_iterations.pdf"),
+         filename = here("notebook", "figures", "rsfEffectPlot_iteractions.pdf"),
          width = 210, height = 100,
          units = "mm", device = cairo_pdf)
 

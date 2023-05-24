@@ -159,7 +159,7 @@ Construction of a multiverse requires justification of which decisions are treat
 A multiverse populated with well-justified decisions allows the exploration of which choices inflate variation between analysis universes, while also offering insights into how to deflate variation {[}e.g., refinement of initial study design, the removal of ambiguities like tightening categories definitions; Steegen et al. (\protect\hyperlink{ref-steegen_increasing_2016}{2016}){]}.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{../ext_images/Multiverse compared diagram} \caption{Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during aysnalis}\label{fig:multiDiagram}
+\includegraphics[width=1\linewidth]{../ext_images/Multiverse compared diagram} \caption{Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during analysis. Redrawn from Dragicevic et al. (2019).}\label{fig:multiDiagram}
 \end{figure}
 
 Ecological systems are complex to study and frustrate replication efforts (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-schnitzer_would_2016}{Schnitzer \& Carson, 2016}), and in the case of movement ecology, the data analysed (i.e., derived data, such as step length, speed, and turn angle derived from timestamped coordinate data) require multiple stages of preprocessing.
@@ -190,9 +190,15 @@ The abmAnimalMovement simulations are a discrete time, agent-based modelling app
 Further details of how the scenarios were parametrised can be found in (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}), and also in the abmAnimalMovement github repository (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github}).
 
 In brief:
-- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
-- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
-- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
+
+\begin{itemize}
+\item
+  Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
+\item
+  Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
+\item
+  Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
+\end{itemize}
 
 Each simulation generated a years worth of movement data, with a data point recorded every minute.
 
@@ -206,10 +212,10 @@ All shelter sites occurred within the higher quality core resource areas.
 
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
 Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \ref{fig:landscapeExample}): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
-While the categroisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the lanscape classification constant to maintain an feasible multiverse analysis.
+While the categorisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the landscape classification constant to maintain an feasible multiverse analysis.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{../prereg/figures/landscapeExample} \caption{An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis.}\label{fig:landscapeExample}
+\includegraphics[width=1\linewidth]{../figures/landscapeExample} \caption{An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis.}\label{fig:landscapeExample}
 \end{figure}
 
 \hypertarget{sampling-and-analysis-options}{%
@@ -233,7 +239,11 @@ Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
-In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \ref{fig:decisionTrees}A).
+In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \ref{fig:decisionTrees}).
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../ext_images/Decision Visualisation} \caption{An illustration of the different decisions creating the multiverse, split betwen those pertaining to sampling and analysis.}\label{fig:decisionTrees}
+\end{figure}
 
 \hypertarget{analysis}{%
 \subsubsection{Analysis}\label{analysis}}
@@ -241,14 +251,14 @@ In summary, the sampling decisions will cover variation in species, tracking fre
 For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
 R presents the number one tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
-Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.17 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.2.1.0 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
-During the writing of this paper, a new method was described as part of the ctmm package v.1.1.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigate.
+Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.16 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
+During the writing of this paper, a new method was described as part of the ctmm package v.0.6.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigate.
 
 Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
 One from the adehabitatHS package: resource selection ratios (Wides).
 Two from the amt package: resource selection function (RSF), step selection function (SSF)
 And the newly described Weighted Resource Selection Function (wRSF \protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}) from the ctmm package.
-Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection (Fig. \ref{fig:decisionTrees}B).
+Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection (Fig. \ref{fig:decisionTrees}).
 
 The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
 The first decisions is whether to approach the habitat selection analysis as a type I, II or III design, as we are concerned about an individuals' habitat selection we will ignore type I.
@@ -286,7 +296,7 @@ Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
 As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
 This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
 Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
-We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
+We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results (\protect\hyperlink{ref-alston_clarifying_2022}{Alston et al., 2022}).
 
 What is considered available to an animal is not cleanly translated from biological concept to a statistical one.
 While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make --to varying degrees-- use of the movement information contained within the dataset they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
@@ -298,7 +308,7 @@ AKDEs also provide a 95\% confidence interval surrounding any chosen contour; fo
 
 Once we had created a defined availability area, we generated points at which the habitat type is recorded to estimate the relative availability.
 How many and in what alignment these availability points are generated poses two additional points of analytical choice.
-For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset: {[}ADD IN R CODE TO PULL THE CHOICE FROM THE TARGETS SCRIPT{]}.
+For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset (Fig. \ref{fig:decisionTrees}).
 For the alignment of the points, points where either random or stratified within the available previously defined.
 
 As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
@@ -334,17 +344,19 @@ Instead we exploring only variations in data quantity (i.e., tracking duration a
 \hypertarget{assessing-the-multiverse}{%
 \subsection{Assessing the multiverse}\label{assessing-the-multiverse}}
 
-To generate the multiverse we used a meta-programming approach via the targets v.1.1.2 and tarchetypes v.0.7.6 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},b).
+To generate the multiverse we used a meta-programming approach via the targets v.0.14.2 and tarchetypes v.0.7.4 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},b).
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing.
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
 
-Further examination was complicated by the three methods described above producing habitat preference values on different scales with different decisions associated with them.
+Further examination was complicated by the four methods described above producing habitat preference values on different scales with different decisions associated with them.
 We elected to analyse the impact of the decisions separately.
 For each method we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated preference, 2) which decisions best explain the transformed deviation from the median estimated preference.
 The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased noise surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat preference.
+All models included individual and species as nested group effects (for example, the formula for the SSF model looking at absolute deviation: absDeltaEst \textasciitilde{} 1 + tdScaled + tfScaled + modelForm + stepDist + turnDist + availablePerStepScaled + (1\textbar species/indi)).
+We normalised all predictor variables as they all existed on vastly different scales, and we wanted to assess relative impact.
 
-We elected to have the model try and predict the median estimate of habitat preference because the simulation cannot provide a direct analogous value to the outputs of all three methods.
+We elected to have the model try and predict the deviation from the median estimate of habitat preference because the simulation cannot provide a direct analogous value to the outputs of all three methods.
 Although the simulation is a discrete time model, where the animal makes decisions based upon a number of options, is similar to a step selection model, the decision making of the animal is made on two time frames breaking our ability to directly compare simulation values with step selection outputs.
 Further, the simulated preference of the animal is balanced against other demands such as site fidelity, movement resistance, and avoidance of certain locations.
 The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
@@ -352,23 +364,27 @@ We ran these models for both time scales: movement decisions every time step, an
 These model results, while not strictly comparable to the other outputs, help confirm the animal was correctly preferring the chosen habitat (bare in mind the animal had a no preference exploratory state that would weaken the effect), and support the use of the median estimate to explore the cause behind the most deviant estimates.
 
 We assessed Bayesian model convergence using rhat values, acf, and trace plots.
-Based on these assessments we modified the running parameters {[}FINAL VALUES HERE{]}
+Based on these assessments we modified the running parameters .
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-The completion of the multiverse resulted in 594 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
+The completion of the multiverse resulted in 576 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered 3 virtual species, 4 individuals per species, frequencies from 0.006 to 2 locations per hour, and durations from 7 to 240 days.
 Each of these datasets underwent every combination of analysis choices resulting in
-281,952 estimates of habitat preference (Wides: 38,016 , RSF: 228,096 , SSF: 15,840).
+282,348 estimates of habitat preference (Wides: 38,016; RSF: 228,096; SSF: 15,840; wRSF: 396).
 
 \hypertarget{general-patterns}{%
 \subsection{General patterns}\label{general-patterns}}
 
-We can get an initial impression of the pattern of the final estimates of preference using a specification curve .
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve (\protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020}; \protect\hyperlink{ref-hall_survey_2022}{Hall et al., 2022}).
 In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
 
-Starting with the Wides results, we see a quite gentle \emph{S} shape {[}FIGURE LINK HERE{]}, with most estimates falling in the range of 0.5 to 2.
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/widesSpecCurve} \caption{A specification curve showing all habitat preference estimates from the Wides analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Left-hand numbers describe the number of NA results connected to each decision. Solid circles are the medians for each choice.}\label{fig:specCurveWides}
+\end{figure}
+
+Starting with the Wides results, we see a quite gentle \emph{S} shape (Fig. \ref{fig:specCurveWides}), with most estimates falling in the range of 0.5 to 2.
 While there is a clear agreement of positive selection for habitat 2 as expected, the exact estimate appears relatively sensitive to the choices made.
 Looking at the specific choices, we can see several weak patterns.
 The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations.
@@ -376,10 +392,14 @@ The same is not clear in tracking frequency, because the lower tracking frequenc
 Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher.
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
-Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in {[}LINK TO FIGURE{]}).
+Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in Fig. \ref{fig:specCurveWides}).
 The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
 
-The Resource Selection Function (RSF) specification curve shows a more ideal \emph{S} shape, with the majority of estimates clearly converging on a common answer {[}FIGURE LINK HERE{]}.
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/rsfSpecCurve} \caption{A specification curve showing all habitat preference estimates from the RSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median.}\label{fig:specCurveRSF}
+\end{figure}
+
+The Resource Selection Function (RSF) specification curve shows a more ideal \emph{S} shape, with the majority of estimates clearly converging on a common answer (Fig. \ref{fig:specCurveRSF}).
 Similar to the Wides analysis the majority of the answers, and medians detected preference for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest preference.
 To best see the changes in variation connected to a given choice, we can look at the rates and position of the outliers (highlighted in purple and orange).
 Although weak patterns, tracking duration, frequency, and multiplier of available points see slight reductions in the number of estimates very high or very low.
@@ -387,39 +407,61 @@ Other patterns are difficult to discern, except for the weighting of used points
 The distinct step-like pattern is a result of the logarithmic scale the weighting varies over (required to capture such a wide range of possible values), which can been seen reflected in other choices' groupings of estimates.
 Overall the weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results.
 
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/uncertaintyPlot} \caption{All standard errors associated with estimates of habitat preference from RSF, SSF, and wRSF analysis pathways. N.b., y axis is log scaled.}\label{fig:uncertaintyPlot}
+\end{figure}
+
 For the RSF analyses we also recovered the range of the 95\% confidence intervals surrounding each estimate.
-When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain.
+When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain (Fig. \ref{fig:uncertaintyPlot}).
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/ssfSpecCurve} \caption{A specification curve showing all habitat preference estimates from the SSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median.}\label{fig:specCurveSSF}
+\end{figure}
 
 The Step Selection Function (SSF) specification curves appears even more successful than the RSF.
-There is a decently clear \emph{S} shape indicating many analysis end points resulting in similar estimates of preference.
+There is a decently clear \emph{S} shape indicating many analysis end points resulting in similar estimates of preference (Fig. \ref{fig:specCurveSSF}).
 There are also considerably fewer estimates that indicate avoidance of habitat 2.
 The stand out patterns are more easily seen in the outlying high estimates.
 Once again there are indications of fewer outlying high estimates when data quantity increases, both with duration and frequency.
 The number of points per step (or strata) appears to intuitively follow that more available steps leads to more consistent estimations, and also the outliers that exist appear to become less extreme.
 The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not appear to make little difference to the final estimates.
 
-Very much like the RSF explorations of the raw data, the 95\% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate.
+Very much like the RSF explorations of the raw data, the 95\% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate (Fig. \ref{fig:uncertaintyPlot}).
 
-The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates.
-The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals.
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wrsfSpecCurve} \caption{A specification curve showing all habitat preference estimates from the wRSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median.}\label{fig:specCurveWRSF}
+\end{figure}
+
+The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates (Fig. \ref{fig:specCurveWRSF}).
+The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals (Fig. \ref{fig:uncertaintyPlot}).
 The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
 
 \hypertarget{model-exploration}{%
 \subsection{Model exploration}\label{model-exploration}}
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew ones' interpretation of which choices have the largest impact.
-Our Bayesian models cut through the noise displayed in {[}FIGURES XXXXXXX{]} to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+Our Bayesian models cut through the noise displayed in to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects (Table. \ref{tab:r2table}).
+The conditional \emph{R\^{}2} values ranged from 0.13 to 0.54, with the RSF models performing the worst.
 
-For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity, with increases in tracking duration (\(\beta\) -0.014, 95\% median Highest-Density Continuous Interval CrI -0.016 -- -0.011) being marginally more effective than tracking frequency (\(\beta\) -0.008, 95\% CrI -0.011 -- -0.006).
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wides_dEstWides_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway.}\label{fig:dEstBetasWides}
+\end{figure}
+
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \ref{fig:dEstBetasWides}), with increases in tracking duration (\(\beta\) -0.014, 95\% CrI -0.016 -- -0.011) being marginally more effective than tracking frequency (\(\beta\) -0.008, 95\% CrI -0.011 -- -0.006).
 Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously (\(\beta\) -0.003, 95\% CrI -0.004 -- -0.002), and it's effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
 Contour choice increases the absolute deviation from the median estimate \(\beta\) 0.007, 95\% CrI 0.006 -- 0.008, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone.
 
-The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency \(\beta\) 0.039, 95\% CrI 0.036 -- 0.042 and tracking duration \(\beta\) -0.054, 95\% CrI -0.057 -- -0.051, with the former leading to greater estimates of preference.
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency \(\beta\) 0.039, 95\% CrI 0.036 -- 0.042 and tracking duration \(\beta\) -0.054, 95\% CrI -0.057 -- -0.051, with the former leading to greater estimates of preference (Fig. \ref{fig:rEstBetasWides}).
 The impact of stratified versus random available point positioning \(\beta\) -0.001, 95\% CrI -0.004 -- 0.002 and the available points multiplier \(\beta\) -0.003, 95\% CrI -0.004 -- -0.001 have little impact mirror the lack of impact in the absolute deviation model.
 All area related choices do not move relative to each other, and reveal that MCPs as an area method to to lead to lower estimates of preference in this scenario, mirroring the lower median displayed in {[}FIGURE XX{]}.
 
-Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference.
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/rsf_dEstRSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway.}\label{fig:dEstBetasRSF}
+\end{figure}
+
+Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference (Fig. \ref{fig:dEstBetasRSF}).
 Like the Wides analysis, data quantity is most important.
 The two largest effects are from tracking duration (\(\beta\) -0.819, 95\% CrI -0.863 -- -0.779) and frequency (\(\beta\) -1.499, 95\% CrI -1.536 -- -1.458), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
 
@@ -431,10 +473,14 @@ Compared to using MCPs both AKDE (\(\beta\) -0.236, 95\% CrI -0.292 -- -0.18) an
 Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs (\(\beta\) 0.307, 95\% CrI 0.249 -- 0.364).
 
 Examining the interactions between tracking duration and frequency with the area methods further reveals the connection between dBBMMs are more variable estimates.
-While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater.
-When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency.
+While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater (Fig. \ref{fig:rsfInteractions}).
+When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency (Fig. \ref{fig:rsfInteractions}).
 
-The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration \(\beta\) -0.429, 95\% CrI -0.479 -- -0.387 and tracking frequency \(\beta\) -0.149, 95\% CrI -0.195 -- -0.102).
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/rsfEffectPlot_iteractions} \caption{The resulting interactions from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway. Left-hand plot shows how scaled tracking duration interacted with area method chosen, while the right-hand shows the interaction between scaled tracking frequency and area method chosen.}\label{fig:rsfInteractions}
+\end{figure}
+
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration \(\beta\) -0.429, 95\% CrI -0.479 -- -0.387 and tracking frequency \(\beta\) -0.149, 95\% CrI -0.195 -- -0.102; Fig. \ref{fig:rEstBetasRSF}).
 While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median ) are more likely to be the correct estimation of simulated preference via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
@@ -451,15 +497,23 @@ The dBBMMs by contrast are more vulnerable to variation in other decisions, a tr
 
 Overall there does not appear to be a decision that leads to great deviation from the median estimate in one direction.
 
-The SSF absolute deviation model matches very closely the previous two models, with tracking quantity both in terms of duration (\(\beta\) -1.471, 95\% CrI -1.552 -- -1.398) and frequency (\(\beta\) -1.676, 95\% CrI -1.758 -- -1.6) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/ssf_dEstSSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway.}\label{fig:dEstBetasSSF}
+\end{figure}
+
+The SSF absolute deviation model matches very closely the previous two models (Fig. \ref{fig:dEstBetasSSF}), with tracking quantity both in terms of duration (\(\beta\) -1.471, 95\% CrI -1.552 -- -1.398) and frequency (\(\beta\) -1.676, 95\% CrI -1.758 -- -1.6) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis all other decisions made negligible impact to an estimate's absolute proximity to the median estimate.
 
-Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly.
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \ref{fig:rEstBetasSSF}).
 The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive (\(\beta\) 0.015, 95\% CrI -0.144 -- 0.186).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
-The results from the WRSF models are largely similar to the SSF models, although with fewer decisions.
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.321, 95\% CrI -0.474 -- -0.172 and tracking frequency \(\beta\) -0.404, 95\% CrI -0.569 -- -0.25), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.321, 95\% CrI -0.474 -- -0.172 and tracking frequency \(\beta\) -0.232, 95\% CrI -0.418 -- -0.072).
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wrsf_dEstwrsf_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway.}\label{fig:dEstBetasWRSF}
+\end{figure}
+
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \ref{fig:dEstBetasWRSF}).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.321, 95\% CrI -0.474 -- -0.172 and tracking frequency \(\beta\) -0.404, 95\% CrI -0.569 -- -0.25), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.364, 95\% CrI -0.548 -- -0.185 and tracking frequency \(\beta\) -0.232, 95\% CrI -0.418 -- -0.072; Fig. \ref{fig:dEstBetasWRSF}).
 The only difference, although both effects overlap considerably, is that increased tracking duration tended to be linked more strongly with lower preference estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 \hypertarget{discussion}{%
@@ -536,34 +590,98 @@ Newer methods of habitat preference analysis appear to reduce variation from res
 \hypertarget{acknowledgements}{%
 \section{Acknowledgements}\label{acknowledgements}}
 
+BMM was funded by the Natural Environment Research Council (NERC) via the IAPETUS2 Doctoral Training Partnership.
+
 \hypertarget{software-availablity}{%
 \section{Software availablity}\label{software-availablity}}
 
 In addition to packages already mentioned in the methods we also used the following.
 
-We used \emph{R} v.4.3.0 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2022.7.2.576 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
+We used \emph{R} v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.3.1.446 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
 We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}) and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
 
-We used \emph{raster} v.3.6.20 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
+We used \emph{raster} v.3.6.14 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
 
-We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), and \emph{ggdist} v.3.3.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
+We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), and \emph{ggdist} v.3.2.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
 
-We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.4 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.3 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
+We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.2 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.2 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
 
-We used the \emph{dplyr} v.1.1.2 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
+We used the \emph{dplyr} v.1.0.10 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.1.8 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
 
-We used \emph{sp} v.1.6.0 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.21 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
+We used \emph{sp} v.1.5.1 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.20 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
 
-We used rmarkdown v.2.21 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.34 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.45 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.42 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
+We used rmarkdown v.2.19 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
 
-We generated R package citations with the aid of \emph{grateful} v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
+We generated R package citations with the aid of \emph{grateful} v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 Wolen et al. (\protect\hyperlink{ref-osfr}{2020})
 
-We generated R package citations with the aid of grateful v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
+We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 \hypertarget{data-availabilty}{%
 \section{Data availabilty}\label{data-availabilty}}
+
+\hypertarget{supplementary-material}{%
+\section{Supplementary Material}\label{supplementary-material}}
+
+\begin{table}
+
+\caption{\label{tab:r2table}$All R^2 values for Bayesian regression models.$}
+\centering
+\begin{tabular}[t]{c|c|c|c|c|c|c|c}
+\hline
+\textit{$R^2$} & Standard error & Confidence interval & CI Lower & CI Upper & Component & Response & Model Method\\
+\hline
+0.400 & 0.003 & 0.95 & 0.394 & 0.406 & Conditional & Absolute Deviation & wides\\
+\hline
+0.018 & 0.001 & 0.95 & 0.016 & 0.020 & Marginal & Absolute Deviation & wides\\
+\hline
+0.537 & 0.002 & 0.95 & 0.532 & 0.541 & Conditional & Raw Deviation & wides\\
+\hline
+0.100 & 0.002 & 0.95 & 0.096 & 0.104 & Marginal & Raw Deviation & wides\\
+\hline
+0.155 & 0.001 & 0.95 & 0.152 & 0.157 & Conditional & Absolute Deviation & rsf\\
+\hline
+0.088 & 0.001 & 0.95 & 0.086 & 0.090 & Marginal & Absolute Deviation & rsf\\
+\hline
+0.125 & 0.001 & 0.95 & 0.123 & 0.128 & Conditional & Raw Deviation & rsf\\
+\hline
+0.040 & 0.001 & 0.95 & 0.039 & 0.042 & Marginal & Raw Deviation & rsf\\
+\hline
+0.255 & 0.005 & 0.95 & 0.245 & 0.266 & Conditional & Absolute Deviation & ssf\\
+\hline
+0.120 & 0.004 & 0.95 & 0.112 & 0.128 & Marginal & Absolute Deviation & ssf\\
+\hline
+0.256 & 0.005 & 0.95 & 0.246 & 0.266 & Conditional & Raw Deviation & ssf\\
+\hline
+0.114 & 0.004 & 0.95 & 0.106 & 0.122 & Marginal & Raw Deviation & ssf\\
+\hline
+0.212 & 0.033 & 0.95 & 0.146 & 0.272 & Conditional & Absolute Deviation & wrsf\\
+\hline
+0.072 & 0.023 & 0.95 & 0.033 & 0.118 & Marginal & Absolute Deviation & wrsf\\
+\hline
+0.212 & 0.033 & 0.95 & 0.152 & 0.275 & Conditional & Raw Deviation & wrsf\\
+\hline
+0.037 & 0.017 & 0.95 & 0.008 & 0.069 & Marginal & Raw Deviation & wrsf\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wides_rEstWides_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the Wides analysis pathway.}\label{fig:rEstBetasWides}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/rsf_rEstRSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the RSF analysis pathway.}\label{fig:rEstBetasRSF}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/ssf_rEstSSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the SSF analysis pathway.}\label{fig:rEstBetasSSF}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wrsf_rEstwrsf_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway.}\label{fig:rEstBetasWRSF}
+\end{figure}
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
@@ -579,6 +697,9 @@ Allaire J, Xie Y, Dervieux C, McPherson J, Luraschi J, Ushey K, Atkins A, Wickha
 
 \leavevmode\vadjust pre{\hypertarget{ref-alston_mitigating_2023}{}}%
 Alston JM, Fleming CH, Kays R, Streicher JP, Downs CT, Ramesh T, Reineking B, Calabrese JM. 2023. Mitigating pseudoreplication and bias in resource selection functions with autocorrelation‐informed weighting. \emph{Methods in Ecology and Evolution} 14:643--654. DOI: \href{https://doi.org/10.1111/2041-210X.14025}{10.1111/2041-210X.14025}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-alston_clarifying_2022}{}}%
+Alston JM, Fleming CH, Noonan MJ, Tucker MA, Silva I, Folta C, Akre TSB, Ali AH, Belant JL, Beyer D, Blaum N, Böhning-Gaese K, Paula RC de, Dekker J, Drescher-Lehman J, Farwig N, Fichtel C, Fischer C, Ford AT, Janssen R, Jeltsch F, Kappeler PM, LaPoint SD, Markham AC, Medici EP, Morato RG, Nathan R, Olson KA, Patterson BD, Petroelje TR, Ramalho EE, Rösner S, Oliveira Santos LG, Schabo DG, Selva N, Sergiel A, Spiegel O, Ullmann W, Zieba F, Zwijacz-Kozica T, Wittemyer G, Fagan WF, Müller T, Calabrese JM. 2022. \emph{Clarifying space use concepts in ecology: Range vs. Occurrence distributions}. bioRxiv. DOI: \href{https://doi.org/10.1101/2022.09.29.509951}{10.1101/2022.09.29.509951}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-anderson_perverse_2007}{}}%
 Anderson MS, Ronning EA, De Vries R, Martinson BC. 2007. The {Perverse} {Effects} of {Competition} on {Scientists}' {Work} and {Relationships}. \emph{Science and Engineering Ethics} 13:437--461. DOI: \href{https://doi.org/10.1007/s11948-007-9042-5}{10.1007/s11948-007-9042-5}.
@@ -708,6 +829,9 @@ Gelman A, Loken E. 2013. \href{http://www.stat.columbia.edu/~gelman/research/unp
 
 \leavevmode\vadjust pre{\hypertarget{ref-grainger_evidence_2019}{}}%
 Grainger M, Bolam FC, stewart G, Nilsen EB. 2019. Evidence synthesis for tackling research waste. \emph{EcoEvoRxiv}. DOI: \href{https://doi.org/10.32942/osf.io/42fkh}{10.32942/osf.io/42fkh}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-hall_survey_2022}{}}%
+Hall BD, Liu Y, Jansen Y, Dragicevic P, Chevalier F, Kay M. 2022. A {Survey} of {Tasks} and {Visualizations} in {Multiverse} {Analysis} {Reports}. \emph{Computer Graphics Forum} 41:402--426. DOI: \href{https://doi.org/10.1111/cgf.14443}{10.1111/cgf.14443}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-head_extent_2015}{}}%
 Head ML, Holman L, Lanfear R, Kahn AT, Jennions MD. 2015. The {Extent} and {Consequences} of {P}-{Hacking} in {Science}. \emph{PLOS Biology} 13:e1002106. DOI: \href{https://doi.org/10.1371/journal.pbio.1002106}{10.1371/journal.pbio.1002106}.
