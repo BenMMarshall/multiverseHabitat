@@ -118,7 +118,7 @@ What counts as reasonable is not necessarily simple, and inclusion of irrelevant
 Construction of a multiverse requires justification of which decisions are treated as variable, and why there is not an _a priori_ and defensible single solution [@del_giudice_travelers_2021].
 A multiverse populated with well-justified decisions allows the exploration of which choices inflate variation between analysis universes, while also offering insights into how to deflate variation [e.g., refinement of initial study design, the removal of ambiguities like tightening categories definitions; @steegen_increasing_2016].
 
-```{r multiDiagram, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during aysnalis"}
+```{r multiDiagram, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during analysis. Redrawn from Dragicevic et al. (2019)."}
 knitr::include_graphics(here::here("notebook", "ext_images", "Multiverse compared diagram.png"))
 ```
 
@@ -138,10 +138,6 @@ Use of simulated data is an established way to explore the robustness of methodo
 Here we describe the initial plan to undertake a multiverse approach to explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
 We describe the simulated scenarios we plan to base the study upon and a preliminary multiverse branching path consisting of three analysis approaches, as well as several broad hypotheses.
 
-<!-- The initial step is run an animal movement simulation where we can input an often of-interest parameter (e.g., preference for a particular habitat type). -->
-<!-- The goal of the multiverse will be to run a multitude of sampling/data processing/analysis approaches on that simulated animal movement data, to determine which pathway or series of decisions gets closest to the predefined parameter used to simulate the data initially. -->
-<!-- If a sufficiently diverse set of scenarios can be explored in the multiverse, the third step will be applying the now know uncertainty from particular choices to explore whether different choices would have changed conclusions in real-world datasets. -->
-
 # Methods
 
 ## Simulating the Scenarios
@@ -153,13 +149,13 @@ The abmAnimalMovement simulations are a discrete time, agent-based modelling app
 Further details of how the scenarios were parametrised can be found in [@abmAnimalMovement], and also in the abmAnimalMovement github repository ([abmAnimalMovement Github](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
 
 In brief:
-- Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
-- Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
-- Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
-<!-- How many individuals each? Populations of 200? Then maybe at the top end all individuals could be sampled, however, unlikely that would be in the real world. -->
-<!-- Using these setting we simulated a population individuals of each species. -->
-<!-- Two years of simulation, one for model, second for validation -->
+* Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
+
+* Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
+
+* Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
+
 Each simulation generated a years worth of movement data, with a data point recorded every minute.
 
 <!-- Weighted landscapes translated into three-tier categories -->
@@ -167,19 +163,18 @@ Our landscapes comprise of three elements, which are considered by the animal di
 The three elements were matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
 The three are non-independent, and based on a single initial random generation using a Gaussian field.
 
-<!-- [MORE SETTINGS HERE?] -->
+<!-- [More settings here?, already a very long methods section...] -->
 From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas. 
 Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease, and more barren areas with high movement ease but with minimal foraging value.
 All shelter sites occurred within the higher quality core resource areas.
 
-<!-- figure here of landscapes -->
 While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
 Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
-While the categroisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the lanscape classification constant to maintain an feasible multiverse analysis.
+While the categorisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the landscape classification constant to maintain an feasible multiverse analysis.
 <!-- figure here of landscapes turned into categories -->
 
 ```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
-knitr::include_graphics(here::here("notebook", "prereg", "figures", "landscapeExample.png"))
+knitr::include_graphics(here::here("notebook", "figures", "landscapeExample.png"))
 ```
 
 ## Sampling and Analysis Options
@@ -188,11 +183,6 @@ Ultimately number of variations and choices we were able to explore is dictated 
 No multiverse can ever be entirely comprehensive, but we endeavoured to include the major decisions that are required during analysis that may not have immediately apparent "correct" answers.
 
 ### Sampling
-
-<!-- # ```{r samplingNum} -->
-<!-- # # possible way of generating a range that is skewed to more realistic number while still hitting the extremes -->
-<!-- # exp(seq(log(1), log(200), length.out = 8)) -->
-<!-- # ``` -->
 
 <!-- Tracking length - max one year -->
 <!-- Tracking frequency - important to consider timing as well -->
@@ -205,18 +195,16 @@ Tracking timing is also an important consideration; for example, recording the l
 For this exploration we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
 Timing only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
 Therefore, for the lower tracking frequencies we ensured that daily tracking was centred around midday (as all our simulated species had diurnal activity patterns).
-<!-- [LOAD IN AND LIST THE TRACKING DURATIONS HERE] -->
-<!-- [LOAD IN AND LIST THE TRACKING FREQS HERE] -->
 
 <!-- Error is likely not worth the effort right now, too much complexity linked to cleaning -->
 Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
 
-In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)A).
+In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)).
 
-```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="..."}
-# knitr::include_graphics(here::here("notebook", "figures", "preregDecisionTrees.png"))
+```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An illustration of the different decisions creating the multiverse, split betwen those pertaining to sampling and analysis."}
+knitr::include_graphics(here::here("notebook", "ext_images", "Decision Visualisation.png"))
 ```
 
 ### Analysis
@@ -231,26 +219,7 @@ Combined the packages offer many options for habitat analysis, we focus on four 
 One from the adehabitatHS package: resource selection ratios (Wides).
 Two from the amt package: resource selection function (RSF), step selection function (SSF)
 And the newly described Weighted Resource Selection Function [wRSF @alston_mitigating_2023] from the ctmm package.
-Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)B).
-
-<!-- #### adeHabaitatHS -->
-<!-- - define available area -->
-<!-- - wides II or III -->
-<!-- - compana -->
-<!-- - eisera -->
-<!-- - engen - no because it doesn't have the II and III choice -->
-<!-- - k-select - no because it is better suited to continuous habitat variables using PCA -->
-
-<!-- #### amt -->
-<!-- - rsf or ssf -->
-<!-- - rsf available area definition -->
-<!-- - rsf point weighting -->
-<!-- - for higher res data, use of bursts? -->
-<!-- - model formula - issf vs ssf, maybe step::interactions -->
-<!-- - extract covariates from start end or mid -->
-<!-- - number of options -->
-<!-- could vary the distributions sl and ta are based on?  -->
-<!-- no resampling or burst because we have artificially consistent data collected -->
+Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)).
 
 The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
 The first decisions is whether to approach the habitat selection analysis as a type I, II or III design, as we are concerned about an individuals' habitat selection we will ignore type I.
@@ -290,12 +259,7 @@ Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
 As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
 This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
 Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
-We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results.
-<!-- [ALSTON newer paper on unifying terms needs to be cited here] -->
-
-<!-- Type II designs require the availability to the same for all animals. -->
-<!-- To create population-level availability we will use the above described methods for each individual, then combine the areas into a single polygon. -->
-<!-- We will also include a "landscape" description of availability that will include the entire landscape raster. -->
+We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results [@alston_clarifying_2022].
 
 What is considered available to an animal is not cleanly translated from biological concept to a statistical one.
 While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make –to varying degrees– use of the movement information contained within the dataset they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
@@ -307,7 +271,7 @@ AKDEs also provide a 95% confidence interval surrounding any chosen contour; for
 
 Once we had created a defined availability area, we generated points at which the habitat type is recorded to estimate the relative availability.
 How many and in what alignment these availability points are generated poses two additional points of analytical choice.
-For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset: [ADD IN R CODE TO PULL THE CHOICE FROM THE TARGETS SCRIPT].
+For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset (Fig. \@ref(fig:decisionTrees)).
 For the alignment of the points, points where either random or stratified within the available previously defined.
 
 As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
@@ -340,9 +304,6 @@ This contrasts to the other methods that either ignore the confounding effect of
 As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model [@alston_mitigating_2023].
 Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
 
-<!-- Once all decision pathways have resulted in a value for selection, we will normalise the results so they are directly comparable. -->
-<!-- This may require the results to be dichotomised into detection/non-detection of selection for a certain habitat. -->
-
 ## Assessing the multiverse
 
 To generate the multiverse we used a meta-programming approach via the targets `r paste0("v.", packageVersion("targets"))` and tarchetypes `r paste0("v.", packageVersion("tarchetypes"))` R packages [@targets; @tarchetypes].
@@ -350,42 +311,60 @@ The targets package was created to facilitate reproducible workflows, but is als
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
 
-Further examination was complicated by the three methods described above producing habitat preference values on different scales with different decisions associated with them.
+Further examination was complicated by the four methods described above producing habitat preference values on different scales with different decisions associated with them.
 We elected to analyse the impact of the decisions separately.
 For each method we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated preference, 2) which decisions best explain the transformed deviation from the median estimated preference.
 The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased noise surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat preference.
+All models included individual and species as nested group effects (for example, the formula for the SSF model looking at absolute deviation: absDeltaEst ~ 1 + tdScaled + tfScaled + modelForm + stepDist + turnDist + availablePerStepScaled + (1|species/indi)).
+We normalised all predictor variables as they all existed on vastly different scales, and we wanted to assess relative impact.
 
-We elected to have the model try and predict the median estimate of habitat preference because the simulation cannot provide a direct analogous value to the outputs of all three methods.
+We elected to have the model try and predict the deviation from the median estimate of habitat preference because the simulation cannot provide a direct analogous value to the outputs of all three methods.
 Although the simulation is a discrete time model, where the animal makes decisions based upon a number of options, is similar to a step selection model, the decision making of the animal is made on two time frames breaking our ability to directly compare simulation values with step selection outputs.
 Further, the simulated preference of the animal is balanced against other demands such as site fidelity, movement resistance, and avoidance of certain locations.
 The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
 We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioural state switch.
 These model results, while not strictly comparable to the other outputs, help confirm the animal was correctly preferring the chosen habitat (bare in mind the animal had a no preference exploratory state that would weaken the effect), and support the use of the median estimate to explore the cause behind the most deviant estimates.
+<!-- should have link to supp mat for all the direct estimates -->
 
 We assessed Bayesian model convergence using rhat values, acf, and trace plots.
-Based on these assessments we modified the running parameters [FINAL VALUES HERE]
+Based on these assessments we modified the running parameters <!-- [FINAL VALUES HERE: warmup = 200, iter = 1000, chains = 4, adapt_delta = 0.90, max_treedepth = 15] -->.
 
 # Results
 
-```{r targetsParse, echo=FALSE}
-areaResults <- qs::qread(here::here("_targets", "objects", "areaResults"))
-ssfResults <- qs::qread(here::here("_targets", "objects", "ssfResults"))
-areaResults <- multiverseHabitat::parse_combined_results(areaResults)
-ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
+```{r targetsParse, echo=FALSE, message=FALSE}
+library(dplyr)
+library(stringr)
+areaResults <- read.csv(here::here("data", "areaResults.csv"))
+ssfResults <- read.csv(here::here("data", "ssfResults.csv"))
+wrsfResults <- read.csv(here::here("data", "wrsfResults.csv"))
+
+nDatasets <- n_distinct(areaResults$species) *
+  n_distinct(areaResults$indi) *
+  n_distinct(areaResults$td) *
+  n_distinct(areaResults$tf)
+
+nEstimates <- nrow(areaResults) +
+  nrow(ssfResults) +
+  nrow(wrsfResults)
+
 ```
 
-The completion of the multiverse resulted in <!-- number of datasets --> `r length(list.files(here::here("_targets", "objects"), pattern = "sampDuraFreqData"))` datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
+The completion of the multiverse resulted in `r nDatasets` datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered `r dplyr::n_distinct(areaResults$species)` virtual species, `r dplyr::n_distinct(areaResults$indi)` individuals per species, frequencies from `r paste(round(range(areaResults$tf), digits = 3), collapse = " to ")` locations per hour, and durations from `r paste(range(areaResults$td), collapse = " to ")` days.
-Each of these datasets underwent every combination of analysis choices resulting in <!-- number of estimates -->
-`r scales::comma(dim(ssfResults)[1] + dim(areaResults)[1])` estimates of habitat preference (`r paste("Wides:", scales::comma(sum(areaResults$analysis == "wides")), ", RSF:", scales::comma(sum(areaResults$analysis == "rsf")), ", SSF:", scales::comma(dim(ssfResults)[1]))`).
+Each of these datasets underwent every combination of analysis choices resulting in
+`r scales::comma(nEstimates)` estimates of habitat preference (`r paste0("Wides: ", scales::comma(sum(areaResults$analysis == "wides")), "; RSF: ", scales::comma(sum(areaResults$analysis == "rsf")), "; SSF: ", scales::comma(dim(ssfResults)[1]), "; wRSF: ", scales::comma(dim(wrsfResults)[1]))`).
 
 ## General patterns
 
-We can get an initial impression of the pattern of the final estimates of preference using a specification curve <!-- [CITE HERE] -->.
+We can get an initial impression of the pattern of the final estimates of preference using a specification curve [@simonsohn_specification_2020; @hall_survey_2022].
 In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer the result of sampling or individual variation.
 
+```{r specCurveWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat preference estimates from the Wides analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Left-hand numbers describe the number of NA results connected to each decision. Solid circles are the medians for each choice."}
+knitr::include_graphics(here::here("notebook", "figures", "widesSpecCurve.png"))
+```
+
 <!-- spec curve wides -->
-Starting with the Wides results, we see a quite gentle *S* shape [FIGURE LINK HERE], with most estimates falling in the range of 0.5 to 2.
+Starting with the Wides results, we see a quite gentle *S* shape (Fig. \@ref(fig:specCurveWides)), with most estimates falling in the range of 0.5 to 2.
 While there is a clear agreement of positive selection for habitat 2 as expected, the exact estimate appears relatively sensitive to the choices made. 
 Looking at the specific choices, we can see several weak patterns.
 The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations.
@@ -393,11 +372,15 @@ The same is not clear in tracking frequency, because the lower tracking frequenc
 Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher.
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
-Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in [LINK TO FIGURE]).
+Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in Fig. \@ref(fig:specCurveWides)).
 The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
 
+```{r specCurveRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat preference estimates from the RSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+knitr::include_graphics(here::here("notebook", "figures", "rsfSpecCurve.png"))
+```
+
 <!-- spec curve rsf -->
-The Resource Selection Function (RSF) specification curve shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer [FIGURE LINK HERE].
+The Resource Selection Function (RSF) specification curve shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer (Fig. \@ref(fig:specCurveRSF)).
 Similar to the Wides analysis the majority of the answers, and medians detected preference for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest preference.
 To best see the changes in variation connected to a given choice, we can look at the rates and position of the outliers (highlighted in purple and orange).
 Although weak patterns, tracking duration, frequency, and multiplier of available points see slight reductions in the number of estimates very high or very low.
@@ -405,163 +388,222 @@ Other patterns are difficult to discern, except for the weighting of used points
 The distinct step-like pattern is a result of the logarithmic scale the weighting varies over (required to capture such a wide range of possible values), which can been seen reflected in other choices' groupings of estimates.
 Overall the weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results. 
 
+```{r uncertaintyPlot, echo=FALSE, out.width='100%', fig.height=3, fig.width=2, fig.align="centre", fig.cap="All standard errors associated with estimates of habitat preference from RSF, SSF, and wRSF analysis pathways. N.b., y axis is log scaled."}
+knitr::include_graphics(here::here("notebook", "figures", "uncertaintyPlot.png"))
+```
+
 For the RSF analyses we also recovered the range of the 95% confidence intervals surrounding each estimate.
-When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain.
+When plotted against the estimate we see a clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain (Fig. \@ref(fig:uncertaintyPlot)).
+
+```{r specCurveSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat preference estimates from the SSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+knitr::include_graphics(here::here("notebook", "figures", "ssfSpecCurve.png"))
+```
 
 <!-- spec curve ssf -->
 
 The Step Selection Function (SSF) specification curves appears even more successful than the RSF.
-There is a decently clear *S* shape indicating many analysis end points resulting in similar estimates of preference.
+There is a decently clear *S* shape indicating many analysis end points resulting in similar estimates of preference (Fig. \@ref(fig:specCurveSSF)).
 There are also considerably fewer estimates that indicate avoidance of habitat 2.
 The stand out patterns are more easily seen in the outlying high estimates.
 Once again there are indications of fewer outlying high estimates when data quantity increases, both with duration and frequency.
 The number of points per step (or strata) appears to intuitively follow that more available steps leads to more consistent estimations, and also the outliers that exist appear to become less extreme.
 The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not appear to make little difference to the final estimates.
 
-Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate.
+Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate (Fig. \@ref(fig:uncertaintyPlot)).
+
+```{r specCurveWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat preference estimates from the wRSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+knitr::include_graphics(here::here("notebook", "figures", "wrsfSpecCurve.png"))
+```
 
 <!-- spec curve wrsf -->
 
-The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates. 
-The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals.
+The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates (Fig. \@ref(fig:specCurveWRSF)). 
+The highest estimates appear connected to the lower tracking frequencies, but like the SSF results those high estimates also tend to have large confidence intervals (Fig. \@ref(fig:uncertaintyPlot)).
 The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
 
 ## Model exploration
 
 ```{r targetsBRMS, echo=FALSE, message=FALSE}
-areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
-areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
-ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
-wrsfBrms <- qs::qread(here::here("_targets", "objects", "wrsfBrms"))
+brmEstResults <- read.csv(here::here("data", "brmsEstResults.csv"))
+
+brmEstResults <- brmEstResults %>% 
+  mutate(inTextSummary = paste0(round(.value, digits = 3),
+                                ", 95% CrI ",
+                                round(.lower, digits = 3),
+                                " – ",
+                                round(.upper, digits = 3)))
+
+
+brmsR2Results <- read.csv(here::here("data", "brmsR2Results.csv"))
+
+# brmsR2Results %>% 
+#   group_by(Component) %>% 
+#   summarise(meanR2 = mean(R2))
+
+condRange <- brmsR2Results %>% 
+  filter(Component == "conditional") %>% 
+  pull(R2) %>% range()
 
 ```
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew ones' interpretation of which choices have the largest impact.
-Our Bayesian models cut through the noise displayed in [FIGURES XXXXXXX] to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+Our Bayesian models cut through the noise displayed in to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects (Table. \@ref(tab:r2table)).
+The conditional *R^2* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
 
 <!-- WIDES MODELS -->
 
 ```{r widesModelEffects, echo=FALSE, message=FALSE}
-library(dplyr)
-brmWides_dEst_tdEffect <- areaBrms_wides$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_dEst_tfEffect <- areaBrms_wides$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_dEst_avpEffect <- areaBrms_wides$modOUT_dEst %>%
-  tidybayes::spread_draws(b_availPointsPerScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_dEst_csEffect <- areaBrms_wides$modOUT_dEst %>%
-  tidybayes::spread_draws(b_contourScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmWides_dEst_tdEffect <- brmEstResults %>% 
+  filter(model == "wides_dEstWides") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmWides_dEst_tfEffect <- brmEstResults %>% 
+  filter(model == "wides_dEstWides") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
+brmWides_dEst_avpEffect <- brmEstResults %>% 
+  filter(model == "wides_dEstWides") %>% 
+  filter(.variable == "b_availPointsPerScaled") %>% 
+  pull(inTextSummary)
+brmWides_dEst_csEffect <- brmEstResults %>% 
+  filter(model == "wides_dEstWides") %>% 
+  filter(.variable == "b_contourScaled") %>% 
+  pull(inTextSummary)
 
-brmWides_rEst_tdEffect <- areaBrms_wides$modOUT_rEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_rEst_tfEffect <- areaBrms_wides$modOUT_rEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_rEst_avpEffect <- areaBrms_wides$modOUT_rEst %>%
-  tidybayes::spread_draws(b_availPointsPerScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmWides_rEst_spEffect <- areaBrms_wides$modOUT_rEst %>%
-  tidybayes::spread_draws(b_samplingPatternst) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmWides_rEst_tdEffect <- brmEstResults %>% 
+  filter(model == "wides_rEstWides") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmWides_rEst_tfEffect <- brmEstResults %>% 
+  filter(model == "wides_rEstWides") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
+brmWides_rEst_avpEffect <- brmEstResults %>% 
+  filter(model == "wides_rEstWides") %>% 
+  filter(.variable == "b_availPointsPerScaled") %>% 
+  pull(inTextSummary)
+brmWides_rEst_spEffect <- brmEstResults %>% 
+  filter(model == "wides_rEstWides") %>% 
+  filter(.variable == "b_samplingPatternst") %>% 
+  pull(inTextSummary)
+```
+
+```{r dEstBetasWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wides_dEstWides_effectsPlot.png"))
 ```
 
 <!-- model res wides absolute -->
-For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity, with increases in tracking duration ($\beta$ `r paste0(round(brmWides_dEst_tdEffect[1], digits = 3), ", 95% median Highest-Density Continuous Interval CrI ", round(brmWides_dEst_tdEffect[2], digits = 3), " – ", round(brmWides_dEst_tdEffect[3], digits = 3))`) being marginally more effective than tracking frequency ($\beta$ `r paste0(round(brmWides_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_tfEffect[2], digits = 3), " – ", round(brmWides_dEst_tfEffect[3], digits = 3))`).
-Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$ `r paste0(round(brmWides_dEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_avpEffect[2], digits = 3), " – ", round(brmWides_dEst_avpEffect[3], digits = 3))`), and it's effect was much smaller than those concerning data quantity.
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \@ref(fig:dEstBetasWides)), with increases in tracking duration ($\beta$ `r brmWides_dEst_tdEffect`) being marginally more effective than tracking frequency ($\beta$ `r brmWides_dEst_tfEffect`).
+Of the other decisions only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$ `r brmWides_dEst_avpEffect`), and it's effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
-Contour choice increases the absolute deviation from the median estimate $\beta$ `r paste0(round(brmWides_dEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmWides_dEst_csEffect[2], digits = 3), " – ", round(brmWides_dEst_csEffect[3], digits = 3))`, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
+Contour choice increases the absolute deviation from the median estimate $\beta$ `r brmWides_dEst_csEffect`, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
 
 <!-- model res wides raw -->
-The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r paste0(round(brmWides_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_tfEffect[2], digits = 3), " – ", round(brmWides_rEst_tfEffect[3], digits = 3))` and tracking duration $\beta$ `r paste0(round(brmWides_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_tdEffect[2], digits = 3), " – ", round(brmWides_rEst_tdEffect[3], digits = 3))`, with the former leading to greater estimates of preference.
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r brmWides_rEst_tfEffect` and tracking duration $\beta$ `r brmWides_rEst_tdEffect`, with the former leading to greater estimates of preference (Fig. \@ref(fig:rEstBetasWides)).
 <!-- Likely a result of the higher frequencies matching more accurately with the time-scale of selection, whereas duration tends to buffer against the extremes regardless. -->
-The impact of stratified versus random available point positioning $\beta$ `r paste0(round(brmWides_rEst_spEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_spEffect[2], digits = 3), " – ", round(brmWides_rEst_spEffect[3], digits = 3))` and the available points multiplier $\beta$ `r paste0(round(brmWides_rEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmWides_rEst_avpEffect[2], digits = 3), " – ", round(brmWides_rEst_avpEffect[3], digits = 3))` have little impact mirror the lack of impact in the absolute deviation model. 
+The impact of stratified versus random available point positioning $\beta$ `r brmWides_rEst_spEffect` and the available points multiplier $\beta$ `r brmWides_rEst_avpEffect` have little impact mirror the lack of impact in the absolute deviation model. 
 All area related choices do not move relative to each other, and reveal that MCPs as an area method to to lead to lower estimates of preference in this scenario, mirroring the lower median displayed in [FIGURE XX].
 
 <!-- RSF MODELS -->
 
 ```{r rsfModelEffects, echo=FALSE, message=FALSE}
-library(dplyr)
-brmrsf_dEst_tdEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_tfEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_csEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_contourScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_avpEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_availPointsPerScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_spEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_samplingPatternst) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_akdeEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_areaAKDE) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_kdeEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_areaKDEhref) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_dEst_dbmEffect <- areaBrms_rsf$modOUT_dEst %>%
-  tidybayes::spread_draws(b_areadBBMM) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmrsf_dEst_tdEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_tfEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_csEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_contourScaled") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_avpEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_availPointsPerScaled") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_spEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_samplingPatternst") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_akdeEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_areaAKDE") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_kdeEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_areaKDEhref") %>% 
+  pull(inTextSummary)
+brmrsf_dEst_dbmEffect <- brmEstResults %>% 
+  filter(model == "rsf_dEstRSF") %>% 
+  filter(.variable == "b_areadBBMM") %>% 
+  pull(inTextSummary)
 
-brmrsf_rEst_tdEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_rEst_tfEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_rEst_spEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_samplingPatternst) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_rEst_avpEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_availPointsPerScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_rEst_dbmEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_areadBBMM) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmrsf_rEst_csEffect <- areaBrms_rsf$modOUT_rEst %>%
-  tidybayes::spread_draws(b_contourScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmrsf_rEst_tdEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmrsf_rEst_tfEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
+brmrsf_rEst_spEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_samplingPatternst") %>% 
+  pull(inTextSummary)
+brmrsf_rEst_avpEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_availPointsPerScaled") %>% 
+  pull(inTextSummary)
+brmrsf_rEst_dbmEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_areadBBMM") %>% 
+  pull(inTextSummary)
+brmrsf_rEst_csEffect <- brmEstResults %>% 
+  filter(model == "rsf_rEstRSF") %>% 
+  filter(.variable == "b_contourScaled") %>% 
+  pull(inTextSummary)
+```
+
+```{r dEstBetasRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "rsf_dEstRSF_effectsPlot.png"))
 ```
 
 <!-- model res rsf absolute -->
-Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference.
+Every decision examined by the RSF absolute effect model appears to be make a difference when estimating preference (Fig. \@ref(fig:dEstBetasRSF)).
 Like the Wides analysis, data quantity is most important.
-The two largest effects are from tracking duration ($\beta$ `r paste0(round(brmrsf_dEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_tdEffect[2], digits = 3), " – ", round(brmrsf_dEst_tdEffect[3], digits = 3))`) and frequency ($\beta$ `r paste0(round(brmrsf_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_tfEffect[2], digits = 3), " – ", round(brmrsf_dEst_tfEffect[3], digits = 3))`), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
+The two largest effects are from tracking duration ($\beta$ `r brmrsf_dEst_tdEffect`) and frequency ($\beta$ `r brmrsf_dEst_tfEffect`), showing that more data leads to more stable estimates of habitat preference (i.e., more likely to get an answer closer to the overall median estimate).
 
 However, unlike with Wides the other analysis decisions also matter, although to varying extents.
-It appears that larger contours ($\beta$ `r paste0(round(brmrsf_dEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_csEffect[2], digits = 3), " – ", round(brmrsf_dEst_csEffect[3], digits = 3))`) and a greater multiplier of available points ($\beta$ `r paste0(round(brmrsf_dEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_avpEffect[2], digits = 3), " – ", round(brmrsf_dEst_avpEffect[3], digits = 3))`) decreases the deviation from the median estimate.
-To a small extent using a stratified available points pattern lead to lower deviation from the median than a purely random available points pattern ($\beta$ `r paste0(round(brmrsf_dEst_spEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_spEffect[2], digits = 3), " – ", round(brmrsf_dEst_spEffect[3], digits = 3))`).
+It appears that larger contours ($\beta$ `r brmrsf_dEst_csEffect`) and a greater multiplier of available points ($\beta$ `r brmrsf_dEst_avpEffect`) decreases the deviation from the median estimate.
+To a small extent using a stratified available points pattern lead to lower deviation from the median than a purely random available points pattern ($\beta$ `r brmrsf_dEst_spEffect`).
 Choice of area method can alter results in two ways.
-Compared to using MCPs both AKDE ($\beta$ `r paste0(round(brmrsf_dEst_akdeEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_akdeEffect[2], digits = 3), " – ", round(brmrsf_dEst_akdeEffect[3], digits = 3))`) and KDEhref ($\beta$ `r paste0(round(brmrsf_dEst_kdeEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_kdeEffect[2], digits = 3), " – ", round(brmrsf_dEst_kdeEffect[3], digits = 3))`) produce estimates more likely to be closer to the median estimate, and to similar degrees.
-Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs ($\beta$ `r paste0(round(brmrsf_dEst_dbmEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_dEst_dbmEffect[2], digits = 3), " – ", round(brmrsf_dEst_dbmEffect[3], digits = 3))`).
+Compared to using MCPs both AKDE ($\beta$ `r brmrsf_dEst_akdeEffect`) and KDEhref ($\beta$ `r brmrsf_dEst_kdeEffect`) produce estimates more likely to be closer to the median estimate, and to similar degrees.
+Dynamic Brownian Bridge Movement Models on the other hand are more likely to lead to greater variation in estimates than those analyses that use MCPs ($\beta$ `r brmrsf_dEst_dbmEffect`).
 
 Examining the interactions between tracking duration and frequency with the area methods further reveals the connection between dBBMMs are more variable estimates.
-While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater.
-When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency.
-<!-- need to add some numbers here for interactions, likely gradients to describe sensitivity, also finalise figure -->
+While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater (Fig. \@ref(fig:rsfInteractions)).
+When interacting with tracking frequency the sensitivity is less pronounced, instead we see MCPs being the most sensitive to a lowering of tracking frequency (Fig. \@ref(fig:rsfInteractions)).
 
+```{r rsfInteractions, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The resulting interactions from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway. Left-hand plot shows how scaled tracking duration interacted with area method chosen, while the right-hand shows the interaction between scaled tracking frequency and area method chosen."}
+knitr::include_graphics(here::here("notebook", "figures", "rsfEffectPlot_iteractions.png"))
+```
 
 <!-- model res rsf raw -->
-The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration $\beta$ `r paste0(round(brmrsf_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_tdEffect[2], digits = 3), " – ", round(brmrsf_rEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmrsf_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_tfEffect[2], digits = 3), " – ", round(brmrsf_rEst_tfEffect[3], digits = 3))`). 
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to leading to more conservative estimates of preference (tracking duration $\beta$ `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:rEstBetasRSF)). 
 While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median <!--[NEED LINK TO SUPP MAT HERE]-->) are more likely to be the correct estimation of simulated preference via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
-Stratified available point sampling was associated with more positive estimates of preference ($\beta$ `r paste0(round(brmrsf_rEst_spEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_spEffect[2], digits = 3), " – ", round(brmrsf_rEst_spEffect[3], digits = 3))`), but also those closer to the median (as indicated by the previous model).
+Stratified available point sampling was associated with more positive estimates of preference ($\beta$ `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous model).
 This suggests that random point sampling, by contrast, leads to more variable estimates that tend to be lower.
-The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$ `r paste0(round(brmrsf_rEst_avpEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_avpEffect[2], digits = 3), " – ", round(brmrsf_rEst_avpEffect[3], digits = 3))`).
+The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$ `r brmrsf_rEst_avpEffect`).
 
 The area method choices reveal a similar pattern.
-Dynamic Brownian Bridge Movement models were connected to the more variable estimates, but this model reveals that the variability did not tend towards a particular direction ($\beta$ `r paste0(round(brmrsf_rEst_dbmEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_dbmEffect[2], digits = 3), " – ", round(brmrsf_rEst_dbmEffect[3], digits = 3))`).
+Dynamic Brownian Bridge Movement models were connected to the more variable estimates, but this model reveals that the variability did not tend towards a particular direction ($\beta$ `r brmrsf_rEst_dbmEffect`).
 Whereas the other methods are connected to lower deviation from the median estimate, but higher raw estimates.
-The area contour selected also reflects this ($\beta$ `r paste0(round(brmrsf_rEst_csEffect[1], digits = 3), ", 95% CrI ", round(brmrsf_rEst_csEffect[2], digits = 3), " – ", round(brmrsf_rEst_csEffect[3], digits = 3))`).
+The area contour selected also reflects this ($\beta$ `r brmrsf_rEst_csEffect`).
 Taken together it appears methods that capture a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of preference.
 The dBBMMs by contrast are more vulnerable to variation in other decisions, a trait reflected in the interaction with data quantity measures.
 
@@ -571,50 +613,61 @@ Overall there does not appear to be a decision that leads to great deviation fro
 <!-- SSF MODELS -->
 
 ```{r ssfModelEffects, echo=FALSE, message=FALSE}
-library(dplyr)
-brmssf_dEst_tdEffect <- ssfBrms$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmssf_dEst_tfEffect <- ssfBrms$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmssf_dEst_tdEffect <- brmEstResults %>% 
+  filter(model == "ssf_dEstSSF") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmssf_dEst_tfEffect <- brmEstResults %>% 
+  filter(model == "ssf_dEstSSF") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
 
-brmssf_rEst_sdEffect <- ssfBrms$modOUT_rEst %>%
-  tidybayes::spread_draws(b_stepDistgamma) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmssf_rEst_sdEffect <- brmEstResults %>% 
+  filter(model == "ssf_rEstSSF") %>% 
+  filter(.variable == "b_stepDistgamma") %>% 
+  pull(inTextSummary)
 ```
-
+```{r dEstBetasSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "ssf_dEstSSF_effectsPlot.png"))
+```
 <!-- model res ssf absolute -->
 
-The SSF absolute deviation model matches very closely the previous two models, with tracking quantity both in terms of duration ($\beta$ `r paste0(round(brmssf_dEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmssf_dEst_tdEffect[2], digits = 3), " – ", round(brmssf_dEst_tdEffect[3], digits = 3))`) and frequency ($\beta$ `r paste0(round(brmssf_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmssf_dEst_tfEffect[2], digits = 3), " – ", round(brmssf_dEst_tfEffect[3], digits = 3))`) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
+The SSF absolute deviation model matches very closely the previous two models (Fig. \@ref(fig:dEstBetasSSF)), with tracking quantity both in terms of duration ($\beta$ `r brmssf_dEst_tdEffect`) and frequency ($\beta$ `r brmssf_dEst_tfEffect`) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis all other decisions made negligible impact to an estimate's absolute proximity to the median estimate.
 
 <!-- model res ssf raw -->
-Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly. 
-The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r paste0(round(brmssf_rEst_sdEffect[1], digits = 3), ", 95% CrI ", round(brmssf_rEst_sdEffect[2], digits = 3), " – ", round(brmssf_rEst_sdEffect[3], digits = 3))`).
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:rEstBetasSSF)). 
+The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_sdEffect`).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
 <!-- WRSF MODELS -->
 
 ```{r wrsfModelEffects, echo=FALSE, message=FALSE}
-library(dplyr)
-brmwrsf_dEst_tdEffect <- wrsfBrms$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmwrsf_dEst_tfEffect <- wrsfBrms$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmwrsf_dEst_tdEffect <- brmEstResults %>% 
+  filter(model == "wrsf_dEstwrsf") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmwrsf_dEst_tfEffect <- brmEstResults %>% 
+  filter(model == "wrsf_dEstwrsf") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
 
-brmwrsf_rEst_tdEffect <- wrsfBrms$modOUT_dEst %>%
-  tidybayes::spread_draws(b_tdScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
-brmwrsf_rEst_tfEffect <- wrsfBrms$modOUT_rEst %>%
-  tidybayes::spread_draws(b_tfScaled) %>%
-  ggdist::median_hdci(.width = c(0.95))
+brmwrsf_rEst_tdEffect <- brmEstResults %>% 
+  filter(model == "wrsf_rEstwrsf") %>% 
+  filter(.variable == "b_tdScaled") %>% 
+  pull(inTextSummary)
+brmwrsf_rEst_tfEffect <- brmEstResults %>% 
+  filter(model == "wrsf_rEstwrsf") %>% 
+  filter(.variable == "b_tfScaled") %>% 
+  pull(inTextSummary)
 ```
 
-The results from the WRSF models are largely similar to the SSF models, although with fewer decisions.
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r paste0(round(brmwrsf_dEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_dEst_tdEffect[2], digits = 3), " – ", round(brmwrsf_dEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmwrsf_dEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_dEst_tfEffect[2], digits = 3), " – ", round(brmwrsf_dEst_tfEffect[3], digits = 3))`), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r paste0(round(brmwrsf_rEst_tdEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_rEst_tdEffect[2], digits = 3), " – ", round(brmwrsf_rEst_tdEffect[3], digits = 3))` and tracking frequency $\beta$ `r paste0(round(brmwrsf_rEst_tfEffect[1], digits = 3), ", 95% CrI ", round(brmwrsf_rEst_tfEffect[2], digits = 3), " – ", round(brmwrsf_rEst_tfEffect[3], digits = 3))`).
+```{r dEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wrsf_dEstwrsf_effectsPlot.png"))
+```
+
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \@ref(fig:dEstBetasWRSF)).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_dEst_tfEffect`), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:dEstBetasWRSF)).
 The only difference, although both effects overlap considerably, is that increased tracking duration tended to be linked more strongly with lower preference estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 # Discussion
@@ -666,10 +719,7 @@ The limited cost of integrating step and turn into SSF formula would suggest iSS
 
 <!-- interactions between method and data - and choice and choice? -->
 <!-- broader contour can have differing impacts depending on analysis -->
-
 <!-- we did not have explicitly simulated variation in step length:habitat type so integrated makes little difference -->
-
-<!-- sclae is important always because of interactions between sampling and question/behaviour. Thurfjell -->
 
 ## Limitations of the multiverse approach and future directions
 
@@ -684,6 +734,7 @@ Newer methods help alleviate the problems with inconsistent tracking [@alston_mi
 
 Ultimately the multiverse approach cannot reveal the true answer; the multiverse's mean result describes the mean of the analysis pathways and does not necessarily converge towards a true effect.
 We attempted to make our findings more generalisable by simulating three distinct animal species that move in different fashions and that face differing level of habitat connectivity.
+<!-- scale is important always because of interactions between sampling and question/behaviour. Thurfjell -->
 We cannot discount scenarios with different movement characteristics that interact with particular analysis choices to bias habitat selection estimates –scale remains a key consideration for any study [@thurfjell_applications_2014; @northrup_conceptual_2022], and context-specific selection remains difficult to translate [@avgar_habitat_2020].
 The difficulty in generalising a "one-size fits all" approach highlights the benefits of methods that can be parametrised by the underlying characteristics of the data (e.g., wRSF [@alston_mitigating_2023]), and where the uncertainty stemming from sampling can be carried forward to the final estimates.
 
@@ -707,6 +758,8 @@ The indications that analysis choices are less important than data quantity impr
 Newer methods of habitat preference analysis appear to reduce variation from researcher choice further, indicating that future studies are more likely to be robust that those before. 
 
 # Acknowledgements
+
+BMM was funded by the Natural Environment Research Council (NERC) via the IAPETUS2 Doctoral Training Partnership.
 
 # Software availablity
 
@@ -736,6 +789,40 @@ We generated R package citations with the aid of grateful `r paste0("v.", packag
 
 # Data availabilty
 
+<!-- add zenodo archived snapshot of github -->
 
+# Supplementary Material
+
+```{r r2table, echo=FALSE, message=FALSE}
+knitr::kable(
+  brmsR2Results %>% 
+    mutate(across(where(is.numeric), round, digits = 3)) %>% 
+    mutate(model = sub("_r2$", "", model),
+           response = ifelse(str_detect(model, "dEst"), "Absolute Deviation", "Raw Deviation"),
+           method = sub("_", "", str_extract(model, "^.*_")),
+           Component = str_to_sentence(Component)
+           ) %>% 
+    select(-model),
+  caption = "$All R^2 values for Bayesian regression models.$", align = "c",
+  col.names = c("\\textit{$R^2$}", "Standard error", "Confidence interval", "CI Lower", "CI Upper",
+                "Component", "Response", "Model Method"), escape = FALSE
+)
+```
+
+```{r rEstBetasWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the Wides analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wides_rEstWides_effectsPlot.png"))
+```
+
+```{r rEstBetasRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the RSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "rsf_rEstRSF_effectsPlot.png"))
+```
+
+```{r rEstBetasSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the SSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "ssf_rEstSSF_effectsPlot.png"))
+```
+
+```{r rEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wrsf_rEstwrsf_effectsPlot.png"))
+```
 
 # References
