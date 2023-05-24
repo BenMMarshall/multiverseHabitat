@@ -13,7 +13,6 @@ prelimMultiData/
 _targets/objects/*
 _targets/meta/*
 _targets/user/*
-!_targets/objects/combinedResults
 
 notebook/prereg/bcf examples/
 notebook/prereg/sampleSizeTesting/
