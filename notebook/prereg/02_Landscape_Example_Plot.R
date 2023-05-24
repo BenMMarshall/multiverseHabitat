@@ -80,7 +80,7 @@ plot_landscapeLayersList <- function(targetList){
 
   combinedLayers <- do.call(rbind, lapply(names(targetList), function(x){
     currLayer <- targetList[[x]]
-    layerDF <- melt(currLayer, c("col", "row"))
+    layerDF <- reshape2::melt(currLayer, c("col", "row"))
     layerDF$layer <- x
     return(layerDF)
   }))
@@ -146,7 +146,7 @@ plot_landscapeLayersList <- function(targetList){
 
 simlandscapesPlot <- plot_landscapeLayersList(landscapeLayersList)
 
-layerDF <- melt(classLandscapeList$classified, c("col", "row"))
+layerDF <- reshape2::melt(classLandscapeList$classified, c("col", "row"))
 layerDF$layer <- "classified"
 classLayer <- layerDF
 
