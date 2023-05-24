@@ -26,7 +26,7 @@ editor_options:
   markdown: 
     wrap: sentence
 abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask 10 researchers to answer the same question with the same dataset, you will receive 10 different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
-keywords: Movement ecology, simulation
+keywords: Movement ecology, simulation, Wides, resource selection functions, step selection function, habitat preference, habitat selection, animal movement, multiverse, research choice, researcher degrees for freedom,
 ---
 
 # Introduction
@@ -757,6 +757,8 @@ We show, using a multiverse of analysis pathways, that data quantity is an impor
 The indications that analysis choices are less important than data quantity improves our confidence in previously published habitat preference studies as there is no more scope to mine a desired result than in other disciplines.
 Newer methods of habitat preference analysis appear to reduce variation from researcher choice further, indicating that future studies are more likely to be robust that those before. 
 
+\clearpage
+
 # Acknowledgements
 
 BMM was funded by the Natural Environment Research Council (NERC) via the IAPETUS2 Doctoral Training Partnership.
@@ -824,5 +826,6 @@ knitr::include_graphics(here::here("notebook", "figures", "ssf_rEstSSF_effectsPl
 ```{r rEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway."}
 knitr::include_graphics(here::here("notebook", "figures", "wrsf_rEstwrsf_effectsPlot.png"))
 ```
+\clearpage
 
 # References
