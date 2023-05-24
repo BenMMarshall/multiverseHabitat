@@ -8,7 +8,8 @@ method_indi_ssf(
   movementData,
   landscape,
   methodForm,
-  covExtract,
+  stepDist,
+  turnDist,
   availableSteps
 )
 }
@@ -17,7 +18,9 @@ method_indi_ssf(
 
 \item{methodForm}{"mf.is", "mf.ss"}
 
-\item{covExtract}{"start", "end", "both"}
+\item{stepDist}{"gamma", "exp"}
+
+\item{turnDist}{"vonmises", "unif"}
 }
 \value{
 a

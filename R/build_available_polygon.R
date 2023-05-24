@@ -31,8 +31,12 @@ build_available_polygon <- function(areaResource,
 
   } else if(method == "AKDE"){
 
-    akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(areaResource, level.UD = contour/100)
-    poly_OUT <- akdePoly[akdePoly$name == akdePoly$name[2],] # just get the point estimate
+    print(contour)
+    print(class(areaResource) == "UD")
+    akdePoly <- ctmm::SpatialPolygonsDataFrame.UD(object = areaResource, level.UD = contour/100)
+    # just get the point estimate
+    poly_OUT <- akdePoly[akdePoly$name ==
+                           akdePoly$name[stringr::str_detect(akdePoly$name, "est")],]
 
   } else if(method == "dBBMM"){
 
