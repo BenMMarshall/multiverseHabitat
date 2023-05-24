@@ -8,7 +8,6 @@
 
 *.afdesign
 
-data/
 prelimMultiData/
 
 _targets/objects/*
