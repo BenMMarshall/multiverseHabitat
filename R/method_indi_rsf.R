@@ -65,6 +65,6 @@ method_indi_rsf <- function(
   method <- rep("rsf", nrow(rsfDF))
   rsfDF <- cbind(rsfDF, method)
 
-  return(extract_estimate(rsfDF))
+  return(multiverseHabitat::extract_estimate(rsfDF))
 
 }

@@ -10,9 +10,11 @@ library(tibble)
 
 # Set target options:
 tar_option_set(
-  packages = c("qs", "here", "raster", "NLMR", "tibble",
+  packages = c("qs", "here", "raster", "NLMR", "tibble", "dplyr", "stringr",
                "multiverseHabitat",
-               "amt", "adehabitatHR", "move"), # packages that your targets need to run
+               "amt", "adehabitatHR", "move",
+               "brms", "bayesplot", "tidybayes", "performance",
+               "ggplot2", "ggridges", "reshape2", "patchwork"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -41,51 +43,50 @@ values_SimIndi <- tibble(
 )
 
 values_Sampling <- tidyr::expand_grid(
-  td = c(7, 15, 30, 60),
-  tf = c(0.5, 1, 2, 6)
-  # tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0),
-  # td = c(7, 15, 30, 60, 120, 240, 365)
+  # td = c(7, 15, 30, 60),
+  # tf = c(0.5, 1, 2, 6)
+  # td = c(7, 15, 30, 60, 120, 240, 365),
+  td = c(7, 15, 30, 60, 120, 240),
+  tf = c(0.5, 1.0, 2.0, 6.0, 12.0, 24.0, 48.0, 168.0)
   # td = c(7, 15),
   # tf = c(0.5, 1)
 )
+# have to filter out certain combos that have too little data to work with
+values_Sampling <- values_Sampling %>%
+  dplyr::mutate(datapoints = td*24 * (1/tf)) %>%
+  dplyr::filter(datapoints > 30) %>%
+  dplyr::select(td, tf)
 
-# values_MethodArea <- tidyr::expand_grid(
-#   areaMethod = c("MCP", "dBBMM"),
-#   # areaMethod = c("MCP", "KDE_href", "AKDE", "dBBMM")
-#   # areaContour = c(90)
-#   areaContour = c(90, 95, 99)
-# )
-values_MethodArea <- tibble(
-  # areaMethod = c("MCP", "dBBMM"),
-  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM")
-)
-values_MethodContour <- tidyr::expand_grid(
-  # areaContour = c(90)
-  areaContour = c(90, 95, 99)
-)
-
-values_MethodSSF <- tidyr::expand_grid(
-  MethodSSF_mf = c("mf.is", "mf.ss"),
-  # MethodSSF_ce = c("start", "end"),
-  MethodSSF_ce = c("end"),
-  # MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
-  MethodSSF_as = c(5, 50)
-)
-
-values_MethodMethod <- tidyr::expand_grid( # Use all possible combinations of input settings.
-  Method_function = rlang::syms(c("method_indi_wides", "method_indi_rsf")),
+optionsList_area <- list(
+  # Method_method = c("wides", "rsf", "wRSF"),
+  Method_method = c("wides", "rsf"),
+  areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
+  areaContour = c(90, 95, 99),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
   # Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 2)), digits = 1)),
   Method_sp = c("rd", "st"),
   # Method_ap = 100,
-  Method_we = exp(seq(log(1), log(10000000), length.out = 3))
+  Method_we = exp(seq(log(1), log(10000000), length.out = 6))
   # Method_we = 1
 )
-# trim out the wieghting variation for when it is wides as that doesn't apply
-values_MethodMethod <- values_MethodMethod[
-  values_MethodMethod$Method_function == "method_indi_rsf" |
-    (values_MethodMethod$Method_function == "method_indi_wides" &
-       values_MethodMethod$Method_we == 1),]
+
+optionsList_area_wRSFSplit <-
+  list(
+    Method_method = c("wRSF"),
+    areaMethod = c("AKDE"),
+    areaContour = c(95),
+    Method_ap = 999,
+    Method_sp = "rd",
+    Method_we = 999
+  )
+
+optionsList_sff <- list(
+  Method_method = c("ssf"),
+  MethodSSF_mf = c("mf.is", "mf.ss"),
+  MethodSSF_sd = c("gamma", "exp"),
+  MethodSSF_td = c("vonmises", "unif"),
+  MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
+)
 
 values_MethodCTM <- tidyr::expand_grid(
   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
@@ -100,7 +101,7 @@ values_MethodCTM <- tidyr::expand_grid(
   Methodctm_di = "di.ro"
 )
 
-targetsList <- list(
+allIndividualEstimatesList <- list(
   ## LANDSCAPE SIMULATION
   tar_map(
     values = values_SimSpecies,
@@ -113,13 +114,13 @@ targetsList <- list(
         individualNum = individual,
         species = species,
         simSteps = 24*60 *365,
-        desOptions = 10,
-        options = 12,
-        landscape,
+        desOptions = 12,
+        options = 15,
+        landscapeList = landscape,
         seed = 2022),
         priority = 0.93), # FUNCTION simulate_individual
 
-      ## DURATION MAP
+      ## DURATION + FREQUENCY MAP
       tar_map(
         values = values_Sampling,
         tar_target(sampDuraFreqData,
@@ -127,97 +128,208 @@ targetsList <- list(
                      movementData = subset_frequency(movementData = simData$locations,
                                                      freqPreset = tf),
                      daysDuration = td),
-                   priority = 0.92), # FUNCTION subset_duration
-        ## FREQUENCY MAP
-        # tar_map(
-        #   values = values_SampFrequency,
-        #   tar_target(sampDuraFreqData,
-        #              subset_frequency(movementData = sampDuraData,
-        #                               freqPreset = tf)), # FUNCTION subset_frequency
-        ## AREA + CONTOUR MAP
-        tar_map(
-          values = values_MethodArea,
-          tar_target(area,
-                     build_available_area(movementData = sampDuraFreqData,
-                                          method = areaMethod,
-                                          SRS_string = "EPSG:32601",
-                                          dBBMMsettings = c(168, 48)),
-                     priority = 0.9), # FUNCTION build_available_area
-          tar_map(
-            values = values_MethodContour,
-            tar_target(polygon,
-                       build_available_polygon(areaResource = area,
-                                               method = areaMethod,
-                                               contour = areaContour,
-                                               SRS_string = "EPSG:32601"),
-                       priority = 0.91), # FUNCTION build_available_area
-            ## AREA-BASED METHODS MAP
-            tar_map(
-              values = values_MethodMethod,
-              # names = "tNames", # Select columns from `values` for target names.
-              tar_target(methOUT, Method_function(movementData = sampDuraFreqData,
-                                                  landscape = landscape,
-                                                  spSamp = Method_sp,
-                                                  availableArea = polygon,
-                                                  availablePoints = Method_ap,
-                                                  weighting = Method_we)) # FUNCTION "method_indi_wides", "method_indi_rsf"
-              # tar_target(methEstimate, extract_estimate(methOUT))
-
-              # next level goes here using tar_map() again
-            ) # area methods map
-          ) # contour map
-        ), # area creation map
-        ## SSF MAP
-        tar_map(
-          values = values_MethodSSF,
-          tar_target(ssfOUT, method_indi_ssf(movementData = sampDuraFreqData,
-                                             landscape = landscape,
-                                             methodForm = MethodSSF_mf,
-                                             covExtract = MethodSSF_ce,
-                                             availableSteps = MethodSSF_as)) # FUNCTION method_ssf
-          # tar_target(ssfEstimate, extract_estimate(ssfOUT))
-        ) # ssf map
-        # ## CTMC MAP
-        # tar_map(
-        #   values = values_MethodCTM,
-        #   tar_target(ctmcOUT, paste0(sampDuraFreqData, "_-_ctm1_", Methodctm_ks,
-        #                           Methodctm_it, Methodctm_pm,
-        #                           Methodctm_im, Methodctm_di))
-        # ) # ctmc map
-        # ) # frequency map
+                   priority = 0.92),
+        ## AREA-BASED METHODS
+        tar_target(areaMethodsOUT,
+                   wrapper_indi_area(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_area
+                   ),
+                   priority = 0.91),
+        ## WRSF
+        tar_target(wrsfMethodsOUT,
+                   wrapper_indi_area(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_area_wRSFSplit
+                   ),
+                   priority = 0.01),
+        ## SSF
+        tar_target(ssfOUT,
+                   wrapper_indi_ssf(
+                     movementData = sampDuraFreqData,
+                     landscape = landscape,
+                     optionsList = optionsList_sff
+                   ),
+                   priority = 0.9)
       ) # duration map
     ) # individual map
   ) # species map
-)
+) # list
 
-# tar_combine(
-#   name = resultsList,
-#   methOUT,
-#   values_MethodSSF,
-#   command = list(!!!.x)
-# )
-
-# targetsList[[1]][grep("OUT", names(targetsList[[1]]))]
-resultsCompiled <- tar_combine(
-  combinedResults,
-  targetsList[[1]][grep("OUT", names(targetsList[[1]]))],
-  # command = list(!!!.x)
+areaCompiled <- tar_combine(
+  areaResults,
+  allIndividualEstimatesList[[1]][grep("areaMethodsOUT", names(allIndividualEstimatesList[[1]]))],
+  # command = list(!!!.x),
   command = rbind(!!!.x),
-  priority = 0
+  priority = 0.8
 )
-list(targetsList, resultsCompiled)
+wrsfCompiled <- tar_combine(
+  wrsfResults,
+  allIndividualEstimatesList[[1]][grep("wrsfMethodsOUT", names(allIndividualEstimatesList[[1]]))],
+  # command = list(!!!.x),
+  command = rbind(!!!.x),
+  priority = 0.1
+)
+ssfCompiled <- tar_combine(
+  ssfResults,
+  allIndividualEstimatesList[[1]][grep("ssfOUT", names(allIndividualEstimatesList[[1]]))],
+  # command = list(!!!.x),
+  command = rbind(!!!.x),
+  priority = 0.8
+)
+
+simsCompiled <- tar_combine(
+  simResults,
+  allIndividualEstimatesList[[1]][grep("simData", names(allIndividualEstimatesList[[1]]))],
+  command = list(!!!.x),
+  # command = rbind(!!!.x),
+  priority = 0.8
+)
+
+
+directCompiled <- list(
+  tar_target(directEstimates, direct_estimates(simResults),
+             priority = 0.99)
+)
+
+method_BRMS <- tibble(
+  method = c("rsf", "wides")
+)
+
+brmsCompiled <- list(
+  # area method models
+  tar_map(
+    values = method_BRMS,
+    tar_target(areaBrms,
+               run_brms(
+                 compiledResults = areaResults,
+                 method = method),
+               priority = 0.71
+    ),
+    tar_target(areaSpecCurves,
+               generate_spec_curves(
+                 compiledResults = areaResults,
+                 method = method),
+               priority = 0.71
+    ),
+    ## EFFECT SIZE TARGET HERE
+    tar_target(effectSizeBrms,
+               generate_effect_plots(
+                 brmsResults = areaBrms,
+                 method = method
+               ),
+               priority = 0.74
+    ),
+    tar_target(summaryBrms,
+               diagnostics_brms(
+                 brmsResults = areaBrms
+               ),
+               priority = 0.71
+    )
+  ),
+  #ssf models
+  tar_target(ssfBrms,
+             run_brms(
+               compiledResults = ssfResults,
+               method = "ssf"),
+             priority = 0.72
+  ),
+  tar_target(ssfSpecCurves,
+             generate_spec_curves(
+               compiledResults = ssfResults,
+               method = "ssf"
+             ),
+             priority = 0.72
+  ),
+  ### SSF EFFECT SIZE TARGET HERE
+  tar_target(effectSizeBrms_ssf,
+             generate_effect_plots(
+               brmsResults = ssfBrms,
+               method = "ssf"
+             ),
+             priority = 0.74
+  ),
+  tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
+             diagnostics_brms(
+               brmsResults = ssfBrms
+             ),
+             priority = 0.73
+  ),
+  #wrsf models
+  tar_target(wrsfBrms,
+             run_brms(
+               compiledResults = wrsfResults,
+               method = "wrsf"),
+             priority = 0.71
+  ),
+  tar_target(wrsfpecCurves,
+             generate_spec_curves(
+               compiledResults = wrsfResults,
+               method = "wrsf"
+             ),
+             priority = 0.71
+  ),
+  ### WRSF EFFECT SIZE TARGET HERE
+  tar_target(effectSizeBrms_wrsf,
+             generate_effect_plots(
+               brmsResults = wrsfBrms,
+               method = "wrsf"
+             ),
+             priority = 0.70
+  ),
+  tar_target(summaryBrms_wrsf, ## added _ssf to match name style of the area methods
+             diagnostics_brms(
+               brmsResults = wrsfBrms
+             ),
+             priority = 0.70
+  ),
+  tar_target(uncertaintyPlot,
+             uncertainty_vs_estimate(
+               aResults = areaResults,
+               sResults = ssfResults,
+               wResults = wrsfResults
+             ),
+             priority = 0.74
+  )
+)
+
+extrasForRMD <- list(
+  tar_target(
+    extractedValues,
+    multiverseHabitat::extract_values_rmd()
+  ),
+  tar_target(
+    iteractionPlot,
+    multiverseHabitat::generate_iteraction_plot()
+  )
+)
+
+list(allIndividualEstimatesList,
+     areaCompiled,
+     wrsfCompiled,
+     ssfCompiled,
+     simsCompiled,
+     brmsCompiled,
+     directCompiled,
+     extrasForRMD)
+
 
 # Launch the app in a background process.
 # tar_watch(seconds = 60, outdated = FALSE, targets_only = TRUE)
 
 # preview one species
-# targets::tar_visnetwork(allow = contains("badger"))
+# targets::tar_visnetwork(allow = contains("BADGER"))
+# targets::tar_visnetwork(allow = contains("7_6_3"))
 # targets::tar_visnetwork()
 # targets::tar_manifest()
 # targets::tar_make()
+# targets::tar_make("effectSizeBrms_ssf")
 # watch out too many workers can hit ram limits
+# targets::tar_make_clustermq(workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
-# targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
+# targets::tar_make_clustermq("wrsfResults", workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives", log_worker = TRUE)
@@ -225,5 +337,6 @@ list(targetsList, resultsCompiled)
 # targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "summary", log_worker = TRUE)
 
+# warnings <- targets::tar_meta(fields = warnings, complete_only = TRUE)
 
 # endPointsAndNodes <- targets::tar_network(targets_only = TRUE)

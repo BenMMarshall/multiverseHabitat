@@ -56,9 +56,11 @@ simulate_landscape <- function(
     (max(moveQual[], na.rm = TRUE) - min(moveQual[], na.rm = TRUE))
 
 
-  # shelter sites are best found near the edge of high resource areas, but deeper than the best movement routes
+  # shelter sites are best found near the edge of high resource areas, but
+  # deeper than the best movement routes
   shelterQual[shelterQual[] < 0.7 & shelterQual[] > 0.5] <-
     shelterQual[shelterQual[] < 0.7 & shelterQual[] > 0.5] + 1
+  shelterQual[shelterQual[] < 0.5] <- 0
   shelterQual[] <- (shelterQual[] - min(shelterQual[], na.rm = TRUE)) /
     (max(shelterQual[], na.rm = TRUE) - min(shelterQual[], na.rm = TRUE))
 
@@ -134,8 +136,8 @@ simulate_landscape <- function(
   # > 0.6
   # <= 0.6 & > 0.3
   # <= 0.3
-  classLandscape[classLandscape[] > 0.6] <- 2
-  classLandscape[classLandscape[] <= 0.6 & classLandscape[] > 0.3] <- 1
+  classLandscape[classLandscape[] > 0.5] <- 2
+  classLandscape[classLandscape[] <= 0.5 & classLandscape[] > 0.3] <- 1
   classLandscape[classLandscape[] <= 0.3] <- 0
 
 
@@ -156,10 +158,21 @@ simulate_landscape <- function(
   # and flip to full match the raster with the matrix used in the sims
   classRaster <- raster::flip(classRaster)
 
+
   classRasterList <- list(
     "classRaster" = raster::flip(classRaster))
 
   landscapeLayersList$classRaster <- classRasterList$classRaster
+
+  rBase <- landscapeLayersList$classRaster
+  rAll <- raster::projectRaster(from = rBase,
+                                to = projectExtent(rBase, crs = sp::CRS(SRS_string = "EPSG:4326")))
+  rAll[] <- as.factor(paste0("c", round(rAll[], digits = 0)))
+
+  classRasterLatLonList <- list(
+    "classRasterLatLon" = rAll)
+
+  landscapeLayersList$classRasterLatLon <- classRasterLatLonList$classRasterLatLon
 
   return(landscapeLayersList)
 

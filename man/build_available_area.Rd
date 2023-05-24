@@ -7,7 +7,6 @@
 build_available_area(
   movementData,
   method = c("MCP", "KDElscv", "KDEhref", "AKDE", "dBBMM"),
-  contour,
   SRS_string = "EPSG:32601",
   dBBMMsettings = NULL
 )
@@ -17,8 +16,6 @@ build_available_area(
 column for timestamps ("\%Y-\%m-\%d \%H:\%M:\%S")}
 
 \item{method}{"MCP", "KDE_LSCV", "KDE_href", "AKDE", "dBBMM"}
-
-\item{contour}{Numeric, > 0 and < 100. Can be a vector.}
 
 \item{SRS_string}{= "EPSG:32601"}
 
