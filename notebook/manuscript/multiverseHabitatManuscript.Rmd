@@ -61,7 +61,8 @@ Questionable research practices can be viewed as methods to achieve a neat, stat
 
 There is a fear that questionable research practices, and the broader incentives they are connected to, are responsible for the replicability crisis (often referred to as the "reproducibility crisis"). Across many disciplines, there are examples of replication studies being unable to replicate prior research [@open_science_collaboration_estimating_2015; @freedman_economics_2015; @kelly_rate_2019].
 Often these replication efforts are conducted with larger sample sizes, or rely on the consolidation of many independent studies (often in the form of meta-analyses).
-The implication is not that the original studies were necessarily flawed; but -- in the absence of questionable research practices -- sufficient variation exists in the study subjects to obscure a consistent effect [i.e., variation beyond variation stemming from sampling; @simonsohn_small_2015].
+The implication is not that the original studies were necessarily flawed; but -- in the absence of questionable research practices -- sufficient variation exists in the study subjects or methods to obscure a consistent effect [i.e., variation other than that stemming from sampling; @simonsohn_small_2015].
+<!-- devezer et al 2021, or that models mismatch with reality or each other, insufficiently tight definitions of the study system? -->
 
 However, variation can also stem from analysis flexibility (i.e., the presence of many ways to analyse the same data to answer the same question).
 This flexibility helps enable questionable research practices [@fraser_questionable_2018], and is potentially steered by publication bias [@cassey_survey_2004; @jennions_publication_2002] if results that produce more publishable results are prioritised/rewarded over less exciting but robust results.
@@ -80,7 +81,7 @@ Therefore, maximising replicability in ecology is key to minimising research was
 The impacts on the study subjects, paired with the often high monetary costs of ecological studies [particularly bio-logging where animals may undergo surgery, @weaver_technology_2021] means that replications can be more difficult to justify.
 When paired with fact that ecological systems are complex and in constant flux --often frustrating perfect replications due to changes in space and time [@nakagawa_replicating_2015; @schnitzer_would_2016] --we are left with a distinct lack of direct replications in ecology [@kelly_rate_2019].
 
-The low prevalence of replications in ecology make it difficult to assess the overall irreplicabilty situation in ecology [@kelly_rate_2019]; but there are several examples that suggest irreplicabilty is something ecologists should be wary of  [@clark_ocean_2020; @roche_behavioural_2020; @sanchez-tojar_meta-analysis_2018; @wang_irreproducible_2018].
+The low prevalence of replications in ecology make it difficult to assess the overall irreplicabilty situation in ecology [@kelly_rate_2019]; but there are several examples that suggest irreplicabilty is something ecologists should be wary of [@clark_ocean_2020; @roche_behavioural_2020; @sanchez-tojar_meta-analysis_2018; @wang_irreproducible_2018].
 The potential for irreplicabilty is further supported by evidence of positive publication bias [@fanelli_positive_2010; @fanelli_negative_2012], and links between smaller sample sizes and inflated effect sizes [@lemoine_underappreciated_2016].
 
 In the absence of direct replications, ecology is often left to assess replicability via conceptual replications [@fraser_role_2020] or efforts broadly referred to as quasi-replications [@palmer_quasi-replication_2000].
@@ -733,6 +734,7 @@ We focused on systematic controlled changes to tracking frequency, but in field 
 Newer methods help alleviate the problems with inconsistent tracking [@alston_mitigating_2023; @fleming_correcting_2018; @silva_autocorrelationinformed_2022], providing an additional reason why analysis decisions should not be ignored.
 
 Ultimately the multiverse approach cannot reveal the true answer; the multiverse's mean result describes the mean of the analysis pathways and does not necessarily converge towards a true effect.
+<!-- devezer et al 2021 has some details on why things don't replicate and that incorrect models can replciate, and correct models can fail - mismatches between reality and the model are important to consider -->
 We attempted to make our findings more generalisable by simulating three distinct animal species that move in different fashions and that face differing level of habitat connectivity.
 <!-- scale is important always because of interactions between sampling and question/behaviour. Thurfjell -->
 We cannot discount scenarios with different movement characteristics that interact with particular analysis choices to bias habitat selection estimates –scale remains a key consideration for any study [@thurfjell_applications_2014; @northrup_conceptual_2022], and context-specific selection remains difficult to translate [@avgar_habitat_2020].
