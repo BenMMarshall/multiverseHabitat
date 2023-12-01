@@ -22,7 +22,6 @@ simulate_landscape <- function(
     stop(paste0(pcks[missing], " not installed"))
   }
 
-  seed <- 2022
   row = 2000; col = 2000
   RandomFields::RFoptions(install="no")
   baseLandscape <- suppressMessages(NLMR::nlm_gaussianfield(ncol = col,
