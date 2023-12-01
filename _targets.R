@@ -88,24 +88,37 @@ optionsList_sff <- list(
   MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
 )
 
-values_MethodCTM <- tidyr::expand_grid(
-  # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
-  # Methodctm_it = c(24/60, 24/30, 24, 1),
-  # Methodctm_pm = c("pm.c1", "pm.c2"),
-  # Methodctm_im = c("im.li", "im.sp"),
-  # Methodctm_di = c("di.ro", "di.ki")
-  Methodctm_ks = 1,
-  Methodctm_it = 24/60,
-  Methodctm_pm = "pm.c1",
-  Methodctm_im = "im.li",
-  Methodctm_di = "di.ro"
+# values_MethodCTM <- tidyr::expand_grid(
+#   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
+#   # Methodctm_it = c(24/60, 24/30, 24, 1),
+#   # Methodctm_pm = c("pm.c1", "pm.c2"),
+#   # Methodctm_im = c("im.li", "im.sp"),
+#   # Methodctm_di = c("di.ro", "di.ki")
+#   Methodctm_ks = 1,
+#   Methodctm_it = 24/60,
+#   Methodctm_pm = "pm.c1",
+#   Methodctm_im = "im.li",
+#   Methodctm_di = "di.ro"
+# )
+
+optionsCompleteList <- list(
+  "species" = values_SimSpecies,
+  "individuals" = values_SimIndi,
+  "regime" = values_Sampling,
+  "area" = optionsList_area,
+  "wrsf" = optionsList_area_wRSFSplit,
+  "ssf" = optionsList_sff
 )
+
+saveRDS(optionsCompleteList, file = here::here("data", "optionsCompleteList.rds"))
+
+set.seed(2022)
 
 allIndividualEstimatesList <- list(
   ## LANDSCAPE SIMULATION
   tar_map(
     values = values_SimSpecies,
-    tar_target(landscape, simulate_landscape(species, 2022)), # FUNCTION simulate_landscape
+    tar_target(landscape, simulate_landscape(species, seed = 2022)), # FUNCTION simulate_landscape
 
     ## INDIDIVUAL SIMULATION
     tar_map(

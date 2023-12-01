@@ -1,0 +1,9 @@
+TO DO
+- add in second branch for scrambled classified raster i.e. null
+- change figures and add in side by side null comparison
+- make median line full vertical on spec curves so it doesn't look like median of y axis
+- make all figure text larger and clearer
+- ensure legends to figures are better at explaining what is in them, in particular model beta results ones
+- address the cold open into movement eco in the intro
+- ensure preference or selection is used consistently
+- ensure there are no sentences implying that replication == truth - but instead they should hint that replication is a way of detecting model differences or room for improvement?

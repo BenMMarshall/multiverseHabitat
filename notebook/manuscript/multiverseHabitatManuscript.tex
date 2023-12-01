@@ -38,6 +38,44 @@
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 %% lines to get the code chunks working
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textbf{#1}}
+\newcommand{\AnnotationTok}[1]{\textit{#1}}
+\newcommand{\AttributeTok}[1]{#1}
+\newcommand{\BaseNTok}[1]{#1}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textit{#1}}
+\newcommand{\CommentVarTok}[1]{\textit{#1}}
+\newcommand{\ConstantTok}[1]{#1}
+\newcommand{\ControlFlowTok}[1]{\textbf{#1}}
+\newcommand{\DataTypeTok}[1]{\underline{#1}}
+\newcommand{\DecValTok}[1]{#1}
+\newcommand{\DocumentationTok}[1]{\textit{#1}}
+\newcommand{\ErrorTok}[1]{\textbf{#1}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{#1}
+\newcommand{\FunctionTok}[1]{#1}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textit{#1}}
+\newcommand{\KeywordTok}[1]{\textbf{#1}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{#1}
+\newcommand{\OtherTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textbf{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{#1}
+\newcommand{\SpecialStringTok}[1]{#1}
+\newcommand{\StringTok}[1]{#1}
+\newcommand{\VariableTok}[1]{#1}
+\newcommand{\VerbatimStringTok}[1]{#1}
+\newcommand{\WarningTok}[1]{\textit{#1}}
 
 %% lines to enable bulletpoints in a new notation style
 \providecommand{\tightlist}{%
@@ -59,7 +97,7 @@
 
 \begin{abstract}
 
-Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask 10 researchers to answer the same question with the same dataset, you will receive 10 different answers. This variation in answers has been linked to several disciplines' replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
+Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask 10 researchers to answer the same question with the same dataset, you will receive likely 10 different answers. This variation in answers has been linked to several disciplines' replication crises. Here, we explore whether answers from movement ecology, specifically habitat preference, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat preference from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat preference. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
 
 \end{abstract}
 
@@ -73,22 +111,22 @@ Movement ecology, simulation, Wides, resource selection functions, step selectio
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Researchers are intrinsically part of the research process (\protect\hyperlink{ref-levins_dialectical_1985}{Levins \& Lewontin, 1985}; \protect\hyperlink{ref-tang-martinez_history_2020}{Tang-Martínez, 2020}), and our expectations can shape the answers we find (\protect\hyperlink{ref-holman_evidence_2015}{Holman et al., 2015}).
-While we can strive to conduct research objectively, there are frequent moments during research that require judgement calls (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}).
+Researchers are intrinsically part of the research process (\protect\hyperlink{ref-levins_dialectical_1985}{Levins \& Lewontin, 1985}; \protect\hyperlink{ref-tang-martinez_history_2020}{Tang-Martínez, 2020}), and our expectations can shape our conclusions (\protect\hyperlink{ref-holman_evidence_2015}{Holman et al., 2015}).
+While we can strive to conduct research objectively, research commonly requires judgement calls (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}).
 Such calls, choices, or decisions occur throughout the research process, encompassing everything from study design (e.g., sample size, sampling intensity, sample stratification) to analysis (e.g., Bayesian or frequentist, ex/inclusion of outliers).
-We draw on our own experience and the input of peers to try and ensure the best choices are made to produce robust and reliable results, but we also contend with data, expertise, and interpretability constraints (\protect\hyperlink{ref-liu_paths_2020}{Liu, Althoff \& Heer, 2020}).
+We draw on our own experience, and the input of peers, to try and ensure the best choices are made to produce robust and reliable results, but we also contend with data, expertise, and interpretability constraints (\protect\hyperlink{ref-liu_paths_2020}{Liu, Althoff \& Heer, 2020}).
 
 Researchers are also influenced by the incentive system around them (\protect\hyperlink{ref-anderson_perverse_2007}{Anderson et al., 2007}).
 We cannot undertake research in a vacuum; we often require institutions, funders, and scientific journals to produce and share research.
 These bodies can influence what research is conducted; they are in a position to incentivise or disincentivise research of certain topics or methodologies (\protect\hyperlink{ref-fanelli_pressures_2010}{Fanelli, 2010a}; \protect\hyperlink{ref-ware_significance_2015}{Ware \& Munafò, 2015}; \protect\hyperlink{ref-smaldino_natural_2016}{Smaldino \& McElreath, 2016}).
 The use of impact factor (and other similar metrics) is an example of citations being used as a measure of quality or research worth.
 But when examined closer, the impact factor appears detached from the robustness or reliability of the research (\protect\hyperlink{ref-Brembs2018}{Brembs, 2018}).
-This decrease in robustness can be seen in the increases in effect sizes inflation, p-value misreporting, among a number of other measures of quality (\protect\hyperlink{ref-Brembs2018}{Brembs, 2018}).
+A decrease in robustness can be seen in the increases in effect sizes inflation, p-value misreporting, and other measures of quality (\protect\hyperlink{ref-Brembs2018}{Brembs, 2018}).
 Similarly, novelty has been promoted by journals to the detriment of replications studies (\protect\hyperlink{ref-vinkers_use_2015}{Vinkers, Tijdink \& Otte, 2015}; \protect\hyperlink{ref-forstmeier_detecting_2017}{Forstmeier, Wagenmakers \& Parker, 2017}; \protect\hyperlink{ref-brembs_reliable_2019}{Brembs, 2019}), despite widespread agreement on the importance of replications (\protect\hyperlink{ref-fraser_role_2020}{Fraser et al., 2020}).
 There is a bias towards positive, statistically significant results (\protect\hyperlink{ref-jennions_publication_2002}{Jennions \& Møller, 2002}; \protect\hyperlink{ref-cassey_survey_2004}{Cassey et al., 2004}).
 Due to the nature of frequentist statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates (\protect\hyperlink{ref-forstmeier_cryptic_2011}{Forstmeier \& Schielzeth, 2011}; \protect\hyperlink{ref-albers_problem_2019}{Albers, 2019}).
 
-Unfortunately, there is evidence that the system of incentives trickle down to impact the judgement calls and decisions of researchers while undertaking research and when publishing those results.
+Unfortunately, there is evidence that the system of incentives trickle down to impact the decisions of researchers while undertaking research and publishing results.
 The more detrimental of these decisions have been termed questionable research practices (\protect\hyperlink{ref-fraser_questionable_2018}{Fraser et al., 2018}; \protect\hyperlink{ref-bishop_rein_2019}{Bishop, 2019}).
 They chiefly come in three forms: HARKing, cherry-picking, and p-hacking.
 Hypothesising After Results Known (HARKing) is where the research can present the results as a confirmatory result, despite originally there being no or contrary hypothesis.
@@ -96,84 +134,125 @@ HARKing can sometimes be further enabled and rationalised by hindsight bias, whe
 Cherry-picking is the removal or non-reporting of data points or (co-)variables, that did not yield significant results.
 P-hacking is the repeated use of statistical tests, with different settings, to achieve statistical significance.
 Arguably, the existence of p-hacking is enabled by an over-reliance on p-value thresholds, rather than flexible p-value thresholds that are predefined based on effect size of interest, sample size, and desired accuracy of estimation (\protect\hyperlink{ref-lakens_justify_2018}{Lakens et al., 2018}).
-Questionable research practices can be viewed as methods to achieve a neat, statistically significant, and publishable narrative (\protect\hyperlink{ref-oboyle_chrysalis_2014}{O'Boyle, Banks \& Gonzalez-Mulé, 2014}); in the worse cases, narratives could be prioritised over transparently reported results.
+Questionable research practices can be viewed as methods to achieve a neat, statistically significant, and publishable narrative (\protect\hyperlink{ref-oboyle_chrysalis_2014}{O'Boyle, Banks \& Gonzalez-Mulé, 2014}).
+In the worse cases, narratives can be prioritised over transparently reported results.
 
 There is a fear that questionable research practices, and the broader incentives they are connected to, are responsible for the replicability crisis (often referred to as the ``reproducibility crisis''). Across many disciplines, there are examples of replication studies being unable to replicate prior research (\protect\hyperlink{ref-freedman_economics_2015}{Freedman, Cockburn \& Simcoe, 2015}; \protect\hyperlink{ref-open_science_collaboration_estimating_2015}{Open Science Collaboration, 2015}; \protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}).
 Often these replication efforts are conducted with larger sample sizes, or rely on the consolidation of many independent studies (often in the form of meta-analyses).
-The implication is not that the original studies were necessarily flawed; but -- in the absence of questionable research practices -- sufficient variation exists in the study subjects to obscure a consistent effect {[}i.e., variation beyond variation stemming from sampling; Simonsohn (\protect\hyperlink{ref-simonsohn_small_2015}{2015}){]}.
+The implication is not that the original studies were necessarily flawed; but, in the absence of questionable research practices, sufficient variation exists in the study subjects or methods to obscure a consistent effect (i.e., variation other than that stemming from sampling alone \protect\hyperlink{ref-simonsohn_small_2015}{Simonsohn, 2015}).
 
 However, variation can also stem from analysis flexibility (i.e., the presence of many ways to analyse the same data to answer the same question).
-This flexibility helps enable questionable research practices (\protect\hyperlink{ref-fraser_questionable_2018}{Fraser et al., 2018}), and is potentially steered by publication bias (\protect\hyperlink{ref-jennions_publication_2002}{Jennions \& Møller, 2002}; \protect\hyperlink{ref-cassey_survey_2004}{Cassey et al., 2004}) if results that produce more publishable results are prioritised/rewarded over less exciting but robust results.
+This flexibility helps enable questionable research practices (\protect\hyperlink{ref-fraser_questionable_2018}{Fraser et al., 2018}), and is potentially steered by publication bias (\protect\hyperlink{ref-jennions_publication_2002}{Jennions \& Møller, 2002}; \protect\hyperlink{ref-cassey_survey_2004}{Cassey et al., 2004}) if more publishable results are prioritised/rewarded over less exciting but robust results.
 Given the prominence of questionable research practices and publication bias, the inconsistencies between initial and replication studies warrant investigation (especially when analysis flexibility is also implicated in potentially flawed replications \protect\hyperlink{ref-bryan_replicator_2019}{Bryan, Yeager \& O'Brien, 2019}).
-It is key to note that analysis flexibility can still lead to variable results in the absence of any undesirable incentives simply as the result of researchers considering different approaches of differing validities for a given dataset (\protect\hyperlink{ref-gelman_garden_2013}{Gelman \& Loken, 2013}).
+Analysis flexibility can still lead to variable results in the absence of any undesirable incentives simply as the result of researchers considering different approaches of differing validities for a given dataset (\protect\hyperlink{ref-gelman_garden_2013}{Gelman \& Loken, 2013}; \protect\hyperlink{ref-gould_same_2023}{Gould et al., 2023}).
 
 Scientific progress requires building upon past results, and therefore requires confidence in past results.
 Issues arise when subsequent research is based upon weak foundations --i.e., studies with a limited capacity to be replicated because of questionable practices or over-generalisation.
 Early significant results can dictate the direction of research and grow resistant to later contradictory results (\protect\hyperlink{ref-barto_dissemination_2012}{Barto \& Rillig, 2012}); therefore, early diagnoses of overly confident results or previously unknown sources of variation becomes a priority.
 
 In medical fields, a lack of replicability comes with direct monetary and well-being costs (\protect\hyperlink{ref-freedman_economics_2015}{Freedman, Cockburn \& Simcoe, 2015}).
-Like the medical field, ecological studies can come with well-being costs to the study subjects {[}e.g., direct surgery/marking of the animal (\protect\hyperlink{ref-Reinert1982}{Reinert \& Cundall, 1982}; \protect\hyperlink{ref-Winne2006}{Winne et al., 2006}){]}, as well as impacts on stakeholders stemming from management decisions.
+Like the medical field, ecological studies can come with well-being costs to the study subjects (e.g., direct surgery/marking of the animal \protect\hyperlink{ref-Reinert1982}{Reinert \& Cundall, 1982}; \protect\hyperlink{ref-Winne2006}{Winne et al., 2006}), as well as impacts on stakeholders stemming from management decisions.
 There are fears that the lack of replicability will feed distrust of science more generally (\protect\hyperlink{ref-anvari_replicability_2018}{Anvari \& Lakens, 2018}).
-Therefore, maximising replicability in ecology is key to minimising research waste (\protect\hyperlink{ref-grainger_evidence_2019}{Grainger et al., 2019}) and the negative impacts on systems and subjects studied.
+Therefore, maximising replicability in ecology is key to minimising research waste (\protect\hyperlink{ref-grainger_evidence_2019}{Grainger et al., 2019}) and the negative impacts on study subjects and systems.
 
 The impacts on the study subjects, paired with the often high monetary costs of ecological studies (particularly bio-logging where animals may undergo surgery, \protect\hyperlink{ref-weaver_technology_2021}{Weaver, Westphal \& Taylor, 2021}) means that replications can be more difficult to justify.
-When paired with fact that ecological systems are complex and in constant flux --often frustrating perfect replications due to changes in space and time (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-schnitzer_would_2016}{Schnitzer \& Carson, 2016}) --we are left with a distinct lack of direct replications in ecology (\protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}).
+Since ecological systems are also complex and in constant flux, often frustrating perfect replications due to changes in space and time (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-schnitzer_would_2016}{Schnitzer \& Carson, 2016}), researchers are left with a distinct lack of direct replications in ecology (\protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}).
 
-The low prevalence of replications in ecology make it difficult to assess the overall irreplicabilty situation in ecology (\protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}); but there are several examples that suggest irreplicabilty is something ecologists should be wary of (\protect\hyperlink{ref-wang_irreproducible_2018}{Wang et al., 2018}; \protect\hyperlink{ref-sanchez-tojar_meta-analysis_2018}{Sánchez-Tójar et al., 2018}; \protect\hyperlink{ref-roche_behavioural_2020}{Roche et al., 2020}; \protect\hyperlink{ref-clark_ocean_2020}{Clark et al., 2020}).
+The low prevalence ecological replication studies makes it difficult to assess the overall rate of replication in ecology (\protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}), but there are several examples that suggest irreplicabilty is something ecologists should be wary of (\protect\hyperlink{ref-wang_irreproducible_2018}{Wang et al., 2018}; \protect\hyperlink{ref-sanchez-tojar_meta-analysis_2018}{Sánchez-Tójar et al., 2018}; \protect\hyperlink{ref-roche_behavioural_2020}{Roche et al., 2020}; \protect\hyperlink{ref-clark_ocean_2020}{Clark et al., 2020}).
 The potential for irreplicabilty is further supported by evidence of positive publication bias (\protect\hyperlink{ref-fanelli_positive_2010}{Fanelli, 2010b}, \protect\hyperlink{ref-fanelli_negative_2012}{2012}), and links between smaller sample sizes and inflated effect sizes (\protect\hyperlink{ref-lemoine_underappreciated_2016}{Lemoine et al., 2016}).
 
 In the absence of direct replications, ecology is often left to assess replicability via conceptual replications (\protect\hyperlink{ref-fraser_role_2020}{Fraser et al., 2020}) or efforts broadly referred to as quasi-replications (\protect\hyperlink{ref-palmer_quasi-replication_2000}{Palmer, 2000}).
-Replications range in intensity. Direct (or exact) replications are attempts to replicate a tightly defined concept/hypothesis while duplicating of all characteristics of the original study.
+Replications range in intensity. Direct (or exact) replications are attempts to replicate a tightly defined concept/hypothesis while duplicating all characteristics of the original study.
 Partial replications are a step looser, where the concept/hypothesis tested is less clearly defined (e.g., applicable to a broader scale) but efforts are made to repeat the same methodology.
-The most general category are conceptual replications, where the subject and method of study varies from the original study, but the replication targets a the same concept/hypothesis (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}).
+The most general category is conceptual replications, where the subject and method of study varies from the original study, but the replication targets a the same concept/hypothesis (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-kelly_rate_2019}{Kelly, 2019}).
 Both partial and conceptual can be classed as quasi-replications if the concept and scale is broadly defined (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}).
 
 Conceptual replications are extremely valuable, but rely on our ability to compare replication efforts to previous findings.
 An important aspect of those comparisons is accounting for factors differing between the studies that are not salient to the effect of interest (\protect\hyperlink{ref-forstmeier_detecting_2017}{Forstmeier, Wagenmakers \& Parker, 2017}); e.g., those linked to sampling differences (\protect\hyperlink{ref-simonsohn_small_2015}{Simonsohn, 2015}).
-An example of sampling differences leading to differences in final results can be seen in the case of reptile space use.
+An example of sampling differences leading to differences in results can be seen in the case of reptile space use.
 Silva et al. (\protect\hyperlink{ref-silva_reptiles_2020}{2020}) showed how frequently a reptile was located by a researcher interacted with the space-use estimation method, leading to large differences in area estimates even when using the same estimation method.
 What is revealing is not only how the choices during analysis (e.g., choice of area estimation method) impacted results, but how the error introduced by those choices changed depending on the sampling.
-It presents a scenario where the \emph{correct} choice was dependent on preceding decisions when designing the study; therefore, highlighting the need to explore the impacts of multiple decisions simultaneously.
+It presents a scenario where the \emph{correct} choice was dependent on preceding decisions when designing the study; thereby, highlighting the need to explore the impacts of multiple decisions simultaneously.
 
-As seen in the reptile space use example, the choices made by the researcher {[}researcher degrees of freedom; Simmons, Nelson \& Simonsohn (\protect\hyperlink{ref-simmons_false-positive_2011}{2011}){]} is a key source of variation among studies.
+As seen in the reptile space use example, the choices made by the researcher (ie., researcher degrees of freedom, \protect\hyperlink{ref-simmons_false-positive_2011}{Simmons, Nelson \& Simonsohn, 2011}) is a key source of variation among studies.
 It would be advantageous to understand which choices have a significant impact and whether we can account for differences in choice during comparisons.
 An understanding of choice could better guide decisions during a study and potentially be used to gauge the robustness of a given dataset in answering a given question.
 
 Research degrees of freedom {[}or flexibility in analysis; Forstmeier, Wagenmakers \& Parker (\protect\hyperlink{ref-forstmeier_detecting_2017}{2017}){]} have been elegantly demonstrated by a number of ``many analysts'' studies (e.g., \protect\hyperlink{ref-silberzahn_many_2018}{Silberzahn et al., 2018}; \protect\hyperlink{ref-huntingtonklein_influence_2021}{Huntington‐Klein et al., 2021}).
 In these studies, a number of researchers, or research groups, are tasked with answering the same question.
-Naturally each participant takes a slightly different approach, both in how the question is interpreted (\protect\hyperlink{ref-auspurg_has_2021}{Auspurg \& Brüderl, 2021}), and the analysis approach chosen (\protect\hyperlink{ref-gelman_garden_2013}{Gelman \& Loken, 2013}; \protect\hyperlink{ref-bastiaansen_time_2020}{Bastiaansen et al., 2020}), resulting is different final results.
-The variation in final results can be considered originating from six sources of uncertainty/variation (\protect\hyperlink{ref-hoffmann_multiplicity_2021}{Hoffmann et al., 2021}): measurement (randomness from the act of measuring), data preprocessing (decisions on data inclusion/exclusion and transforming), parameter (decisions on which parameters used as covariates/predictors), model (decisions on model structure and specification), method (decisions on method choice and parameterisation), and sampling (randomness as a result of sampling a wider population).
+Naturally each participant takes a slightly different approach, both in how the question is interpreted (\protect\hyperlink{ref-auspurg_has_2021}{Auspurg \& Brüderl, 2021}), and the analysis approach chosen (\protect\hyperlink{ref-gelman_garden_2013}{Gelman \& Loken, 2013}; \protect\hyperlink{ref-bastiaansen_time_2020}{Bastiaansen et al., 2020}; \protect\hyperlink{ref-gould_same_2023}{Gould et al., 2023}), resulting is different final results.
+The variation in final results can be considered originating from six sources of uncertainty/variation (Table \ref{tab:sourcesVariation}, \protect\hyperlink{ref-hoffmann_multiplicity_2021}{Hoffmann et al., 2021}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(variationTable,}
+             \AttributeTok{format =} \StringTok{"latex"}\NormalTok{,}
+             \AttributeTok{align =} \StringTok{"lcc"}\NormalTok{,}
+             \AttributeTok{vline =} \StringTok{""}\NormalTok{,}
+             \AttributeTok{toprule =} \StringTok{""}\NormalTok{,}
+             \CommentTok{\# midrule = "",}
+             \AttributeTok{linesep =} \StringTok{""}\NormalTok{,}
+             \AttributeTok{bottomrule =} \StringTok{""}\NormalTok{,}
+             \AttributeTok{caption =} \StringTok{"The potential sources leading to variation in results (Hoffmann et al., 2021)."}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{font\_size =} \DecValTok{8}\NormalTok{, }\AttributeTok{latex\_options =} \StringTok{"scale\_down"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in !is.null(rmarkdown::metadata$output) && rmarkdown::metadata$output
+## %in% : 'length(x) = 2 > 1' in coercion to 'logical(1)'
+\end{verbatim}
+
+\begin{table}
+
+\caption{\label{tab:sourcesVariation}The potential sources leading to variation in results (Hoffmann et al., 2021).}
+\centering
+\resizebox{\linewidth}{!}{
+\fontsize{8}{10}\selectfont
+\begin{tabular}[t]{lcc}
+
+Origin & Details & Example\\
+\hline
+Measurement & Randomness from the act of measuring & Measurement error stemming from imperfect precision or accuracy\\
+Data preprocessing & Decisions on data inclusion/exclusion and transforming & Differing thresholds for what counts as outlying\\
+Parameter & Decisions on which parameters used as covariates/predictors & Differing thresholds on acceptable covariance of predictors\\
+Model & Decisions on model structure and specification & Model formulation and specification of random effects\\
+Method & Decisions on method choice and parameterisation & Choosing an overarching GLMM over a series of T-tests\\
+Sampling & Randomness as a result of sampling a wider population & Sampling from a wider population results in different samples\\
+
+\end{tabular}}
+\end{table}
+
 Several sources of variation (data preprocessing, parameter, model, and method) are likely to be particularly key to defining researcher degrees of freedom post data collection.
 In some cases, the cause behind the variability in results is hard to diagnose (\protect\hyperlink{ref-breznau_observing_2021}{Breznau et al., 2021}), or will be less likely to be questioned because of the agreement with existing theory (\protect\hyperlink{ref-gelman_garden_2013}{Gelman \& Loken, 2013}).
 There are examples where the variation in results is sufficient to change the final conclusions (\protect\hyperlink{ref-salis_how_2021}{Salis, Lena \& Lengagne, 2021}), and others where it alters the strength of an estimated effect (\protect\hyperlink{ref-desbureaux_subjective_2021}{Desbureaux, 2021}).
-The importance of the effect size variation is context specific, i.e., how variation relates to the overall effect size, and can impact results pertaining to real-world scenarios (\protect\hyperlink{ref-desbureaux_subjective_2021}{Desbureaux, 2021}).
 
 \hypertarget{multiverse-analysis}{%
 \subsection{Multiverse analysis}\label{multiverse-analysis}}
 
-A rising approach to address the unknown impacts of undisclosed researcher degrees of freedom is to fully explore all plausible or reasonable analysis choices open to researchers -- to explore a multiverse of design choices (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}).
-This multiverse analysis -- closely linked to vibration of effects (\protect\hyperlink{ref-patel_assessment_2015}{Patel, Burford \& Ioannidis, 2015}), multi-model analysis (\protect\hyperlink{ref-young_model_2017}{Young \& Holsteen, 2017}), and specification curve analysis (\protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020})-- has the potential to demonstrate and quantify the variation stemming from researcher's analyses choices (\protect\hyperlink{ref-rijnhart_assessing_2021}{Rijnhart et al., 2021}).
+A rising approach addressing the unknown impacts of undisclosed researcher degrees of freedom is to fully explore all plausible or reasonable analysis choices open to researchers -- to explore a multiverse of design choices (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}).
+This multiverse analysis -- closely linked to vibration of effects (\protect\hyperlink{ref-patel_assessment_2015}{Patel, Burford \& Ioannidis, 2015}), multi-model analysis (\protect\hyperlink{ref-young_model_2017}{Young \& Holsteen, 2017}), and specification curve analysis (\protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020})-- has the potential to quantify the variation stemming from researcher's analyses choices (\protect\hyperlink{ref-rijnhart_assessing_2021}{Rijnhart et al., 2021}).
 Choices can include everything from from sample sizes and splits (e.g., \protect\hyperlink{ref-webb_multiverse_2021}{Webb \& Demeyere, 2021}) to measurement and summary statistics (e.g., \protect\hyperlink{ref-parsons_exploring_2020}{Parsons, 2020}), but crucially should only include options that are reasonable (\protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020}; \protect\hyperlink{ref-del_giudice_travelers_2021}{Del Giudice \& Gangestad, 2021}).
-What counts as reasonable is not necessarily simple, and inclusion of irrelevant choices can easily mask important choices because of the multiplicative nature of a branching path network (\protect\hyperlink{ref-del_giudice_travelers_2021}{Del Giudice \& Gangestad, 2021}) (Fig. \ref{fig:multiDiagram}).
+What counts as reasonable is not necessarily obvious, and inclusion of irrelevant choices can easily mask important choices because of the multiplicative nature of a branching path network (\protect\hyperlink{ref-del_giudice_travelers_2021}{Del Giudice \& Gangestad, 2021}) (Fig. \ref{fig:multiDiagram}).
 Construction of a multiverse requires justification of which decisions are treated as variable, and why there is not an \emph{a priori} and defensible single solution (\protect\hyperlink{ref-del_giudice_travelers_2021}{Del Giudice \& Gangestad, 2021}).
 A multiverse populated with well-justified decisions allows the exploration of which choices inflate variation between analysis universes, while also offering insights into how to deflate variation {[}e.g., refinement of initial study design, the removal of ambiguities like tightening categories definitions; Steegen et al. (\protect\hyperlink{ref-steegen_increasing_2016}{2016}){]}.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{../ext_images/Multiverse compared diagram} \caption{Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during analysis. Redrawn from Dragicevic et al. (2019).}\label{fig:multiDiagram}
+\includegraphics[width=1\linewidth]{../ext_images/Multiverse compared diagram updated} \caption{Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during analysis. Redrawn from Dragicevic et al. (2019).}\label{fig:multiDiagram}
 \end{figure}
 
 Ecological systems are complex to study and frustrate replication efforts (\protect\hyperlink{ref-nakagawa_replicating_2015}{Nakagawa \& Parker, 2015}; \protect\hyperlink{ref-schnitzer_would_2016}{Schnitzer \& Carson, 2016}), and in the case of movement ecology, the data analysed (i.e., derived data, such as step length, speed, and turn angle derived from timestamped coordinate data) require multiple stages of preprocessing.
 Therefore, multiverse analysis is an avenue to explore causes of variation between studies without the additional costs of practical studies, while also being capable of exploring data processing decisions that may not have immediately apparent impacts on final results.
 
-If the data entropy (the process in which as data ages the chances of irreversible loss increase, \protect\hyperlink{ref-vines_availability_2014}{Vines et al., 2014}) and resistance to data sharing (\protect\hyperlink{ref-miyakawa_no_2020}{Miyakawa, 2020}; \protect\hyperlink{ref-tedersoo_data_2021}{Tedersoo et al., 2021}) can be overcome, we will be able to retroactively explore the impact of researcher degrees of freedom on ecological studies (\protect\hyperlink{ref-rijnhart_assessing_2021}{Rijnhart et al., 2021}).
+If the data entropy (the process in which as data ages the chances of irreversible loss increase, \protect\hyperlink{ref-vines_availability_2014}{Vines et al., 2014}) and resistance to data sharing (\protect\hyperlink{ref-miyakawa_no_2020}{Miyakawa, 2020}; \protect\hyperlink{ref-tedersoo_data_2021}{Tedersoo et al., 2021}) can be overcome, we can retroactively explore the impact of researcher degrees of freedom on ecological studies (\protect\hyperlink{ref-rijnhart_assessing_2021}{Rijnhart et al., 2021}).
 Such retroactive assessment is an attractive option when other methods to explore false positive rates (\protect\hyperlink{ref-hoffmann_multiplicity_2021}{Hoffmann et al., 2021}), such as preregistration and registered reports (\protect\hyperlink{ref-kaplan_likelihood_2015}{Kaplan \& Irvin, 2015}; \protect\hyperlink{ref-scheel_excess_2021}{Scheel, Schijen \& Lakens, 2021}), will require more time to yield results.
 Ideally we can use multiverse analysis with preregistrations to boost transparency surrounding the inclusion of decisions and the rationale behind others exclusions (\protect\hyperlink{ref-dragicevic_increasing_2019}{Dragicevic et al., 2019}; \protect\hyperlink{ref-simonsohn_specification_2020}{Simonsohn, Simmons \& Nelson, 2020}).
 Given the success of meta-analyses to overcome short-comings in the publication record {[}e.g., p-hacking; Head et al. (\protect\hyperlink{ref-head_extent_2015}{2015}){]}, multiverse analysis may aid the direction of future research efforts by providing a means of meeting calls to replicate results before collecting more (\protect\hyperlink{ref-nuijten_verify_2018}{Nuijten et al., 2018}).
 
 However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer (\protect\hyperlink{ref-steegen_increasing_2016}{Steegen et al., 2016}) --the ``average'' result is not necessarily the closest to the truth.
-If we were to undertake a multiverse analysis in a scenario with a ``known truth'', i.e., using a simulated dataset (\protect\hyperlink{ref-bastiaansen_time_2020}{Bastiaansen et al., 2020}), we may be able to detect identify the amount of variation from different sources {[}e.g, biological variation vs study design variation; Breznau et al. (\protect\hyperlink{ref-breznau_observing_2021}{2021}){]}, and potentially the systematic biases stemming from specific choices (potentially via Bayesian Causal Forests \protect\hyperlink{ref-bryan_replicator_2019}{Bryan, Yeager \& O'Brien, 2019}).
+If we were to undertake a multiverse analysis in a scenario with a ``known truth'', i.e., using a simulated dataset (\protect\hyperlink{ref-bastiaansen_time_2020}{Bastiaansen et al., 2020}), we may be able to identify the amount of variation attributable to different sources {[}e.g, biological variation vs study design variation; Breznau et al. (\protect\hyperlink{ref-breznau_observing_2021}{2021}){]}, and potentially the systematic biases stemming from specific choices (potentially via Bayesian Causal Forests \protect\hyperlink{ref-bryan_replicator_2019}{Bryan, Yeager \& O'Brien, 2019}).
 
-Use of simulated data is an established way to explore the robustness of methodologies (\protect\hyperlink{ref-minchin_simulation_1987}{Minchin, 1987}; \protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}); and this project will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
+Use of simulated data is an established way to explore the robustness of methodologies (\protect\hyperlink{ref-minchin_simulation_1987}{Minchin, 1987}; \protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}), and here we will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
 
 Here we describe the initial plan to undertake a multiverse approach to explore how decisions concerning the design and analysis of an animal tracking study can impact the findings on habitat selection.
 We describe the simulated scenarios we plan to base the study upon and a preliminary multiverse branching path consisting of three analysis approaches, as well as several broad hypotheses.
@@ -185,9 +264,9 @@ We describe the simulated scenarios we plan to base the study upon and a prelimi
 \subsection{Simulating the Scenarios}\label{simulating-the-scenarios}}
 
 We simulated three scenarios/species, comprising of different animals and landscapes.
-We simulated the landscapes using the NLMR v.1.1.1 package (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using abmAnimalMovement v.0.1.3.0 (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
+We simulated the landscapes using the NLMR v.1.1.1 package (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using abmAnimalMovement v.0.1.3.0 package (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-Further details of how the scenarios were parametrised can be found in (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}), and also in the abmAnimalMovement github repository (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github}).
+Further details of how the scenarios were parametrised can be found in (\protect\hyperlink{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}), and also in the abmAnimalMovement github repository along with associated documentation (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github}).
 
 In brief:
 
@@ -195,23 +274,25 @@ In brief:
 \item
   Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
 \item
-  Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
+  Species 2, Vulture: medium site fidelity via the use of multiple roosting/resting sites, a high and variable movement speed with minimal landscape resistance, an 8-12 hour activity cycle with seasonal shifts.
 \item
   Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 \end{itemize}
 
-Each simulation generated a years worth of movement data, with a data point recorded every minute.
+Each simulation generated a year's worth of movement data with a data point recorded every minute.
 
-Our landscapes comprise of three elements, which are considered by the animal differently depending on the behavioural state the animal is in (resting, exploring, foraging).
-The three elements were matrices where each cell describes either foraging quality, shelter site quality, and movement ease.
-The three are non-independent, and based on a single initial random generation using a Gaussian field.
+The agent-based animal movement simulation require an environment to guide movement.
+Our landscapes are defined as three stacked matrices, where the rows and columns of the matrix representing the X and Y location in the landscape, and the value in each cell numerically describes the quality of a given resource the animal can consider when deciding where to move.
+Each of the three matrices' describe one resource: foraging quality, shelter site quality, and movement ease (Fig. \ref{fig:landscapeExample}), which are considered by the animal differently depending on the behavioural state the animal is in (resting, exploring, foraging).
+All three are non-independent, and based on a single initial random generation using a Gaussian field.
 
 From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas.
 Broadly, we created: core resource areas (e.g., forests) with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease, and more barren areas with high movement ease but with minimal foraging value.
 All shelter sites occurred within the higher quality core resource areas.
 
-While our landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
-Therefore, to simply the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \ref{fig:landscapeExample}): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
+While our simulation landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
+Therefore, to simplify the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \ref{fig:landscapeExample}): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
+This results in a classified matrix/raster of habitat types usable for downstream analyses (Fig. \ref{fig:landscapeExample}).
 While the categorisation of landscapes is a major decision during the analysis of habitat preference, we elected to keep the landscape classification constant to maintain an feasible multiverse analysis.
 
 \begin{figure}
@@ -221,66 +302,80 @@ While the categorisation of landscapes is a major decision during the analysis o
 \hypertarget{sampling-and-analysis-options}{%
 \subsection{Sampling and Analysis Options}\label{sampling-and-analysis-options}}
 
-Ultimately number of variations and choices we were able to explore is dictated by computational costs and time.
+The number of variations and choices we were able to explore is ultimately dictated by computational costs and time.
 No multiverse can ever be entirely comprehensive, but we endeavoured to include the major decisions that are required during analysis that may not have immediately apparent ``correct'' answers.
 
 \hypertarget{sampling}{%
 \subsubsection{Sampling}\label{sampling}}
 
 The first decisions concern data quantity.
-We varied tracking duration and tracking frequency primarily, while keep consistency fixed.
-While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we did not explore tracking consistency at this time.
+We varied tracking duration and tracking frequency primarily, while keeping consistency fixed.
+While tracking consistency, or random/systematic data loss during tracking is an element affecting data quantity, the numerous ways of defining consistency means we did not explore tracking consistency.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
-For this exploration we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
+For this exploration, we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
 Timing only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
 Therefore, for the lower tracking frequencies we ensured that daily tracking was centred around midday (as all our simulated species had diurnal activity patterns).
+We varied tracking duration from 7 to 240 days, and tracking frequency from 0.5 to 168 data points every hour (i.e., 2 to 0.01 points per hour) .
 
 Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
-As the causes and measurement of error, as well as the solutions to, location error are numerous we will not be exploring the impact of error during this exploration in favour of more variation in other decision nodes.
+As the causes and measurement of error, as well as the solutions to, location error are numerous; we will not explore the impact of error during this exploration in favour of more variation in other decision nodes.
 
-In summary, the sampling decisions will cover variation in species, tracking frequency, and tracking duration (Fig. \ref{fig:decisionTrees}).
+In summary, the sampling decisions will cover variation in species represented by four independent individuals, tracking frequency, and tracking duration (Fig. \ref{fig:decisionTrees}).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{../ext_images/Decision Visualisation} \caption{An illustration of the different decisions creating the multiverse, split betwen those pertaining to sampling and analysis.}\label{fig:decisionTrees}
+\includegraphics[width=1\linewidth]{../ext_images/Decision Visualisation} \caption{An illustration of the different decisions creating the multiverse, split between those pertaining to sampling and analysis. Grey choices pertaining to data simulation and sampling. Species: the three different movement archetypes the simulations were loosely based upon. Individual: the number of individuals simulated per each species. Tracking duration: the length in days of the tracking data sampled from the overall simulated year. Tracking frequency: the frequency of the sampling of data points from the 1-per-minute simulated data. Purple choices concerned with analysis pathways using area-based estimations of availability (Wides: Wides selection ratios, RSF: Resource Selection Function). Area method: the method used to generate the area polygon that is considered available to the individual (MCP: Minimum Convex Polygon, KDE: Kernel Density Estimator, AKDE: Autocorrelated Kernel Density Estimator, dBBMM: dynamic Brownian Bridge Movement Models). Contour: the threshold used to convert the utilisation/occurrence distribution into a discrete polygon. Available points: the number of randomly generated points to extract available habitat within the polygon. Points pattern: whether the random points were spatially distributed in a stratified or pure random fashion. Weighting: the weighting of the available points in relation to the used points in the RSF formula. Light orange choices pertain to the SSF (Step Selection Function) analysis pathways. Model formula: whether the step and turn angles were added as interactions to the habitat variable (integrated if added). Available points: the number of randomly generated available points per step/used point. Turn angle: the distribution used to generate the turn angles of the available points. Step distribution: the distribution used to generate the step distances of the available points. Dark orange is the WRSF (Weighted Resource Selection Function) analysis. Decisions that required discrete choices are illustrated with circles, whereas those that continuous are depicted as triangles.}\label{fig:decisionTrees}
 \end{figure}
 
 \hypertarget{analysis}{%
 \subsubsection{Analysis}\label{analysis}}
 
 For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
-R presents the number one tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
+R is the most common tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
 Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.16 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
 During the writing of this paper, a new method was described as part of the ctmm package v.0.6.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigate.
 
-Combined the packages offer many options for habitat analysis, we focus on four that tackle individual habitat selection.
-One from the adehabitatHS package: resource selection ratios (Wides).
-Two from the amt package: resource selection function (RSF), step selection function (SSF)
-And the newly described Weighted Resource Selection Function (wRSF \protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}) from the ctmm package.
+Combined, the packages offer many options for habitat analysis.
+We focus on four that tackle individual habitat selection:
+
+\begin{itemize}
+\item
+  One from the adehabitatHS package: resource selection ratios (Wides)
+\item
+  Two from the amt package: resource selection function (RSF), step selection function (SSF)
+\item
+  And the newly described Weighted Resource Selection Function (wRSF \protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}) from the ctmm package.
+\end{itemize}
+
 Each of the methods require downstream decisions resulting in a ``garden of forking paths'' to a final estimate of habitat selection (Fig. \ref{fig:decisionTrees}).
 
+\hypertarget{area-based-approaches}{%
+\paragraph{Area based approaches}\label{area-based-approaches}}
+
 The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
-The first decisions is whether to approach the habitat selection analysis as a type I, II or III design, as we are concerned about an individuals' habitat selection we will ignore type I.
+The first decisions is whether to approach the habitat selection analysis as a type I, II or III design.
+We are concerned with an individuals' habitat selection, so ignore type I.
 While type II habitat selection can identify individual preference, it requires habitat availability to be defined on a population or landscape scale (i.e., a universal availability).
 As movement data presents an opportunity to estimate individual preference, and we are not simulating a true interacting population, we focus on type III.
 Type III and the need to individually define available habitat opens up many different analytically decisions concerning how that availability is defined.
 
-We used a range of methods are build areas from the recorded locations of the animal: Minimum convex polygons (MCPs), Kernel Density Estimations (KDEs), Autocorrelated Kernel Density Estimations (AKDEs), and dynamic Brownian Bridge Movement Models (dBBMMs).
+We used a range of methods to build areas that could be considered available to the animal from the recorded locations of the animal: Minimum convex polygons (MCPs), Kernel Density Estimations (KDEs), Autocorrelated Kernel Density Estimations (AKDEs), and dynamic Brownian Bridge Movement Models (dBBMMs).
+
 Minimum convex polygons (MCPs) simply creates a polygon based on the out most locations, where the interior angles sum to less than 180 degrees.
 
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use or utilisation.
 Critical to KDEs operation is a bandwidth or smoothing factor (h) that alters the resulting area treated as used by the animal (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}).
 For this analysis we use the the reference bandwidth (href) as it is commonly used (\protect\hyperlink{ref-crane_lots_2020}{Crane et al., 2020}), while also quickly and consistently calculable on a individual by individual basis.
 An alternative common method to determine smoothing factor is Least Squares Cross Validation (LSCV).
-However, we avoided the LSCV method for two reasons: 1) the LSCV method can fail to converge on a smoothing factor thereby introducing an unpredictable fail state in any potential multiverse, 2) the more limited area estimate it produces make it less suitable for defining habitat availability.
+However, we avoided the LSCV method for two reasons: 1) the LSCV method can fail to converge on a smoothing factor, thereby introducing an unpredictable fail state in any potential multiverse, and 2) the more limited area estimate it produces makes it less suitable for defining habitat availability.
 
 The limitations of MCPs and KDEs have prompted the development of newer methods of area use estimation (\protect\hyperlink{ref-silva_reptiles_2020}{Silva et al., 2020}) that better account for the non-independence and autocorrelative structures within animal movement data (\protect\hyperlink{ref-Noonan2018}{Noonan et al., 2019}).
 We used two of these methods to define availability.
 
 First is the Autocorrelated Kernel Density Estimations (AKDEs) (\protect\hyperlink{ref-Fleming2015}{Fleming et al., 2015}; \protect\hyperlink{ref-Fleming2017}{Fleming \& Calabrese, 2017}) from the ctmm package (\protect\hyperlink{ref-Calabrese2016}{Calabrese, Fleming \& Gurarie, 2016}; \protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}).
 The ctmm package provides a workflow for creating an area estimate based on a number of movement models.
-The movement models include different levels of autocorrelative structure: Ornstein-Uhlenbeck (OU) models account for central tendency, the Ornstein--Uhlenbeck Foraging (OUF) build on this by also accounting for autocorrelation in movement speed, while the Independent Identically Distributed (IID) models assume location independence meaning they are similar to traditional kernel density approaches.
+The movement models include different levels of autocorrelative structure: Ornstein-Uhlenbeck (OU) models account for central tendency; the Ornstein--Uhlenbeck Foraging (OUF) models build on this by also accounting for autocorrelation in movement speed; while the Independent Identically Distributed (IID) models assume location independence, meaning they are similar to traditional kernel density approaches.
 Each model type is also fitted in isotropic (circular) or anisotropic (elliptical) forms.
 The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
 Therefore, we use the guidance from (\protect\hyperlink{ref-silva_autocorrelationinformed_2022}{Silva et al., 2022}) to generate weighted AKDEs using perturbative hybrid residual maximum likelihood method (pHREML), and select the best performing by AICc for inclusion in further analysis.
@@ -289,62 +384,67 @@ Using weighted AKDEs means the area estimates better address gaps between locati
 The second movement-specific method we used was dynamic Brownian Bridge Movement Models (dBBMMs) (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}) from the move package (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}), which estimates movement capacity of the animal to calibrate repeated random walks between known locations.
 DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated (\protect\hyperlink{ref-Kranstauber2012}{Kranstauber et al., 2012}).
 Window and margin are defined by a number of data points; therefore, to keep the time they represent the same between different tracking frequencies, we changed their values for each tracking frequency.
-As our most infrequent tracking is 168 hours (1 week), we set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
+As our most infrequent tracking is 168 hours (7 week), we set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
 The broader window and margin sizes helped reduce computational costs, a major concern when so many dBBMMs are being calculated.
 
 Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
 As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
 This occurrence distribution is describing the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
-Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing comparing habitat use to an alternative measure of habitat use.
+Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing habitat use to an alternative measure of habitat use.
 We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results (\protect\hyperlink{ref-alston_clarifying_2022}{Alston et al., 2022}).
 
-What is considered available to an animal is not cleanly translated from biological concept to a statistical one.
-While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make --to varying degrees-- use of the movement information contained within the dataset they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
-Therefore, the researcher must make a some-what arbitrary choice regarding what is included/excluded and counted as available; Each of these area estimation methods require a choice to be made regarding the outermost boundary.
+What is considered available to an animal is not cleanly translated from a biological concept to a statistical one.
+While the area estimation methods (MCPs, KDEs, AKDEs, dBBMMs) described above make --to varying degrees-- use of the movement information contained within the dataset, they remain abstractions of the underlying drivers of animal movement (i.e., selection and perception).
+Therefore, the researcher must make a some-what arbitrary choice regarding what is included/excluded and counted as available; each of these area estimation methods requires a choice to be made regarding the outermost boundary.
 We explored the impact of using a 90, 95, and 99\% contour for all the methods.
-MCPs areas are generated based a percentage of the location points.
-Whereas the KDE, AKDE, and dBBMM methods require a contour to be extracted from the utilisation distribution (occurrence distribution for dBBMMs).
-AKDEs also provide a 95\% confidence interval surrounding any chosen contour; for the purposes of simplicity we only use the point estimate for each \% contour.
+MCPs areas are generated based a percentage of the location points, whereas the KDE, AKDE, and dBBMM methods require a contour to be extracted from the utilisation distribution (occurrence distribution for dBBMMs).
+AKDEs also provide a 95\% confidence interval surrounding any chosen contour; for the purposes of simplicity, we only use the point estimate for each \% contour.
 
 Once we had created a defined availability area, we generated points at which the habitat type is recorded to estimate the relative availability.
-How many and in what alignment these availability points are generated poses two additional points of analytical choice.
-For this study we varied the number of availability points as a multiple of the number of animal locations in the dataset (Fig. \ref{fig:decisionTrees}).
-For the alignment of the points, points where either random or stratified within the available previously defined.
+How many, and in what alignment, these availability points are generated poses two additional points of analytical choice.
+For this study, we varied the number of availability points as a multiple of the number of animal locations in the dataset (from 1 to 10, Fig. \ref{fig:decisionTrees}).
+For the alignment of the points, points were either random or stratified within the available previously defined.
 
-As mentioned resource selection function (RSF) share the above decisions on availability with the Wides methods.
+As mentioned, resource selection functions (RSF) share the above decisions on availability with the Wides methods.
 In addition, for the RSF we also explored the impact of varying the weighting of the available points when the RSF (i.e., generalized linear model / logistic regression) model is run, which impacts the fitting process.
-There are suggestions that altering the weighing can improve model convergence and decrease the uncertainty surrounding habitat preference estimates (\protect\hyperlink{ref-fieberg_how_2021}{Fieberg et al., 2021}); we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate.
+There are suggestions that altering the weighing can improve model convergence and decrease the uncertainty surrounding habitat preference estimates (\protect\hyperlink{ref-fieberg_how_2021}{Fieberg et al., 2021}); we included this decision to examine whether the pursuit of a more confident answer is biasing the point estimate (from 1 to 1e+07).
 
-Other than the area based methods of Wides and RSF, we also explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
+\hypertarget{step-selection-functions}{%
+\paragraph{Step selection functions}\label{step-selection-functions}}
+
+In addition to the area based methods of Wides and RSF, we explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
 
 Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
-As a result SSFs have a number of decisions not shared with the area methods.
+Consequently, SSFs have a number of decisions not shared with the area methods.
 
 We explored three decisions associated with the generation of random (available but unused) locations for each step.
-The first is similar to the area methods, we varied the number of random locations generated per step from \#\# to \#\#.
+The first is similar to the area methods, we varied the number of random locations generated per step from 5 to 500.
 The second and third are concerning the distributions used to generate the random step and turn angles.
 Step lengths were tested with a Gamma and Exponential distributions, while turn angle was tested with Von-Mises and Uniform distributions.
 
-The other decisions we explored in SSFs was whether to run the model as a standard step selection or an integrated step selection function.
-The standard step selection model is a conditional logistic regression, where we aim to estimate the used/non-used by the habitat values (case\_ \textasciitilde{} values + strata(step\_id\_)).
+The other decisions we explored in SSFs were whether to run the model as a standard step selection or an integrated step selection function.
+The standard step selection model is a conditional logistic regression, where we aim to estimate the used/unused by the habitat values (case\_ \textasciitilde{} values + strata(step\_id\_)).
 The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
 The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artefact of the movements of the animal rather than active habitat preference (\protect\hyperlink{ref-avgar_integrated_2016}{Avgar et al., 2016}).
 
 We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of ``bursts''.
-Bursts are used when the researcher wants to look at selection at a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
-Such grouping of data deserves investigation, but the myriad of ways bursts can be defined and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
+Bursts are used when the researcher wants to look at selection over a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
+Such grouping of data deserves investigation, but there are myriad of ways bursts can be defined, and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
+
+\hypertarget{weighted-resource-selection-functions}{%
+\paragraph{Weighted Resource Selection Functions}\label{weighted-resource-selection-functions}}
 
 Compared to the other methods, Weighted Resource Selection Functions do not have many associated choices.
 Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat preference (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}).
 This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on --potentially arbitrary-- decisions with regards to how to mitigate any biasing effects the structures produce.
-As a result we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}).
-Instead we exploring only variations in data quantity (i.e., tracking duration and frequency).
+As a result, we have no exploration of analysis decisions for this method because aspects such an available area or points not longer apply, and availability is estimated as part of the model (\protect\hyperlink{ref-alston_mitigating_2023}{Alston et al., 2023}).
+Instead we explore only variations in data quantity (i.e., tracking duration and frequency).
 
 \hypertarget{assessing-the-multiverse}{%
 \subsection{Assessing the multiverse}\label{assessing-the-multiverse}}
 
-To generate the multiverse we used a meta-programming approach via the targets v.0.14.2 and tarchetypes v.0.7.4 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},b).
+To generate the multiverse we used a meta-programming approach via the targets v.0.14.2 and tarchetypes v.0.7.4 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},\protect\hyperlink{ref-tarchetypes}{b}).
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing.
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation a complex workflow may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
@@ -599,7 +699,7 @@ BMM was funded by the Natural Environment Research Council (NERC) via the IAPETU
 
 In addition to packages already mentioned in the methods we also used the following.
 
-We used \emph{R} v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.3.1.446 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
+We used \emph{R} v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.9.1.494 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
 We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}) and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
 
 We used \emph{raster} v.3.6.14 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
@@ -608,11 +708,11 @@ We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggpl
 
 We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.2 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.2 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
 
-We used the \emph{dplyr} v.1.0.10 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.1.8 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
+We used the \emph{dplyr} v.1.1.3 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
 
 We used \emph{sp} v.1.5.1 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.20 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
 
-We used rmarkdown v.2.19 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
+We used rmarkdown v.2.25 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
 
 We generated R package citations with the aid of \emph{grateful} v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
@@ -625,6 +725,20 @@ We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyp
 
 \hypertarget{supplementary-material}{%
 \section{Supplementary Material}\label{supplementary-material}}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `mutate()`.
+## i In argument: `across(where(is.numeric), round, digits = 3)`.
+## Caused by warning:
+## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+## Supply arguments directly to `.fns` through an anonymous function instead.
+## 
+##   # Previously
+##   across(a:b, mean, na.rm = TRUE)
+## 
+##   # Now
+##   across(a:b, \(x) mean(x, na.rm = TRUE))
+\end{verbatim}
 
 \begin{table}
 
@@ -829,6 +943,9 @@ Gabry J, Simpson D, Vehtari A, Betancourt M, Gelman A. 2019. Visualization in ba
 
 \leavevmode\vadjust pre{\hypertarget{ref-gelman_garden_2013}{}}%
 Gelman A, Loken E. 2013. \href{http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf}{The garden of forking paths: {Why} multiple comparisons can be a problem, even when there is no "fishing expedition" or "p-hacking" and the research hypothesis was posited ahead of time}. :17.
+
+\leavevmode\vadjust pre{\hypertarget{ref-gould_same_2023}{}}%
+Gould E, Fraser H, Parker T, Nakagawa S, Griffith S, Vesk P, Fidler F, Abbey-Lee R, Abbott J, Aguirre L, Alcaraz C, Altschul D, Arekar K, Atkins J, Atkinson J, Barrett M, Bell K, Bello S, Berauer B, Bertram M, Billman P, Blake C, Blake S, Bliard L, Bonisoli-Alquati A, Bonnet T, Bordes C, Bose A, Botterill-James T, Boyd M, Boyle S, Bradfer-Lawrence T, Brand J, Brengdahl M, Bulla M, Bussière L, Camerlenghi E, Campbell S, Campos L, Caravaggi A, Cardoso P, Carroll C, Catanach T, Chen X, Chik HYJ, Choy E, Christie A, Chuang A, Chunco A, Clark B, Cox M, Cressman K, Crouch C, D'Amelio P, De Sousa A, Döbert T, Dobler R, Dobson A, Doherty T, Drobniak S, Duffy A, Dunn R, Dunning J, Eberhart-Hertel L, Elmore J, Elsherif M, English H, Ensminger D, Ernst U, Ferguson S, Ferreira-Arruda T, Fieberg J, Finch E, Fiorenza E, Fisher D, Forstmeier W, Fourcade Y, Francesca Santostefano F, Frank G, Freund C, Gandy S, Gannon D, García-Cervigón A, Géron C, Gilles M, Girndt A, Gliksman D, Goldspiel H, Gomes D, Goslee S, Gosnell J, Gratton P, Grebe N, Greenler S, Griffith D, Griffith F, Grossman J, Güncan A, Haesen S, Hagan J, Harrison N, Hasnain S, Havird J, Heaton A, Hsu B-Y, Iranzo E, Iverson E, Jimoh S, Johnson D, Johnsson M, Jorna J, Jucker T, Jung M, Kačergytė I, Ke A, Kelly C, Keogan K, Keppeler F, Killion A, Kim D, Kochan D, Korsten P, Kothari S, Kuppler J, Kusch J, Lagisz M, Larkin D, Larson C, Lauck K, Lauterbur M, Law A, Léandri-Breton D-J, Lievens E, Lima D, Lindsay S, Macphie K, Mair M, Malm L, Mammola S, Manhart M, Mäntylä E, Marchand P, Marshall B, Martin D, Martin J, Martin C, Martinig A, McCallum E, McNew S, Meiners S, Michelangeli M, Moiron M, Moreira B, Mortensen J, Mos B, Muraina T, Nelli L, Nilsonne G, Nolazco S, Nooten S, Novotny J, Olin A, Organ C, Ostevik K, Palacio F, Paquet M, Pascall D, Pasquarella V, Payo-Payo A, Pedersen K, Perez G, Perry K, Pottier P, Proulx M, Proulx R, Pruett J, Ramananjato V, Randimbiarison F, Razafindratsima O, Rennison D, Riva F, Riyahi S, Roast M, Rocha F, Roche D, Román-Palacios C, Rosenberg M, Ross J, Rowland F, Rugemalila D, Russell A, Ruuskanen S, Saccone P, Sadeh A, Salazar S, Sales K, Salmón P, Sanchez-Tojar A, Santos L, Schilling H, Schmidt M, Schmoll T, Schneider A, Schrock A, Schroeder J, Schtickzelle N, Schultz N, Scott D, Shapiro J, Sharma N, Shearer C, Sitvarin M, Skupien F, Slinn H, Smith J, Smith G, Sollmann R, Stack Whitney K, Still S, Stuber E, Sutton G, Swallow B, Taff C, Takola E, Tanentzap A, Thawley C, Tortorelli C, Trlica A, Turnell B, Urban L, Van De Vondel S, Van Oordt F, Vanderwel M, Vanderwel K, Vanderwolf K, Verrelli B, Vieira M, Vollering J, Walker X, Walter J, Waryszak P, Weaver R, Weller D, Whelan S, White R, Wolfson D, Wood A, Yanco S, Yen J, Youngflesh C, Zilio G, Zimmer C, Zitomer R, Villamil N, Tompkins E. 2023. Same data, different analysts: Variation in effect sizes due to analytical decisions in ecology and evolutionary biology. \emph{EcoEvoRxiv}. DOI: \href{https://doi.org/10.32942/X2GG62}{10.32942/X2GG62}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-grainger_evidence_2019}{}}%
 Grainger M, Bolam FC, stewart G, Nilsen EB. 2019. Evidence synthesis for tackling research waste. \emph{EcoEvoRxiv}. DOI: \href{https://doi.org/10.32942/osf.io/42fkh}{10.32942/osf.io/42fkh}.
