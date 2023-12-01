@@ -16,4 +16,5 @@ _targets/user/*
 
 notebook/prereg/bcf examples/
 notebook/prereg/sampleSizeTesting/
+notebook/manuscript/feedback/
 
