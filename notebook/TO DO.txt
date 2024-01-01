@@ -3,7 +3,43 @@ TO DO
 - change figures and add in side by side null comparison
 - make median line full vertical on spec curves so it doesn't look like median of y axis
 - make all figure text larger and clearer
-- ensure legends to figures are better at explaining what is in them, in particular model beta results ones
-- address the cold open into movement eco in the intro
-- ensure preference or selection is used consistently
+
+
+- DONE - ensure preference or selection is used consistently
 - ensure there are no sentences implying that replication == truth - but instead they should hint that replication is a way of detecting model differences or room for improvement?
+
+- ensure legends to figures are better at explaining what is in them, in particular model beta results ones - really before doing this we need to check that the distributions displayed are the posterior predictictives not the posterior distirbutions of the mu estimates
+- address the cold open into movement eco in the intro - partially done with new 2nd to last intro paragraph - think we need to swap spread_draws to add_predicted_draws in the effects plot code
+See below with efforts to check if the spread_draws makes a difference, pretty sure it does but below use of predicted draws isn't what we want, we want to show the distribution built from the Mu dist combined with any sigma/sd distribtuion associated with it - we didn't allow sigma to vary so perhaps it matters less?
+
+gradLimits <- modCurrent %>%
+    spread_draws(`b_.*`, regex = TRUE) %>%
+    dplyr::select(-.chain, -.iteration, -.draw) %>%
+    pivot_longer(everything(), names_to = "variable") %>%
+    filter(!variable %in% c("b_Intercept"),
+           !str_detect(variable, ":")) %>%
+    summarise(
+      minX = min(value),
+      maxX = max(value)
+    )
+
+  predAdded <- modCurrent %>%
+    add_predicted_draws(object = modCurrent,
+      newdata = brmsResults$modOUT_dEst$data %>%
+        select(-absDeltaEst)) %>%
+    ungroup() %>%
+    dplyr::select(-.chain, -.iteration, -.draw, -.row) %>%
+    mutate(across(everything(), as.character)) %>%
+    pivot_longer(matches(c("tdScaled", "tfScaled",
+                           "modelForm", "stepDist",
+                           "turnDist", "availablePerStepScaled",
+                           "species",
+                           "indi", "species:indi")), names_to = "variable") %>%
+    mutate(.prediction = as.numeric(.prediction))
+    # filter(!variable %in% c("b_Intercept"),
+    #        !str_detect(variable, ":")) %>%
+  predAdded %>%
+    summarise(
+      minX = min(.prediction),
+      maxX = max(.prediction)
+    )
