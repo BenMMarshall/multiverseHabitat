@@ -13,7 +13,7 @@
 method_indi_wides <- function(
     # first two can be for individuals, as they will be provided by previous nodes
   movementData,
-  landscape,
+  landscapeRaster,
   # below can all be programmed as single values as the
   # targets workflow will be used to feed multiple values
   # in
@@ -39,13 +39,13 @@ method_indi_wides <- function(
   })
 
   # extract the habitat types each point is located within
-  availValues <- raster::extract(landscape$classRaster, availPoints)
+  availValues <- raster::extract(landscapeRaster, availPoints)
 
   availValues_DF <- data.frame(rbind(table(availValues)))
   names(availValues_DF) <- sub("X", "c", names(availValues_DF))
 
   suppressWarnings({
-    usedValues <- raster::extract(landscape$classRaster, sp::SpatialPoints(movementData[,c("x", "y")],
+    usedValues <- raster::extract(landscapeRaster, sp::SpatialPoints(movementData[,c("x", "y")],
                                                                  sp::CRS(SRS_string = "EPSG:32601")))
   })
   usedValues_DF <- data.frame(rbind(table(usedValues)))

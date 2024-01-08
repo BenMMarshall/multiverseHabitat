@@ -14,7 +14,11 @@
 subset_frequency <- function(movementData, freqPreset){
 
   movementData$hour <- as.numeric(substr(movementData$datetime, 12, 13))
+  # instances returning NA, replace with 0
+  movementData$hour[is.na(movementData$hour)] <- 0
   movementData$minute <- as.numeric(substr(movementData$datetime, 15, 16))
+  # instances returning NA, replace with 0
+  movementData$minute[is.na(movementData$minute)] <- 0
   movementData$yday <- as.numeric(format(movementData$datetime,"%j"))
 
   if(freqPreset == 0.5){

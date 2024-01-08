@@ -17,6 +17,7 @@ wrapper_indi_area <- function(
 ){
 
   Method_method <- optionsList$Method_method
+  Method_lc <- optionsList_sff$Method_lc
   areaMethod <- optionsList$areaMethod
   areaContour <- optionsList$areaContour
   Method_ap <- optionsList$Method_ap
@@ -25,17 +26,20 @@ wrapper_indi_area <- function(
 
   # wides places
   listSize <-
+    length(Method_lc) *
     length(areaMethod) *
     length(areaContour) *
     length(Method_ap) *
     length(Method_sp) +
     # rsf places
+    length(Method_lc) *
     length(areaMethod) *
     length(areaContour) *
     length(Method_ap) *
     length(Method_sp) *
     length(Method_we) +
     # wRSF place
+    length(Method_lc) *
     1
 
   ## loop is better than an apply function as the for loop reduces the number of
@@ -88,53 +92,14 @@ wrapper_indi_area <- function(
 
             for(sp in Method_sp){
 
-              if(me == "wides"){
+              for(lc in Method_lc){
+                ##############################################
 
-                i <- i+1
-
-                # this tackles the instances where area estimates fail
-                if(is.na(polyOUT)){
-
-                  listOUT[[i]] <- data.frame(
-                    Estimate = NA,
-                    Lower = NA,
-                    Upper = NA,
-                    analysis = me,
-                    area = am,
-                    contour = ac,
-                    availPointsPer = ap,
-                    samplingPattern = sp,
-                    weighting = NA
-                  )
-
-                } else {
-
-                  wiOUT <- multiverseHabitat::method_indi_wides(
-                    movementData = movementData,
-                    landscape = landscape,
-                    spSamp = sp,
-                    availableArea = polyOUT,
-                    availablePointsPer = ap)
-
-                  listOUT[[i]] <- data.frame(
-                    Estimate = wiOUT$Estimate,
-                    Lower = wiOUT$Estimate - wiOUT$SE,
-                    Upper = wiOUT$Estimate + wiOUT$SE,
-                    analysis = me,
-                    area = am,
-                    contour = ac,
-                    availPointsPer = ap,
-                    samplingPattern = sp,
-                    weighting = NA
-                  )
-                } # if poly NA
-                # print(me)
-
-              } else if(me == "rsf"){
-
-                for(we in Method_we){
+                if(me == "wides"){
 
                   i <- i+1
+
+                  # this tackles the instances where area estimates fail
                   if(is.na(polyOUT)){
 
                     listOUT[[i]] <- data.frame(
@@ -142,42 +107,91 @@ wrapper_indi_area <- function(
                       Lower = NA,
                       Upper = NA,
                       analysis = me,
+                      classLandscape = lc,
                       area = am,
                       contour = ac,
                       availPointsPer = ap,
                       samplingPattern = sp,
-                      weighting = we
+                      weighting = NA
                     )
 
                   } else {
 
-                    rsfOUT <- multiverseHabitat::method_indi_rsf(
+                    wiOUT <- multiverseHabitat::method_indi_wides(
                       movementData = movementData,
-                      landscape = landscape,
+                      landscapeRaster = landscape[[lc]],
                       spSamp = sp,
                       availableArea = polyOUT,
-                      availablePointsPer = ap,
-                      weighting = we
-                    )
-
+                      availablePointsPer = ap)
 
                     listOUT[[i]] <- data.frame(
-                      Estimate = rsfOUT$Estimate,
-                      Lower = rsfOUT$Estimate - rsfOUT$SE,
-                      Upper = rsfOUT$Estimate + rsfOUT$SE,
+                      Estimate = wiOUT$Estimate,
+                      Lower = wiOUT$Estimate - wiOUT$SE,
+                      Upper = wiOUT$Estimate + wiOUT$SE,
                       analysis = me,
+                      classLandscape = lc,
                       area = am,
                       contour = ac,
                       availPointsPer = ap,
                       samplingPattern = sp,
-                      weighting = we
+                      weighting = NA
                     )
                   } # if poly NA
-
                   # print(me)
 
-                } # we
-              } # if method rsf
+                } else if(me == "rsf"){
+
+                  for(we in Method_we){
+
+                    i <- i+1
+                    if(is.na(polyOUT)){
+
+                      listOUT[[i]] <- data.frame(
+                        Estimate = NA,
+                        Lower = NA,
+                        Upper = NA,
+                        analysis = me,
+                        classLandscape = lc,
+                        area = am,
+                        contour = ac,
+                        availPointsPer = ap,
+                        samplingPattern = sp,
+                        weighting = we
+                      )
+
+                    } else {
+
+                      rsfOUT <- multiverseHabitat::method_indi_rsf(
+                        movementData = movementData,
+                        landscapeRaster = landscape[[lc]],
+                        spSamp = sp,
+                        availableArea = polyOUT,
+                        availablePointsPer = ap,
+                        weighting = we
+                      )
+
+
+                      listOUT[[i]] <- data.frame(
+                        Estimate = rsfOUT$Estimate,
+                        Lower = rsfOUT$Estimate - rsfOUT$SE,
+                        Upper = rsfOUT$Estimate + rsfOUT$SE,
+                        analysis = me,
+                        classLandscape = lc,
+                        area = am,
+                        contour = ac,
+                        availPointsPer = ap,
+                        samplingPattern = sp,
+                        weighting = we
+                      )
+                    } # if poly NA
+
+                    # print(me)
+
+                  } # we
+                } # if method rsf
+
+                ##############################################
+              } # lc
             } # sp
           } # ap
         } # ac
@@ -196,6 +210,7 @@ wrapper_indi_area <- function(
             Lower = NA,
             Upper = NA,
             analysis = "wRSF",
+            classLandscape = NA,
             area = NA,
             contour = NA,
             availPointsPer = NA,
@@ -230,6 +245,7 @@ wrapper_indi_area <- function(
               Lower = NA,
               Upper = NA,
               analysis = "wRSF",
+              classLandscape = NA,
               area = NA,
               contour = NA,
               availPointsPer = NA,
@@ -249,32 +265,42 @@ wrapper_indi_area <- function(
                                         timezone = "UTC",
                                         projection = sp::CRS(SRS_string = "EPSG:32601"))
 
-          wRSF <- ctmm:::rsf.fit(teleObj,
-                                 UD = areaOUT,
-                                 R = list(c = landscape$classRasterLatLon),
-                                 # R = list(
-                                 #   c0 = r0,
-                                 #   c1 = r1,
-                                 #   c2 = r2),
-                                 error = 0.01,
-                                 reference = 1,
-                                 max.mem = "1 Gb")
 
-          # summary(wRSF)
-          wRSFOUT <- summary(wRSF)$CI[1,]
-          rm(wRSF)
+          ##################
+          for(lc in Method_lc){
 
-          listOUT[[i]] <- data.frame(
-            Estimate = wRSFOUT["est"],
-            Lower = wRSFOUT["low"],
-            Upper = wRSFOUT["high"],
-            analysis = "wRSF",
-            area = NA,
-            contour = NA,
-            availPointsPer = NA,
-            samplingPattern = NA,
-            weighting = NA
-          )
+            wRSF <- ctmm:::rsf.fit(teleObj,
+                                   UD = areaOUT,
+                                   R = list(c = landscape[[paste0(lc, "LatLon")]]),
+                                   # R = list(
+                                   #   c0 = r0,
+                                   #   c1 = r1,
+                                   #   c2 = r2),
+                                   error = 0.01,
+                                   reference = 1,
+                                   max.mem = "1 Gb")
+
+            # summary(wRSF)
+            wRSFOUT <- summary(wRSF)$CI[1,]
+            rm(wRSF)
+
+            listOUT[[i]] <- data.frame(
+              Estimate = wRSFOUT["est"],
+              Lower = wRSFOUT["low"],
+              Upper = wRSFOUT["high"],
+              analysis = "wRSF",
+              classLandscape = lc,
+              area = NA,
+              contour = NA,
+              availPointsPer = NA,
+              samplingPattern = NA,
+              weighting = NA
+            )
+
+          } # lc
+          #################
+
+
         } # if error in akde area method
       } # if wRSF
 

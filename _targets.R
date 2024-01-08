@@ -60,6 +60,7 @@ values_Sampling <- values_Sampling %>%
 optionsList_area <- list(
   # Method_method = c("wides", "rsf", "wRSF"),
   Method_method = c("wides", "rsf"),
+  Method_lc = c("classRaster", "classRasterScram"),
   areaMethod = c("MCP", "KDEhref", "AKDE", "dBBMM"),
   areaContour = c(90, 95, 99),
   Method_ap = as.integer(round(exp(seq(log(1), log(10), length.out = 4)), digits = 1)),
@@ -73,6 +74,7 @@ optionsList_area <- list(
 optionsList_area_wRSFSplit <-
   list(
     Method_method = c("wRSF"),
+    Method_lc = c("classRaster", "classRasterScram"),
     areaMethod = c("AKDE"),
     areaContour = c(95),
     Method_ap = 999,
@@ -82,11 +84,13 @@ optionsList_area_wRSFSplit <-
 
 optionsList_sff <- list(
   Method_method = c("ssf"),
+  Method_lc = c("classRaster", "classRasterScram"),
   MethodSSF_mf = c("mf.is", "mf.ss"),
   MethodSSF_sd = c("gamma", "exp"),
   MethodSSF_td = c("vonmises", "unif"),
   MethodSSF_as = as.integer(round(exp(seq(log(5), log(500), length.out = 5)), digits = 1))
 )
+
 
 # values_MethodCTM <- tidyr::expand_grid(
 #   # Methodctm_ks = round(c(1, 1/2, 1/4, 1/16, 1/32), digits = 2),
