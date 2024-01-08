@@ -14,7 +14,7 @@
 method_indi_ssf <- function(
     # first two can be for individuals, as they will be provided by previous nodes
   movementData,
-  landscape,
+  landscapeRaster,
   # below can all be programmed as single values as the
   # targets workflow will be used to feed multiple values
   # in
@@ -42,7 +42,7 @@ method_indi_ssf <- function(
                                  ta_distr = amt::fit_distr(movementSteps$ta_, turnDist))
 
   modelData <- amt::extract_covariates(modelData,
-                                       landscape$classRaster,
+                                       landscapeRaster,
                                        where = "end")
 
   modelData$values <- paste0("c", modelData$layer)
