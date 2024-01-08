@@ -17,6 +17,7 @@ wrapper_indi_ssf <- function(
 ){
 
   Method_method <- optionsList_sff$Method_method
+  Method_lc <- optionsList_sff$Method_lc
   MethodSSF_mf <- optionsList_sff$MethodSSF_mf
   MethodSSF_sd <- optionsList_sff$MethodSSF_sd
   MethodSSF_td <- optionsList_sff$MethodSSF_td
@@ -40,28 +41,37 @@ wrapper_indi_ssf <- function(
 
         for(as in MethodSSF_as){
 
-          ssfOUT <- multiverseHabitat::method_indi_ssf(
-            movementData = movementData,
-            landscape = landscape,
-            methodForm = mf,
-            stepDist = sd,
-            turnDist = td,
-            availableSteps = as
-          )
+          for(lc in Method_lc){
 
-          i <- i+1
+            # lc <- optionsList_sff$Method_lc[2]
+            ##############################
 
-          listOUT[[i]] <- data.frame(
-            Estimate = ssfOUT$Estimate,
-            Lower = ssfOUT$Estimate - ssfOUT$SE,
-            Upper = ssfOUT$Estimate + ssfOUT$SE,
-            analysis = "ssf",
-            modelForm = mf,
-            stepDist = sd,
-            turnDist = td,
-            availablePerStep = as
-          )
-          # print(i)
+            ssfOUT <- multiverseHabitat::method_indi_ssf(
+              movementData = movementData,
+              landscapeRaster = landscape[[lc]],
+              methodForm = mf,
+              stepDist = sd,
+              turnDist = td,
+              availableSteps = as
+            )
+
+            i <- i+1
+
+            listOUT[[i]] <- data.frame(
+              Estimate = ssfOUT$Estimate,
+              Lower = ssfOUT$Estimate - ssfOUT$SE,
+              Upper = ssfOUT$Estimate + ssfOUT$SE,
+              analysis = "ssf",
+              classLandscape = lc,
+              modelForm = mf,
+              stepDist = sd,
+              turnDist = td,
+              availablePerStep = as
+            )
+            # print(i)
+
+          } # lc
+
         } # as
       } # sd
     } # td
