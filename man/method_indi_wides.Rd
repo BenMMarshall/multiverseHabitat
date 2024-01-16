@@ -6,7 +6,7 @@
 \usage{
 method_indi_wides(
   movementData,
-  landscape,
+  landscapeRaster,
   spSamp,
   availableArea,
   availablePointsPer,

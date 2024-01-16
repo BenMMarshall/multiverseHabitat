@@ -6,7 +6,7 @@
 \usage{
 method_indi_rsf(
   movementData,
-  landscape,
+  landscapeRaster,
   spSamp,
   availableArea,
   availablePointsPer,

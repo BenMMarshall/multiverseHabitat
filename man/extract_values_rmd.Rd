@@ -4,7 +4,15 @@
 \alias{extract_values_rmd}
 \title{Generate files needed for RMD manuscript}
 \usage{
-extract_values_rmd()
+extract_values_rmd(
+  areaResults,
+  ssfResults,
+  wrsfResults,
+  areaBrms_wides,
+  areaBrms_rsf,
+  ssfBrms,
+  wrsfBrms
+)
 }
 \value{
 Will save a series of csv files containing the raw estimates and

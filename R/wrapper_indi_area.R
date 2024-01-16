@@ -17,7 +17,7 @@ wrapper_indi_area <- function(
 ){
 
   Method_method <- optionsList$Method_method
-  Method_lc <- optionsList_sff$Method_lc
+  Method_lc <- optionsList$Method_lc
   areaMethod <- optionsList$areaMethod
   areaContour <- optionsList$areaContour
   Method_ap <- optionsList$Method_ap
@@ -200,11 +200,11 @@ wrapper_indi_area <- function(
 
         print(me)
 
-        i <- i+1
         if(class(areaOUT)[1] == "try-error"){
 
           print(areaOUT)
 
+          i <- i+1
           listOUT[[i]] <- data.frame(
             Estimate = NA,
             Lower = NA,
@@ -240,6 +240,7 @@ wrapper_indi_area <- function(
 
           # if we want to skip the given tf and td combo
           if(trf == "Don't Run" | trd %in% c(7,30,120)){
+            i <- i+1
             listOUT[[i]] <- data.frame(
               Estimate = NA,
               Lower = NA,
@@ -252,54 +253,54 @@ wrapper_indi_area <- function(
               samplingPattern = NA,
               weighting = NA
             )
-          }
+          } else {
 
+            spPoints <- sp::SpatialPoints(movementData[,c("x", "y")],
+                                          sp::CRS(SRS_string = "EPSG:32601"))
+            spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
+            movementData$lon <- spLL@coords[,1]
+            movementData$lat <- spLL@coords[,2]
+            teleObj <- ctmm::as.telemetry(movementData,
+                                          timeformat = "%Y-%m-%d %H:%M:%S",
+                                          timezone = "UTC",
+                                          projection = sp::CRS(SRS_string = "EPSG:32601"))
 
-          spPoints <- sp::SpatialPoints(movementData[,c("x", "y")],
-                                        sp::CRS(SRS_string = "EPSG:32601"))
-          spLL <- sp::spTransform(spPoints, sp::CRS(SRS_string = "EPSG:4326"))
-          movementData$lon <- spLL@coords[,1]
-          movementData$lat <- spLL@coords[,2]
-          teleObj <- ctmm::as.telemetry(movementData,
-                                        timeformat = "%Y-%m-%d %H:%M:%S",
-                                        timezone = "UTC",
-                                        projection = sp::CRS(SRS_string = "EPSG:32601"))
+            ##################
+            for(lc in Method_lc){
+              i <- i+1
 
+              wRSF <- ctmm:::rsf.fit(teleObj,
+                                     UD = areaOUT,
+                                     R = list(c = landscape[[paste0(lc, "LatLon")]]),
+                                     # R = list(
+                                     #   c0 = r0,
+                                     #   c1 = r1,
+                                     #   c2 = r2),
+                                     error = 0.01,
+                                     reference = 1,
+                                     max.mem = "1 Gb")
 
-          ##################
-          for(lc in Method_lc){
+              # summary(wRSF)
+              wRSFOUT <- summary(wRSF)$CI[1,]
+              rm(wRSF)
 
-            wRSF <- ctmm:::rsf.fit(teleObj,
-                                   UD = areaOUT,
-                                   R = list(c = landscape[[paste0(lc, "LatLon")]]),
-                                   # R = list(
-                                   #   c0 = r0,
-                                   #   c1 = r1,
-                                   #   c2 = r2),
-                                   error = 0.01,
-                                   reference = 1,
-                                   max.mem = "1 Gb")
+              listOUT[[i]] <- data.frame(
+                Estimate = wRSFOUT["est"],
+                Lower = wRSFOUT["low"],
+                Upper = wRSFOUT["high"],
+                analysis = "wRSF",
+                classLandscape = lc,
+                area = NA,
+                contour = NA,
+                availPointsPer = NA,
+                samplingPattern = NA,
+                weighting = NA
+              )
 
-            # summary(wRSF)
-            wRSFOUT <- summary(wRSF)$CI[1,]
-            rm(wRSF)
+            } # lc
+            #################
 
-            listOUT[[i]] <- data.frame(
-              Estimate = wRSFOUT["est"],
-              Lower = wRSFOUT["low"],
-              Upper = wRSFOUT["high"],
-              analysis = "wRSF",
-              classLandscape = lc,
-              area = NA,
-              contour = NA,
-              availPointsPer = NA,
-              samplingPattern = NA,
-              weighting = NA
-            )
-
-          } # lc
-          #################
-
+          } # else bit to skip certain wrsf because of long run times
 
         } # if error in akde area method
       } # if wRSF

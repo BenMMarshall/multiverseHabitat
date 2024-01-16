@@ -15,6 +15,7 @@ generate_spec_curves <- function(compiledResults, method){
   # library(ggridges)
   # library(reshape2)
   # library(patchwork)
+  # library(stringr)
 
   if(!method %in% c("rsf", "ssf", "wides", "wrsf")){
     stop("Type must be rsf, ssf, wides, wrsf")
@@ -26,7 +27,7 @@ generate_spec_curves <- function(compiledResults, method){
   # summary plots draft -----------------------------------------------------
 
   # targets::tar_load(areaResults)
-
+  # compiledResults <- areaResults
   if(method == "rsf"){
 
     areaResults <- multiverseHabitat::parse_combined_results(compiledResults)
@@ -41,6 +42,10 @@ generate_spec_curves <- function(compiledResults, method){
                                          "Random",
                                          "Stratified")
 
+    rsfResults$classLandscape <- ifelse(str_detect(rsfResults$classLandscape, "Scram"),
+                                        "Scrambled Habitat Layer (i.e., No selection)",
+                                        "Correct Habitat Layer (i.e., Positive selection)")
+
     levelOrdering <- unique(c(sort(unique(rsfResults$td)),
                               sort(unique(rsfResults$tf)),
                               unique(rsfResults$area),
@@ -52,8 +57,9 @@ generate_spec_curves <- function(compiledResults, method){
     rsfResultsPlotData <- rsfResults %>%
       dplyr::select(Estimate, Lower, Upper, indi, species,
                     td,  tf,
-                    area, contour, availPointsPer, samplingPattern, weighting, sigColour) %>%
-      reshape2::melt(c("Estimate", "Lower", "Upper", "indi", "species", "sigColour")) %>%
+                    area, contour, availPointsPer, samplingPattern, weighting, sigColour,
+                    classLandscape) %>%
+      reshape2::melt(c("Estimate", "Lower", "Upper", "indi", "species", "sigColour", "classLandscape")) %>%
       dplyr::mutate(
         variable = case_when(
           variable == "td" ~ "Tracking Duration (days)",
@@ -67,12 +73,14 @@ generate_spec_curves <- function(compiledResults, method){
         indi = as.factor(indi),
         species = as.factor(species),
         value = factor(value, levels = levelOrdering)) %>%
-      dplyr::group_by(variable, value) %>%
-      dplyr::mutate(d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
+      dplyr::group_by(classLandscape) %>%
+      dplyr::mutate(medEst = median(Estimate, na.rm = TRUE)) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
+      dplyr::mutate(d_medEst = Estimate - medEst) %>%
       dplyr::ungroup()
 
     medData <- rsfResultsPlotData %>%
-      dplyr::group_by(variable, value) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::summarise(medEst = median(Estimate, na.rm = TRUE))
 
     nSummary <- rsfResultsPlotData %>%
@@ -81,7 +89,7 @@ generate_spec_curves <- function(compiledResults, method){
         Estimate < -7.5 ~ -33,
         TRUE ~ -8
       )) %>%
-      dplyr::group_by(bunch, variable, value) %>%
+      dplyr::group_by(bunch, variable, value, classLandscape) %>%
       dplyr::summarise(n = n())
 
     (splitSpecCurve_rsf <- rsfResultsPlotData %>%
@@ -99,9 +107,8 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 1, size = 1, colour = "#403F41") +
         geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                    linetype = 2) +
-        facet_grid(variable~., scales = "free_y", space = "free", switch = "y") +
+        facet_grid(variable~classLandscape, scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
-        # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
         scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
         theme_bw() +
         theme(
@@ -109,6 +116,7 @@ generate_spec_curves <- function(compiledResults, method){
           text = element_text(colour = palette["coreGrey"]),
           strip.background = element_blank(),
           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.x.top = element_blank(),
           strip.text.y.left = element_text(angle = 0, margin = margin(-8.5,12,0,0)),
           axis.text.y.left = element_text(margin = margin(0,-165,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
           axis.ticks.y.left = element_blank(),
@@ -123,40 +131,42 @@ generate_spec_curves <- function(compiledResults, method){
     splitSpecCurve_rsf_numbers <- splitSpecCurve_rsf +
       geom_text(data = nSummary, aes(x = bunch, y = value, label = n), fontface = 3)
 
-    overallMed <- data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
-                             "indexLoc" = round(nrow(rsfResults)/2, digits = 0))
+    overallMed <- rsfResults %>%
+      mutate(n = n()) %>%
+      group_by(classLandscape) %>%
+      summarise(medEst = median(Estimate, na.rm = TRUE),
+                n = n[1])
 
     (overallSpecCurve_rsf <- rsfResults %>%
+        group_by(classLandscape) %>%
         dplyr::arrange(Estimate) %>%
         dplyr::mutate(index = row_number(),
                       indi = as.factor(indi),
                       species = as.factor(species),
-                      d_medEst = Estimate - median(rsfResults$Estimate, na.rm = TRUE)) %>%
+                      d_medEst = Estimate - median(Estimate, na.rm = TRUE)) %>%
         ggplot() +
-        geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
-                   linetype = 1) +
-        # geom_errorbarh(aes(xmin = Lower, xmax = Upper, y = index, colour = d_medEst),
-        #               alpha = 0.005, linewidth = 0.2) +
-        # coord_cartesian(xlim = c(-35, 20)) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.75, colour = "#403F41",
+                   linetype = 2) +
         # geom_point(aes(x = Estimate, y = index, colour = d_medEst),
         #            size = 1, alpha = 0.2)+
-        geom_point(aes(x = Estimate, y = index, colour = d_medEst), alpha = 0.25,
-                   pch = 3, size = 0.75)+
-        geom_point(data = data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(rsfResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2.5, colour = "#FFFFFF") +
-        geom_point(data = data.frame("medEst" = median(rsfResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(rsfResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2, colour = "#403F41") +
-        annotate("text", x = overallMed$medEst +14, y = overallMed$indexLoc, label = "Median",
-                 fontface = 4, size = 5, colour = palette["coreGrey"],
-                 hjust = 1, vjust = -0.2) +
-        annotate("segment", x = overallMed$medEst +14, xend = overallMed$medEst,
-                 y = overallMed$indexLoc, yend = overallMed$indexLoc,
-                 linewidth = 0.75, colour = palette["coreGrey"]) +
-        scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
+        geom_point(aes(x = Estimate, y = index, colour = d_medEst),
+                   alpha = 0.25,
+                   pch = 3, size = 0.25)+
+        geom_segment(data = overallMed,
+                     aes(x = medEst, xend = medEst, y = Inf,
+                         yend = -Inf),
+                     alpha = 1, linewidth = 0.45, linetype = 1,
+                     colour = palette["BADGER"]) +
+        geom_text(data = overallMed, aes(x = medEst, y = 0,
+                                         label = paste0(" Median = ",
+                                                        round(medEst, digits = 2))),
+                  hjust = 0, vjust = 0, fontface = 4, colour = palette["BADGER"]) +
+        scale_colour_gradient2(low = palette["BADGER"],
+                               mid = palette["coreGrey"],
+                               high = palette["2"]) +
+        scale_y_continuous(expand = c(0.05, 0)) +
+        facet_grid(.~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         theme_bw() +
         theme(
@@ -168,13 +178,14 @@ generate_spec_curves <- function(compiledResults, method){
           axis.text.y.left = element_blank(),
           axis.ticks.y.left = element_blank(),
           axis.line.x = element_line(),
+          axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
           strip.clip = "off",
           legend.position = "none",
           panel.border = element_blank(),
           panel.spacing = unit(18, "pt"),
           panel.grid = element_blank())
     )
-
 
     (rsfSpecComplete <- overallSpecCurve_rsf / splitSpecCurve_rsf +
         plot_layout(heights = c(1, 3), guides = "collect"))
@@ -197,6 +208,10 @@ generate_spec_curves <- function(compiledResults, method){
 
     widesResults$tf <- round(widesResults$tf, digits = 2)
 
+    widesResults$classLandscape <- ifelse(str_detect(widesResults$classLandscape, "Scram"),
+                                          "Scrambled Habitat Layer (i.e., No selection)",
+                                          "Correct Habitat Layer (i.e., Positive selection)")
+
     levelOrdering <- unique(c(sort(unique(widesResults$td)),
                               sort(unique(widesResults$tf)),
                               unique(widesResults$area),
@@ -205,8 +220,9 @@ generate_spec_curves <- function(compiledResults, method){
                               sort(unique(widesResults$weighting))))
 
     widesResultsPlotData <- widesResults %>%
-      dplyr::select(Estimate, indi, species, td,  tf, area, contour, availPointsPer, sigColour) %>%
-      reshape2::melt(c("Estimate", "indi", "species", "sigColour")) %>%
+      dplyr::select(Estimate, indi, species, td,  tf, area, contour, availPointsPer, sigColour,
+                    classLandscape) %>%
+      reshape2::melt(c("Estimate", "indi", "species", "sigColour", "classLandscape")) %>%
       dplyr::mutate(
         variable = case_when(
           variable == "td" ~ "Tracking Duration (days)",
@@ -220,7 +236,7 @@ generate_spec_curves <- function(compiledResults, method){
         value = factor(value, levels = levelOrdering))
 
     medData <- widesResultsPlotData %>%
-      dplyr::group_by(variable, value) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::summarise(medEst = median(Estimate, na.rm = TRUE),
                        nZeroNA = sum(Estimate == 0 | is.na(Estimate)))
 
@@ -240,9 +256,9 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 1, size = 1, colour = "#403F41") +
         geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                    linetype = 2) +
-        geom_text(data = medData, aes(x = -0.2, y = value, label = nZeroNA),
-                  colour = palette["coreGrey"], fontface = 4, hjust = 1) +
-        facet_grid(variable~., scales = "free_y", space = "free", switch = "y") +
+        geom_text(data = medData, aes(x = 0.05, y = value, label = nZeroNA),
+                  colour = palette["coreGrey"], fontface = 4, hjust = 0) +
+        facet_grid(variable~classLandscape, scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         theme_bw() +
         theme(
@@ -250,6 +266,7 @@ generate_spec_curves <- function(compiledResults, method){
           text = element_text(colour = palette["coreGrey"]),
           strip.background = element_blank(),
           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.x.top = element_blank(),
           strip.text.y.left = element_text(angle = 0, margin = margin(-8.5,12,0,0)),
           axis.text.y.left = element_text(margin = margin(0,-165,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
           axis.ticks.y.left = element_blank(),
@@ -261,41 +278,42 @@ generate_spec_curves <- function(compiledResults, method){
           panel.grid = element_blank())
     )
 
-    overallMed <- data.frame("medEst" = median(widesResults$Estimate, na.rm = TRUE),
-                             "indexLoc" = round(nrow(widesResults)/2, digits = 0))
+    overallMed <- widesResults %>%
+      mutate(n = n()) %>%
+      group_by(classLandscape) %>%
+      summarise(medEst = median(Estimate, na.rm = TRUE),
+                n = n[1])
 
     (overallSpecCurve_wides <- widesResults %>%
+        group_by(classLandscape) %>%
         dplyr::arrange(Estimate) %>%
         dplyr::mutate(index = row_number(),
                       indi = as.factor(indi),
-                      species = as.factor(species)) %>%
+                      species = as.factor(species),
+                      d_medEst = Estimate - median(Estimate, na.rm = TRUE)) %>%
         ggplot() +
-        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-                   linetype = 1) +
-        # geom_point(aes(x = Estimate, y = index),
-        #            size = 1, alpha = 0.2, colour = palette["coreGrey"])+
-        geom_point(aes(x = Estimate, y = index), alpha = 0.25,
-                   pch = 3, size = 0.75, colour = palette["coreGrey"])+
-        geom_point(data = data.frame("medEst" = median(widesResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(widesResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2.5, colour = "#FFFFFF") +
-        geom_point(data = data.frame("medEst" = median(widesResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(widesResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2, colour = "#403F41") +
-        geom_text(data = medData %>% ungroup(), aes(x = -0.2, y = 1, label = sum(nZeroNA)),
-                  colour = palette["coreGrey"], fontface = 4, hjust = 1) +
-        annotate("text", x = overallMed$medEst +1, y = overallMed$indexLoc, label = "Median",
-                 fontface = 4, size = 5, colour = palette["coreGrey"],
-                 hjust = 1, vjust = -0.2) +
-        annotate("segment", x = overallMed$medEst +1, xend = overallMed$medEst,
-                 y = overallMed$indexLoc, yend = overallMed$indexLoc,
-                 linewidth = 0.75, colour = palette["coreGrey"]) +
-        # geom_vline(data = directEstimates %>%
-        #              filter(Method == "wides", scale == "movement"),
-        #            aes(xintercept = Estimate)) +
-        # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.75, colour = "#403F41",
+                   linetype = 2) +
+        # geom_point(aes(x = Estimate, y = index, colour = d_medEst),
+        #            size = 1, alpha = 0.2)+
+        geom_point(aes(x = Estimate, y = index, colour = d_medEst),
+                   alpha = 0.25,
+                   pch = 3, size = 0.25)+
+        geom_segment(data = overallMed,
+                     aes(x = medEst, xend = medEst, y = Inf,
+                         yend = -Inf),
+                     alpha = 1, linewidth = 0.45, linetype = 1,
+                     colour = palette["BADGER"]) +
+        geom_text(data = overallMed, aes(x = medEst, y = 0,
+                                         label = paste0(" Median = ",
+                                                        round(medEst, digits = 2))),
+                  hjust = 0, vjust = 0, fontface = 4, colour = palette["BADGER"]) +
+        scale_colour_gradient2(low = palette["BADGER"],
+                               mid = palette["coreGrey"],
+                               high = palette["2"]) +
+        scale_y_continuous(expand = c(0.05, 0)) +
+        facet_grid(.~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         theme_bw() +
         theme(
@@ -307,6 +325,8 @@ generate_spec_curves <- function(compiledResults, method){
           axis.text.y.left = element_blank(),
           axis.ticks.y.left = element_blank(),
           axis.line.x = element_line(),
+          axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
           strip.clip = "off",
           legend.position = "none",
           panel.border = element_blank(),
@@ -339,6 +359,10 @@ generate_spec_curves <- function(compiledResults, method){
                                   "Uniform",
                                   "Von Mises")
 
+    ssfResults$classLandscape <- ifelse(str_detect(ssfResults$classLandscape, "Scram"),
+                                        "Scrambled Habitat Layer (i.e., No selection)",
+                                        "Correct Habitat Layer (i.e., Positive selection)")
+
     levelOrdering <- unique(c("5", sort(unique(ssfResults$td)), # 5 is added manually as it appears in two variables
                               sort(unique(ssfResults$availablePerStep)),
                               sort(unique(ssfResults$tf)),
@@ -349,8 +373,8 @@ generate_spec_curves <- function(compiledResults, method){
 
     ssfResultsPlotData <- ssfResults %>%
       dplyr::select(Estimate, indi, species, td,  tf, modelForm, stepDist, turnDist, availablePerStep,
-                    sigColour) %>%
-      reshape2::melt(c("Estimate", "indi", "species", "sigColour")) %>%
+                    sigColour, classLandscape) %>%
+      reshape2::melt(c("Estimate", "indi", "species", "sigColour", "classLandscape")) %>%
       dplyr::mutate(
         variable = case_when(
           variable == "td" ~ "Tracking Duration (days)",
@@ -363,12 +387,12 @@ generate_spec_curves <- function(compiledResults, method){
         indi = as.factor(indi),
         species = as.factor(species),
         value = factor(value, levels = levelOrdering)) %>%
-      dplyr::group_by(variable, value) %>%
-      dplyr::mutate(d_medEst = Estimate - median(ssfResults$Estimate, na.rm = TRUE)) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
+      dplyr::mutate(d_medEst = Estimate - median(Estimate, na.rm = TRUE)) %>%
       dplyr::ungroup()
 
     medData <- ssfResultsPlotData %>%
-      dplyr::group_by(variable, value) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::summarise(medEst = median(Estimate, na.rm = TRUE))
 
     (splitSpecCurve_ssf <- ssfResultsPlotData %>%
@@ -386,7 +410,8 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 1, size = 1, colour = "#403F41") +
         geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                    linetype = 2) +
-        facet_grid(variable~., scales = "free_y", space = "free", switch = "y") +
+        facet_grid(variable~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
         theme_bw() +
@@ -395,6 +420,7 @@ generate_spec_curves <- function(compiledResults, method){
           text = element_text(colour = palette["coreGrey"]),
           strip.background = element_blank(),
           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.x.top = element_blank(),
           strip.text.y.left = element_text(angle = 0, margin = margin(-8.5,12,0,0)),
           axis.text.y.left = element_text(margin = margin(0,-165,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
           axis.ticks.y.left = element_blank(),
@@ -406,8 +432,11 @@ generate_spec_curves <- function(compiledResults, method){
           panel.grid = element_blank())
     )
 
-    overallMed <- data.frame("medEst" = median(ssfResults$Estimate, na.rm = TRUE),
-                             "indexLoc" = round(nrow(ssfResults)/2, digits = 0))
+    overallMed <- ssfResults %>%
+      mutate(n = n()) %>%
+      group_by(classLandscape) %>%
+      summarise(medEst = median(Estimate, na.rm = TRUE),
+                n = n[1])
 
     (overallSpecCurve_ssf <- ssfResults %>%
         arrange(Estimate) %>%
@@ -416,27 +445,28 @@ generate_spec_curves <- function(compiledResults, method){
                species = as.factor(species),
                d_medEst = Estimate - median(ssfResults$Estimate, na.rm = TRUE)) %>%
         ggplot() +
-        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
-                   linetype = 1) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.75, colour = "#403F41",
+                   linetype = 2) +
         # geom_point(aes(x = Estimate, y = index, colour = d_medEst),
         #            size = 1, alpha = 0.2)+
         geom_point(aes(x = Estimate, y = index, colour = d_medEst),
                    alpha = 0.25,
-                   pch = 3, size = 0.75)+
-        geom_point(data = data.frame("medEst" = median(ssfResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(ssfResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2.5, colour = "#FFFFFF") +
-        geom_point(data = overallMed,
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2, colour = "#403F41") +
-        annotate("text", x = overallMed$medEst +5, y = overallMed$indexLoc, label = "Median",
-                 fontface = 4, size = 5, colour = palette["coreGrey"],
-                 hjust = 1, vjust = -0.2) +
-        annotate("segment", x = overallMed$medEst +5, xend = overallMed$medEst,
-                 y = overallMed$indexLoc, yend = overallMed$indexLoc,
-                 linewidth = 0.75, colour = palette["coreGrey"]) +
-        scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
+                   pch = 3, size = 0.25)+
+        geom_segment(data = overallMed,
+                   aes(x = medEst, xend = medEst, y = Inf,
+                       yend = -Inf),
+                   alpha = 1, linewidth = 0.45, linetype = 1,
+                   colour = palette["BADGER"]) +
+        geom_text(data = overallMed, aes(x = medEst, y = 0,
+                                         label = paste0(" Median = ",
+                                                        round(medEst, digits = 2))),
+                  hjust = 0, vjust = 0, fontface = 4, colour = palette["BADGER"]) +
+        scale_colour_gradient2(low = palette["BADGER"],
+                               mid = palette["coreGrey"],
+                               high = palette["2"]) +
+        scale_y_continuous(expand = c(0.05, 0)) +
+        facet_grid(.~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         theme_bw() +
         theme(
@@ -448,6 +478,8 @@ generate_spec_curves <- function(compiledResults, method){
           axis.text.y.left = element_blank(),
           axis.ticks.y.left = element_blank(),
           axis.line.x = element_line(),
+          axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
           strip.clip = "off",
           legend.position = "none",
           panel.border = element_blank(),
@@ -466,17 +498,23 @@ generate_spec_curves <- function(compiledResults, method){
 
   } else if(method == "wrsf"){
 
+    # compiledResults <- wrsfResults
+
     wrsfResults <- multiverseHabitat::parse_combined_results(compiledResults[!is.na(compiledResults$Estimate),])
 
     wrsfResults$tf <- round(wrsfResults$tf, digits = 2)
+
+    wrsfResults$classLandscape <- ifelse(str_detect(wrsfResults$classLandscape, "Scram"),
+                                        "Scrambled Habitat Layer (i.e., No selection)",
+                                        "Correct Habitat Layer (i.e., Positive selection)")
 
     levelOrdering <- unique(c(sort(unique(wrsfResults$td)),
                               sort(unique(wrsfResults$tf))))
 
     wrsfResultsPlotData <- wrsfResults %>%
       dplyr::select(Estimate, Lower, Upper, indi, species,
-                    td,  tf) %>%
-      reshape2::melt(c("Estimate", "Lower", "Upper", "indi", "species")) %>%
+                    td,  tf, classLandscape) %>%
+      reshape2::melt(c("Estimate", "Lower", "Upper", "indi", "species", "classLandscape")) %>%
       dplyr::mutate(
         variable = case_when(
           variable == "td" ~ "Tracking Duration (days)",
@@ -486,12 +524,14 @@ generate_spec_curves <- function(compiledResults, method){
         species = as.factor(species),
         value = factor(value, levels = levelOrdering)
       ) %>%
-      dplyr::group_by(variable, value) %>%
-      dplyr::mutate(d_medEst = Estimate - median(wrsfResults$Estimate, na.rm = TRUE)) %>%
+      dplyr::group_by(classLandscape) %>%
+      dplyr::mutate(medEst = median(Estimate, na.rm = TRUE)) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
+      dplyr::mutate(d_medEst = Estimate - medEst) %>%
       dplyr::ungroup()
 
     medData <- wrsfResultsPlotData %>%
-      dplyr::group_by(variable, value) %>%
+      dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::summarise(medEst = median(Estimate, na.rm = TRUE))
 
     nSummary <- wrsfResultsPlotData %>%
@@ -500,7 +540,7 @@ generate_spec_curves <- function(compiledResults, method){
         Estimate < -7.5 ~ -33,
         TRUE ~ -8
       )) %>%
-      dplyr::group_by(bunch, variable, value) %>%
+      dplyr::group_by(bunch, variable, value, classLandscape) %>%
       dplyr::summarise(n = n())
 
     (splitSpecCurve_wrsf <- wrsfResultsPlotData %>%
@@ -518,7 +558,7 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 1, size = 1, colour = "#403F41") +
         geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                    linetype = 2) +
-        facet_grid(variable~., scales = "free_y", space = "free", switch = "y") +
+        facet_grid(variable~classLandscape, scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         # scale_colour_manual(values = unname(palette[c("2", "coreGrey", "BADGER")]), na.value = "#000000") +
         scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
@@ -528,6 +568,7 @@ generate_spec_curves <- function(compiledResults, method){
           text = element_text(colour = palette["coreGrey"]),
           strip.background = element_blank(),
           strip.text = element_text(face = 4, hjust = 1, vjust = 1),
+          strip.text.x.top = element_blank(),
           strip.text.y.left = element_text(angle = 0, margin = margin(-8.5,12,0,0)),
           axis.text.y.left = element_text(margin = margin(0,-165,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
           axis.ticks.y.left = element_blank(),
@@ -542,40 +583,42 @@ generate_spec_curves <- function(compiledResults, method){
     splitSpecCurve_wrsf_numbers <- splitSpecCurve_wrsf +
       geom_text(data = nSummary, aes(x = bunch, y = value, label = n), fontface = 3)
 
-    overallMed <- data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
-                             "indexLoc" = round(nrow(wrsfResults)/2, digits = 0))
+    overallMed <- wrsfResults %>%
+      mutate(n = n()) %>%
+      group_by(classLandscape) %>%
+      summarise(medEst = median(Estimate, na.rm = TRUE),
+                n = n[1])
 
     (overallSpecCurve_wrsf <- wrsfResults %>%
+        dplyr::group_by(classLandscape) %>%
         dplyr::arrange(Estimate) %>%
         dplyr::mutate(index = row_number(),
                       indi = as.factor(indi),
                       species = as.factor(species),
-                      d_medEst = Estimate - median(wrsfResults$Estimate, na.rm = TRUE)) %>%
+                      d_medEst = Estimate - median(Estimate, na.rm = TRUE)) %>%
         ggplot() +
-        geom_vline(xintercept = 0, linewidth = 0.25, alpha = 0.9, colour = "#403F41",
-                   linetype = 1) +
-        # geom_errorbarh(aes(xmin = Lower, xmax = Upper, y = index, colour = d_medEst),
-        #               alpha = 0.005, linewidth = 0.2) +
-        # coord_cartesian(xlim = c(-35, 20)) +
+        geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.75, colour = "#403F41",
+                   linetype = 2) +
         # geom_point(aes(x = Estimate, y = index, colour = d_medEst),
         #            size = 1, alpha = 0.2)+
-        geom_point(aes(x = Estimate, y = index, colour = d_medEst), alpha = 0.25,
-                   pch = 3, size = 0.75)+
-        geom_point(data = data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(wrsfResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2.5, colour = "#FFFFFF") +
-        geom_point(data = data.frame("medEst" = median(wrsfResults$Estimate, na.rm = TRUE),
-                                     "indexLoc" = round(nrow(wrsfResults)/2, digits = 0)),
-                   aes(x = medEst, y = indexLoc),
-                   alpha = 1, size = 2, colour = "#403F41") +
-        annotate("text", x = overallMed$medEst +6, y = overallMed$indexLoc,
-                 label = "Median",
-                 fontface = 4, size = 5, colour = palette["coreGrey"],
-                 hjust = 1, vjust = -0.2) +
-        annotate("segment", x = overallMed$medEst +6, xend = overallMed$medEst,
-                 y = overallMed$indexLoc, yend = overallMed$indexLoc,
-                 linewidth = 0.75, colour = palette["coreGrey"]) +
+        geom_point(aes(x = Estimate, y = index, colour = d_medEst),
+                   alpha = 0.25,
+                   pch = 3, size = 0.25)+
+        geom_segment(data = overallMed,
+                     aes(x = medEst, xend = medEst, y = Inf,
+                         yend = -Inf),
+                     alpha = 1, linewidth = 0.45, linetype = 1,
+                     colour = palette["BADGER"]) +
+        geom_text(data = overallMed, aes(x = medEst, y = 0,
+                                         label = paste0(" Median = ",
+                                                        round(medEst, digits = 2))),
+                  hjust = 0, vjust = 0, fontface = 4, colour = palette["BADGER"]) +
+        scale_colour_gradient2(low = palette["BADGER"],
+                               mid = palette["coreGrey"],
+                               high = palette["2"]) +
+        scale_y_continuous(expand = c(0.05, 0)) +
+        facet_grid(.~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
         labs(y = "", x = "Estimate") +
         theme_bw() +
@@ -588,6 +631,8 @@ generate_spec_curves <- function(compiledResults, method){
           axis.text.y.left = element_blank(),
           axis.ticks.y.left = element_blank(),
           axis.line.x = element_line(),
+          axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
           strip.clip = "off",
           legend.position = "none",
           panel.border = element_blank(),

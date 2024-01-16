@@ -14,7 +14,7 @@ tar_option_set(
                "multiverseHabitat",
                "amt", "adehabitatHR", "move",
                "brms", "bayesplot", "tidybayes", "performance",
-               "ggplot2", "ggridges", "reshape2", "patchwork"), # packages that your targets need to run
+               "ggplot2", "ggridges", "reshape2", "patchwork", "ggtext"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -315,7 +315,12 @@ brmsCompiled <- list(
 extrasForRMD <- list(
   tar_target(
     extractedValues,
-    multiverseHabitat::extract_values_rmd()
+    multiverseHabitat::extract_values_rmd(areaResults, ssfResults, wrsfResults,
+                                          areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms)
+  ),
+  tar_target(
+    allEffectPlot,
+    generate_allEffect_plots(modelExtracts = extractedValues)
   ),
   tar_target(
     iteractionPlot,
