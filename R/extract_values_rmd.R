@@ -7,12 +7,13 @@
 #'   model betas that are needed to knit the manuscript.
 #'
 #' @export
-extract_values_rmd <- function(){
+extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
+                               areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms){
 
   # write csv files of the raw estimate data
-  areaResults <- qs::qread(here::here("_targets", "objects", "areaResults"))
-  ssfResults <- qs::qread(here::here("_targets", "objects", "ssfResults"))
-  wrsfResults <- qs::qread(here::here("_targets", "objects", "wrsfResults"))
+  # areaResults <- qs::qread(here::here("_targets", "objects", "areaResults"))
+  # ssfResults <- qs::qread(here::here("_targets", "objects", "ssfResults"))
+  # wrsfResults <- qs::qread(here::here("_targets", "objects", "wrsfResults"))
 
   areaResults <- multiverseHabitat::parse_combined_results(areaResults)
   ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
@@ -22,10 +23,10 @@ extract_values_rmd <- function(){
   write.csv(ssfResults, file = here::here("data", "ssfResults.csv"))
   write.csv(wrsfResults, file = here::here("data", "wrsfResults.csv"))
 
-  areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
-  areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
-  ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
-  wrsfBrms <- qs::qread(here::here("_targets", "objects", "wrsfBrms"))
+  # areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
+  # areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
+  # ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
+  # wrsfBrms <- qs::qread(here::here("_targets", "objects", "wrsfBrms"))
 
 
 # compile all R2 from all models ------------------------------------------
@@ -42,7 +43,6 @@ extract_values_rmd <- function(){
   #       attr(wrsfBrms$modOUT_dEst_r2,"CI")$R2_Bayes_marginal),
   # Component = c("conditional", "marginal")
   # )
-
   r2_allModels <- do.call(rbind, lapply(list(areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms),
                                         function(x){
     models <- paste0(sub("_.*$", "_", x[[1]][1]), x[[1]][3:4])
@@ -146,6 +146,12 @@ extract_values_rmd <- function(){
 
   write.csv(brmEst_ext, file = here::here("data", "brmsEstResults.csv"),
             row.names = FALSE)
+
+  extractedList <- list(
+    "r2Outputs" = r2_allModels,
+    "betasOutputs" = brmEst_ext)
+
+  return(extractedList)
 
 }
 

@@ -6,7 +6,7 @@
 \usage{
 method_indi_ssf(
   movementData,
-  landscape,
+  landscapeRaster,
   methodForm,
   stepDist,
   turnDist,

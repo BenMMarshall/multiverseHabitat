@@ -69,26 +69,6 @@ generate_effect_plots <- function(brmsResults, method){
 
     if(method == "rsf"){
 
-      #################################################################################
-      # performance metrics
-
-      # tdScaledEffect <- modCurrent %>%
-      #   spread_draws(b_tdScaled) %>%
-      #   median_hdci(.width = c(0.95))
-      #
-      # modCurrent %>%
-      #   spread_draws(r_species[condition,]) %>%
-      #   median_hdi(.width = c(0.95))
-      #
-      # modCurrent %>%
-      #   spread_draws(`r_species:indi`[condition,]) %>%
-      #   median_hdi(.width = c(0.95))
-      #
-      # (r2scores <- performance::r2_bayes(modCurrent))
-
-      #################################################################################
-
-
       # RSF EFFECTS -------------------------------------------------------------
 
       rsfEffectsData <- modCurrent %>%
