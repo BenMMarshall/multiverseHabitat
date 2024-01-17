@@ -7,7 +7,7 @@
 #'
 #' @export
 generate_allEffect_plots <- function(modelExtracts){
-
+  # targets::tar_load("extractedValues")
   # modelExtracts <- extractedValues
 
   palette <- multiverseHabitat::get_palette()
@@ -99,32 +99,34 @@ generate_allEffect_plots <- function(modelExtracts){
         "<b style='color:#7D26D4'>RSF</b>"
       ))
     ) %>%
-    filter(!.variable == "b_Intercept")
+    filter(!.variable == "b_Intercept") %>%
+    mutate(rawAbs = ifelse(rawAbs == "dEst", "Absolute difference from median",
+                           "Raw difference from median"))
 
 
   gradLimits <- range(c(betasOutputsPlotData$.lower, betasOutputsPlotData$.upper))
   labelLocation <- data.frame(gradLimits)
-  labelLocationText <- data.frame(gradIndent = gradLimits + c(0.25, -0.25))
-  labelText <- c("Closer to median\npreference estimate",
-                 "Farther from median\npreference estimate")
-  arrowAdj <- c(0.015, -0.015)
+  labelLocationText <- data.frame(gradIndent = gradLimits + c(0.05, -0.05))
+  labelText <- c("Closer to\nmed. est.",
+                 "Farther from\nmed. est.")
+  arrowAdj <- c(0, 0)
   facetSplit <- factor(rep("<b style='color:#E87D13'>Area Based Only</b>", 2), levels = c(
     "Sampling Choices",
     "Step Generation Choices",
     "<b style='color:#4F0E99'>SSF Only</b>",
     "<b style='color:#E87D13'>Area Based Only</b>")
   )
-  hjust <- c(1,0)
+  hjust <- c(0,1)
 
   annotationDF <- cbind(labelLocation, labelLocationText, labelText, arrowAdj,
                         facetSplit, hjust)
 
   modelLabels <- tribble(
     ~x, ~y, ~text, ~hjust, ~vjust, ~facetSplit, ~rawAbs, ~labCol,
-    4.35,   -0.65, "<b style='color:#AD6DED'>\u25CF = Wides</b>", 0.5, 0, "<b style='color:#E87D13'>Area Based Only</b>", "rEst", "#AD6DED",
-    5.40,   -0.65, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#E87D13'>Area Based Only</b>", "dEst", "#7D26D4",
-    2.55,   -0.78, "<b style='color:#4F0E99'>\u25C6 = Step Selection</b>", 0.5, 0, "<b style='color:#4F0E99'>SSF Only</b>", "rEst", "#4F0E99",
-    1.20,   -0.72, "<b style='color:#E87D13'>\u25BC = wRSF</b>", 0.5, 1, "Sampling Choices", "dEst", "#E87D13"
+    4.35,   -0.65, "<b style='color:#AD6DED'>\u25CF = Wides</b>", 0.5, 0, "<b style='color:#E87D13'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
+    5.40,   -0.65, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#E87D13'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    2.55,   -0.78, "<b style='color:#4F0E99'>\u25C6 = Step Selection</b>", 0.5, 0, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
+    1.20,   -0.72, "<b style='color:#E87D13'>\u25BC = wRSF</b>", 0.5, 1, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
   modelLabels <- modelLabels %>%
     mutate(facetSplit = factor(facetSplit, levels = c(
@@ -134,10 +136,10 @@ generate_allEffect_plots <- function(modelExtracts){
 
   arrowsDF <- tribble(
     ~x, ~y, ~xend, ~yend, ~facetSplit, ~rawAbs, ~labCol,
-    4.35,   -0.65, 2.95, -0.02, "<b style='color:#E87D13'>Area Based Only</b>", "rEst", "#AD6DED",
-    4.92,   -0.65, 3.35, -0.22, "<b style='color:#E87D13'>Area Based Only</b>", "dEst", "#7D26D4",
-    2.55,   -0.75, 0.85, -0.01, "<b style='color:#4F0E99'>SSF Only</b>", "rEst", "#4F0E99",
-    1.12,   -0.46, 1.61, -0.28, "Sampling Choices", "dEst", "#E87D13"
+    4.30,   -0.65, 2.84, -0.04, "<b style='color:#E87D13'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
+    4.82,   -0.65, 3.25, -0.22, "<b style='color:#E87D13'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    2.51,   -0.75, 0.91, -0.06, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
+    1.12,   -0.48, 1.61, -0.28, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
   arrowsDF <- arrowsDF %>%
     mutate(facetSplit = factor(facetSplit, levels = c(
@@ -151,7 +153,7 @@ generate_allEffect_plots <- function(modelExtracts){
                linetype = 1) +
     geom_errorbar(aes(x = .variable, ymin = .lower, ymax = .upper,
                       colour = method),
-                  position = position_dodge(0.75), width = 0) +
+                  position = position_dodge(0.75), width = 0, linewidth = 0.85) +
     geom_vline(xintercept = seq(0.5,20.5,1), linewidth = 0.25, alpha = 0.5, colour = "#403F41",
                linetype = 2) +
     geom_richtext(data = modelLabels,
@@ -167,18 +169,18 @@ generate_allEffect_plots <- function(modelExtracts){
                arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")))+
     geom_segment(data = annotationDF,
                  aes(x = -0.2, xend = -0.2,
-                     y = 0.02, yend = gradIndent + arrowAdj),
+                     y = 0.02, yend = gradLimits),
                  colour = "#9F9FA0",
                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
                  linewidth = 1.25) +
     geom_text(data = annotationDF,
               aes(x = -0.1, y = gradIndent,
                   label = labelText, hjust = hjust),
-              colour = "#9F9FA0", vjust = 0.5, lineheight = 0.95,
-              size = 3, fontface = 4) +
+              colour = "#9F9FA0", vjust = 0.65, lineheight = 1.25,
+              size = 2.75, fontface = 4) +
     geom_point(aes(x = .variable, y = .value,
                    colour = method, shape = method, fill = method),
-               position = position_dodge(0.75)) +
+               position = position_dodge(0.75), size = 2) +
     geom_point(data = annotationDF,
                aes(x = -0.75, y = 0)) +
     scale_fill_manual(values = modelPalette,
@@ -209,7 +211,8 @@ generate_allEffect_plots <- function(modelExtracts){
       line = element_line(colour = palette["coreGrey"]),
       text = element_text(colour = palette["coreGrey"]),
       strip.background = element_blank(),
-      strip.text.y.left = element_markdown(face = 4, hjust = 0, vjust = 1, angle = 0,
+      strip.text = element_markdown(face = 4, hjust = 1, vjust = 1),
+      strip.text.y.left = element_markdown(face = 2, hjust = 0, vjust = 1, angle = 0,
                                            margin = margin(-5,10,0,-152)),
       # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
       # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left

@@ -14,7 +14,8 @@ tar_option_set(
                "multiverseHabitat",
                "amt", "adehabitatHR", "move",
                "brms", "bayesplot", "tidybayes", "performance",
-               "ggplot2", "ggridges", "reshape2", "patchwork", "ggtext"), # packages that your targets need to run
+               "ggplot2", "ggridges", "reshape2", "patchwork", "ggtext",
+               "kableExtra"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",
@@ -325,6 +326,19 @@ extrasForRMD <- list(
   tar_target(
     iteractionPlot,
     multiverseHabitat::generate_iteraction_plot()
+  ),
+  tar_target(
+    rmdRender,
+    render_rmd(extractedValues,
+               effectPlots,
+               allEffectPlot,
+               iteractionPlot,
+               uncertaintyPlot,
+               areaSpecCurves_wides,
+               areaSpecCurves_rsf,
+               ssfSpecCurves),
+    cue = tar_cue(mode = "always"),
+    priority = 0.1
   )
 )
 
