@@ -15,7 +15,7 @@ tar_option_set(
                "amt", "adehabitatHR", "move",
                "brms", "bayesplot", "tidybayes", "performance",
                "ggplot2", "ggridges", "reshape2", "patchwork", "ggtext",
-               "kableExtra"), # packages that your targets need to run
+               "kableExtra", "readr"), # packages that your targets need to run
   garbage_collection = TRUE,
   format = "qs", # storage format
   storage = "worker",

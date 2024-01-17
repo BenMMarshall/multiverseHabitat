@@ -400,9 +400,9 @@ Based on these assessments we modified the running parameters <!-- [FINAL VALUES
 ```{r targetsParse, echo=FALSE, message=FALSE}
 library(dplyr)
 library(stringr)
-areaResults <- read.csv(here::here("data", "areaResults.csv"))
-ssfResults <- read.csv(here::here("data", "ssfResults.csv"))
-wrsfResults <- read.csv(here::here("data", "wrsfResults.csv"))
+areaResults <- read_csv(here::here("data", "areaResults.csv.gz"))
+ssfResults <- read_csv(here::here("data", "ssfResults.csv.gz"))
+wrsfResults <- read_csv(here::here("data", "wrsfResults.csv.gz"))
 
 nDatasets <- n_distinct(areaResults$species) *
   n_distinct(areaResults$indi) *
