@@ -14,8 +14,6 @@ _targets/objects/*
 _targets/meta/*
 _targets/user/*
 
-data/*.csv
-
 notebook/prereg/bcf examples/
 notebook/prereg/sampleSizeTesting/
 notebook/manuscript/feedback/
