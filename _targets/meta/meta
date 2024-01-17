@@ -1,7 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 .Random.seed|object|004bd6d68bb849f3|||||||||||||||
-allEffectPlot|stem|f8041d91de2da591|7bf6e01b90040a8a|66e5355cedcf9c99|414677313||t19738.7036482565s|e54ecd483c71e7da|127619|qs|local|vector|||1.323||
-allIndividualEstimatesList|object|9e33e51b5e4daecc|||||||||||||||
+allEffectPlot|stem|bb72c69562db0bab|7bf6e01b90040a8a|0742f4ae7df99718|414677313||t19739.6315825622s|f81edac748f54b5c|127609|qs|local|vector|||0.9||
+allIndividualEstimatesList|object|431e93187c3b3439|||||||||||||||
 apply_to_leaves|function|b1d46ba8693c70e2|||||||||||||||
 areaBrms_rsf|stem|7d64f10a417e28eb|cddd5c49138854cf|026bcfb63f97500c|-1018173552||t19737.8636661848s|0d745ad43a485d79|109303009|qs|local|vector|||33437.292|There were 346 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.11, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess. There were 292 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.09, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess|
 areaBrms_wides|stem|cf22ab8fa939052a|27751fadc5a212bb|026bcfb63f97500c|1155429587||t19737.5504196287s|e0e0ce8d71dd5e07|83533893|qs|local|vector|||6372.8|Rows containing NAs were excluded from the model.. There were 17 divergent transitions after warmup. Seehttpsmcstan.orgmiscwarnings.htmldivergenttransitionsafterwarmupto find out why this is a problem and how to eliminate them.. There were 306 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. There were 3 chains where the estimated Bayesian Fraction of Missing Information was low. Seehttpsmcstan.orgmiscwarnings.htmlbfmilow. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 2.83, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess. Rows containing NAs were excluded from the model.. There were 8 divergent transitions after warmup. Seehttpsmcstan.orgmiscwarnings.htmldivergenttransitionsafterwarmupto find out why this is a problem and how to eliminate them.. There were 324 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. There were 3 chains where the estimated Bayesian Fraction of Missing Information was low. Seehttpsmcstan.orgmiscwarnings.htmlbfmilow. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.67, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating poste|
@@ -603,13 +603,13 @@ areaResults|stem|8540d18c1306c132|afe5c3df814bbc4a|fb4b758d56451267|1363725402||
 areaSpecCurves|stem|ae0b00d590c59ddf|6ad31a8a0c514f1d|a06af953420715c5|-2022559680||t19444.572321927s|f70012cadfc433ad|2.2250738585072e-308|qs|local|vector|||2.805|1m22mRemoved 8 rows containing missing values geom_point.. 1m22mRemoved 48 rows containing missing values geom_point.|
 areaSpecCurves_rsf|stem|81276402e9cac079|f50c0675f2ef0093|4c9b9029f5aaac54|-2117326114||t19737.4678249579s|68d64e6f9d86ca2f|594962583|qs|local|vector|||36.186||
 areaSpecCurves_wides|stem|8c74d0f3744137fa|34fa1e22a475b4d7|4c9b9029f5aaac54|-113799238||t19737.4673324937s|9c85ae275f28844c|32655774|qs|local|vector|||9.482|1m22mRemoved 1516 rows containing missing values geom_point.. 1m22mRemoved 7580 rows containing missing values geom_point.|
-brmsCompiled|object|2684d99b4b1d50e9|||||||||||||||
+brmsCompiled|object|741c21d0571c58ba|||||||||||||||
 build_available_area|function|7762b2ec3d2e7353|||||||||||||||
 build_available_polygon|function|c4b0a854a5948c49|||||||||||||||
 build_nested_list|function|a5128199400f298e|||||||||||||||
 diagnostics_brms|function|03394a9575232439|||||||||||||||
 direct_estimates|function|4f509d38473392d7|||||||||||||||
-directCompiled|object|df16efb7b4585b65|||||||||||||||
+directCompiled|object|8c941357a6e840e3|||||||||||||||
 directEstimates|stem|bf9f6cd250cdd6e7|7d3bae5ba37a9d05|2ac8efb0457fd764|-547029378||t19739.4864547355s|5da7477cd254b6f9|1464|qs|local|vector|||1478.215|Loglik converged before variable  3  beta may be infinite.|
 effectSizeBrms_rsf|stem|f7de35f88f0d79c5|b6ddb4022dac329b|3f913f7152c9eebd|1412388967||t19739.4315990045s|c3a72b2388c34147|113339470|qs|local|vector|||1.591|no nonmissing arguments to max returning Inf. Removed 9 rows containing missing values geom_segment.. no nonmissing arguments to max returning Inf. Removed 9 rows containing missing values geom_segment.|
 effectSizeBrms_ssf|stem|6a577349651eb908|5b203124e2f8f8cb|27e1bcef86bfdb5d|-861743457||t19739.4315446523s|e729b2155dbae8cd|62099702|qs|local|vector|||2.727|no nonmissing arguments to max returning Inf. Removed 6 rows containing missing values geom_segment.. no nonmissing arguments to max returning Inf. Removed 6 rows containing missing values geom_segment.|
@@ -617,10 +617,10 @@ effectSizeBrms_wides|stem|c523826eec53f8b6|d7959391b39bd8ca|9a585e536754f331|-28
 effectSizeBrms_wrsf|stem|93229d58cfdc1cc7|8afe34c034f56563|8d2b89cc2f3936f8|1801586861||t19739.4320952118s|dfd8a52edb46c464|58176896|qs|local|vector|||0.708|no nonmissing arguments to max returning Inf. Removed 2 rows containing missing values geom_segment.. no nonmissing arguments to max returning Inf. Removed 2 rows containing missing values geom_segment.|
 extract_estimate|function|291fc3380242fac4|||||||||||||||
 extract_model_values|function|d86bd51c20a18299|||||||||||||||
-extract_values_rmd|function|6b1c0c2f5fbcf4a0|||||||||||||||
-extractedValues|stem|4bc00b2b5cc4da7c|b8109fa1802f787f|268b55c9c6ae9bb8|1202805663||t19738.6585774536s|fb35830066535703|3169|qs|local|vector|||12.252|NAs introduced by coercion|
-extrasForRMD|object|6cb118fe6c255861|||||||||||||||
-generate_allEffect_plots|function|d55b450aa709bf61|||||||||||||||
+extract_values_rmd|function|19bde6ac9bc88f98|||||||||||||||
+extractedValues|stem|4bc00b2b5cc4da7c|b8109fa1802f787f|268b55c9c6ae9bb8|1202805663||t19739.6356509004s|fb35830066535703|3169|qs|local|vector|||9.484|NAs introduced by coercion|
+extrasForRMD|object|3067d0011ae1daa1|||||||||||||||
+generate_allEffect_plots|function|f6a2f2fe6de84426|||||||||||||||
 generate_effect_plots|function|bedeb79c380983a6|||||||||||||||
 generate_iteraction_plot|function|155816568f4a1111|||||||||||||||
 generate_spec_curves|function|15784f9974ac33df|||||||||||||||
@@ -642,7 +642,7 @@ parse_combined_results|function|ec21fc6540b11cb4|||||||||||||||
 plot_landscape_example|function|07e925fab03f1bf9|||||||||||||||
 prefix_all|function|29fdba172e3ba648|||||||||||||||
 render_rmd|function|fcf47d65aee0a616|||||||||||||||
-rmdRender|stem|1fc299ea6939a567|92225978c113182f|716b8c5fefdc562f|-796373120||t19739.4868527494s|24d52ebf1535bba2|123|qs|local|vector|||24.809|LaTeX Warning Float too large for page by 44.48126pt on input line 276.. LaTeX Warning Float too large for page by 33.9117pt on input line 276.|
+rmdRender|stem|1fc299ea6939a567|92225978c113182f|6dfde50035c3cf09|-796373120||t19739.6360831796s|24d52ebf1535bba2|123|qs|local|vector|||24.544|LaTeX Warning Float too large for page by 44.48126pt on input line 276.. LaTeX Warning Float too large for page by 33.9117pt on input line 276.|
 run_brms|function|f3df13d84cb7baa8|||||||||||||||
 sampDuraFreqData_120_0.5_1_BADGER|stem|85ed61122cefd8d3|94e83c5572bbba6f|a134d4df46840be8|1461233018||t19726.5436568134s|3271cfd7a741d246|196426|qs|local|vector|||3.062||
 sampDuraFreqData_120_0.5_1_KINGCOBRA|stem|e88561ce68e293da|1e94c9fc8edbadaf|3f74eba9a68bfd50|-773549326||t19726.5413879143s|ad128e216d1e4641|191081|qs|local|vector|||3.239||

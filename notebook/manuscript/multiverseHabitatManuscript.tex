@@ -495,27 +495,23 @@ The bulk of the estimates agree and are tightly concentrated around the median w
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew the interpretation of which choices have the largest impact.
 Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
-All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects (Table. \ref{tab:r2table}).
+All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \ref{tab:r2table}).
 The conditional \emph{R\^{}2} values ranged from 0.05 to 0.33, with the RSF models performing the worst.
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{../figures/wides_dEstWides_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway.}\label{fig:dEstBetasWides}
+\includegraphics[width=1\linewidth]{../figures/_allEffectsPlot} \caption{Estimated betas for each choice's impact on the devation from the median habitat selection estimate.}\label{fig:brmsAllEffectsPlot}
 \end{figure}
 
-For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \ref{fig:dEstBetasWides}), with increases in tracking duration (\(\beta\) -0.02, 95\% CrI -0.022 -- -0.019) being marginally more effective than tracking frequency (\(\beta\) -0.013, 95\% CrI -0.015 -- -0.012).
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWides}), with increases in tracking duration (\(\beta\) -0.02, 95\% CrI -0.022 -- -0.019) being marginally more effective than tracking frequency (\(\beta\) -0.013, 95\% CrI -0.015 -- -0.012).
 Of the other decisions, only the multiplier of available points appeared to decrease absolute deviation unambiguously (\(\beta\) -0.004, 95\% CrI -0.005 -- -0.003), and its effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
 Contour choice increases the absolute deviation from the median estimate \(\beta\) 0.003, 95\% CrI 0.003 -- 0.004, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone.
 
-The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency \(\beta\) 0.013, 95\% CrI 0.01 -- 0.015 and tracking duration \(\beta\) -0.023, 95\% CrI -0.025 -- -0.02, with the former leading to greater estimates of selection (Fig. \ref{fig:rEstBetasWides}).
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency \(\beta\) 0.013, 95\% CrI 0.01 -- 0.015 and tracking duration \(\beta\) -0.023, 95\% CrI -0.025 -- -0.02, with the former leading to greater estimates of selection (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:rEstBetasWides}).
 The choice of stratified versus random available point positioning \(\beta\) -0.001, 95\% CrI -0.003 -- 0.001 and the available points multiplier \(\beta\) -0.002, 95\% CrI -0.004 -- -0.001 have less of an impact, mirroring the smaller effects seen in the absolute deviation model.
 All area related choices do not move relative to each other, and reveal that MCPs as an area method to lead to lower estimates of selection in this scenario.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{../figures/rsf_dEstRSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway.}\label{fig:dEstBetasRSF}
-\end{figure}
-
-Every decision examined by the RSF absolute effect model appears to be make a difference when estimating selection (Fig. \ref{fig:dEstBetasRSF}).
+Every decision examined by the RSF absolute effect model appears to be make a difference when estimating selection (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasRSF}).
 Like the Wides analysis, data quantity is most important.
 The two largest effects are from tracking duration (\(\beta\) -0.625, 95\% CrI -0.649 -- -0.601) and frequency (\(\beta\) -1.081, 95\% CrI -1.104 -- -1.055), showing that more data leads to more stable estimates of habitat selection (i.e., more likely to get an answer closer to the overall median estimate).
 
@@ -534,7 +530,7 @@ When interacting with tracking frequency, the sensitivity is less pronounced; in
 \includegraphics[width=1\linewidth]{../figures/rsfEffectPlot_iteractions} \caption{The resulting interactions from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway. Left-hand plot shows how scaled tracking duration interacted with area method chosen, while the right-hand shows the interaction between scaled tracking frequency and area method chosen.}\label{fig:rsfInteractions}
 \end{figure}
 
-The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration \(\beta\) -0.469, 95\% CrI -0.496 -- -0.435 and tracking frequency \(\beta\) -0.276, 95\% CrI -0.3 -- -0.248; Fig. \ref{fig:rEstBetasRSF}).
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration \(\beta\) -0.469, 95\% CrI -0.496 -- -0.435 and tracking frequency \(\beta\) -0.276, 95\% CrI -0.3 -- -0.248; Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:rEstBetasRSF}).
 While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median ) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
@@ -551,23 +547,15 @@ The dBBMMs, by contrast, are more vulnerable to variation in other decisions, a 
 
 Overall there does not appear to be a decision that leads to great deviation from the median estimate in one direction.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{../figures/ssf_dEstSSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway.}\label{fig:dEstBetasSSF}
-\end{figure}
-
-The SSF absolute deviation model very closely matches the previous two models (Fig. \ref{fig:dEstBetasSSF}), where tracking quantity both in terms of duration (\(\beta\) -0.978, 95\% CrI -1.027 -- -0.927) and frequency (\(\beta\) -1.185, 95\% CrI -1.231 -- -1.135) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
+The SSF absolute deviation model very closely matches the previous two models (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasSSF}), where tracking quantity both in terms of duration (\(\beta\) -0.978, 95\% CrI -1.027 -- -0.927) and frequency (\(\beta\) -1.185, 95\% CrI -1.231 -- -1.135) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis, all other decisions made a negligible impact on an estimate's absolute proximity to the median estimate.
 
-Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \ref{fig:rEstBetasSSF}).
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:rEstBetasSSF}).
 The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive (\(\beta\) 0.001, 95\% CrI -0.114 -- 0.085).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{../figures/wrsf_dEstwrsf_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway.}\label{fig:dEstBetasWRSF}
-\end{figure}
-
-The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \ref{fig:dEstBetasWRSF}).
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.255, 95\% CrI -0.372 -- -0.122 and tracking frequency \(\beta\) -0.196, 95\% CrI -0.319 -- -0.062), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.26, 95\% CrI -0.447 -- -0.101 and tracking frequency \(\beta\) -0.094, 95\% CrI -0.246 -- 0.07; Fig. \ref{fig:dEstBetasWRSF}).
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWRSF}).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.255, 95\% CrI -0.372 -- -0.122 and tracking frequency \(\beta\) -0.196, 95\% CrI -0.319 -- -0.062), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.26, 95\% CrI -0.447 -- -0.101 and tracking frequency \(\beta\) -0.094, 95\% CrI -0.246 -- 0.07; Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWRSF}).
 The only difference (although both effects overlap considerably) is that increased tracking duration tended to be linked more strongly with lower selection estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 \hypertarget{discussion}{%
@@ -713,6 +701,22 @@ We generated R package citations with the aid of grateful v.0.2.0 (\protect\hype
 
 \end{tabular}}
 \end{table}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wides_dEstWides_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway.}\label{fig:dEstBetasWides}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/rsf_dEstRSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway.}\label{fig:dEstBetasRSF}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/ssf_dEstSSF_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway.}\label{fig:dEstBetasSSF}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{../figures/wrsf_dEstwrsf_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway.}\label{fig:dEstBetasWRSF}
+\end{figure}
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{../figures/wides_rEstWides_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the Wides analysis pathway.}\label{fig:rEstBetasWides}

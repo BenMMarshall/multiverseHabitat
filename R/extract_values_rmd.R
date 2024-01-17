@@ -19,9 +19,9 @@ extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
   ssfResults <- multiverseHabitat::parse_combined_results(ssfResults)
   wrsfResults <- multiverseHabitat::parse_combined_results(wrsfResults)
 
-  write.csv(areaResults, file = here::here("data", "areaResults.csv"))
-  write.csv(ssfResults, file = here::here("data", "ssfResults.csv"))
-  write.csv(wrsfResults, file = here::here("data", "wrsfResults.csv"))
+  write_csv(areaResults, file = here::here("data", "areaResults.csv.gz"))
+  write_csv(ssfResults, file = here::here("data", "ssfResults.csv.gz"))
+  write_csv(wrsfResults, file = here::here("data", "wrsfResults.csv.gz"))
 
   # areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
   # areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
