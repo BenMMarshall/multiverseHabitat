@@ -13,9 +13,12 @@ prelimMultiData/
 _targets/objects/*
 _targets/meta/*
 _targets/user/*
+<<<<<<< HEAD
 
 data/*.csv
 data/*.csv$
+=======
+>>>>>>> filteringLargeCSVs
 
 notebook/prereg/bcf examples/
 notebook/prereg/sampleSizeTesting/
