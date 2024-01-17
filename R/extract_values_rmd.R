@@ -23,6 +23,10 @@ extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
   write_csv(ssfResults, file = here::here("data", "ssfResults.csv.gz"))
   write_csv(wrsfResults, file = here::here("data", "wrsfResults.csv.gz"))
 
+  write_csv(areaResults[1:2,1:2], file = here::here("data", "areaResults.csv"))
+  write_csv(ssfResults[1:2,1:2], file = here::here("data", "ssfResults.csv"))
+  write_csv(wrsfResults[1:2,1:2], file = here::here("data", "wrsfResults.csv"))
+
   # areaBrms_wides <- qs::qread(here::here("_targets", "objects", "areaBrms_wides"))
   # areaBrms_rsf <- qs::qread(here::here("_targets", "objects", "areaBrms_rsf"))
   # ssfBrms <- qs::qread(here::here("_targets", "objects", "ssfBrms"))
