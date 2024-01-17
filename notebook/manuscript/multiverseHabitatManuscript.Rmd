@@ -18,6 +18,7 @@ output:
     theme: yeti
     highlight: monochrome
     fig_caption: true
+always_allow_html: true
 link-citations: yes
 linkcolor: gray
 tables: TRUE
@@ -506,67 +507,67 @@ brmsR2Results <- read.csv(here::here("data", "brmsR2Results.csv"))
 #   summarise(meanR2 = mean(R2))
 
 condRange <- brmsR2Results %>% 
-  filter(Component == "conditional") %>% 
+  dplyr::filter(Component == "conditional") %>% 
   pull(R2) %>% range()
 
 ```
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew the interpretation of which choices have the largest impact.
 Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
-All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects (Table. \@ref(tab:r2table)).
+All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \@ref(tab:r2table)).
 The conditional *R^2* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
+
+```{r brmsAllEffectsPlot, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Estimated betas for each choice's impact on the devation from the median habitat selection estimate."}
+knitr::include_graphics(here::here("notebook", "figures", "_allEffectsPlot.png"))
+```
 
 <!-- WIDES MODELS -->
 
 ```{r widesModelEffects, echo=FALSE, message=FALSE}
 brmWides_dEst_tdEffect <- brmEstResults %>% 
-  filter(model == "wides_dEstWides") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_tfEffect <- brmEstResults %>% 
-  filter(model == "wides_dEstWides") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_avpEffect <- brmEstResults %>% 
-  filter(model == "wides_dEstWides") %>% 
-  filter(.variable == "b_availPointsPerScaled") %>% 
+  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_csEffect <- brmEstResults %>% 
-  filter(model == "wides_dEstWides") %>% 
-  filter(.variable == "b_contourScaled") %>% 
+  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
 
 brmWides_rEst_tdEffect <- brmEstResults %>% 
-  filter(model == "wides_rEstWides") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_tfEffect <- brmEstResults %>% 
-  filter(model == "wides_rEstWides") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_avpEffect <- brmEstResults %>% 
-  filter(model == "wides_rEstWides") %>% 
-  filter(.variable == "b_availPointsPerScaled") %>% 
+  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_spEffect <- brmEstResults %>% 
-  filter(model == "wides_rEstWides") %>% 
-  filter(.variable == "b_samplingPatternst") %>% 
+  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
-```
-
-```{r dEstBetasWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway."}
-knitr::include_graphics(here::here("notebook", "figures", "wides_dEstWides_effectsPlot.png"))
 ```
 
 <!-- model res wides absolute -->
-For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \@ref(fig:dEstBetasWides)), with increases in tracking duration ($\beta$ `r brmWides_dEst_tdEffect`) being marginally more effective than tracking frequency ($\beta$ `r brmWides_dEst_tfEffect`).
-<!-- ?????????????should we be calculating contrasts here to really support comparative statemetns like this???????????? -->
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWides)), with increases in tracking duration ($\beta$ `r brmWides_dEst_tdEffect`) being marginally more effective than tracking frequency ($\beta$ `r brmWides_dEst_tfEffect`).
+<!-- ?????????????should we be calculating contrasts here to really support comparative statements like this???????????? -->
 Of the other decisions, only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$ `r brmWides_dEst_avpEffect`), and its effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
 Contour choice increases the absolute deviation from the median estimate $\beta$ `r brmWides_dEst_csEffect`, that appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
 
 <!-- model res wides raw -->
-The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r brmWides_rEst_tfEffect` and tracking duration $\beta$ `r brmWides_rEst_tdEffect`, with the former leading to greater estimates of selection (Fig. \@ref(fig:rEstBetasWides)).
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r brmWides_rEst_tfEffect` and tracking duration $\beta$ `r brmWides_rEst_tdEffect`, with the former leading to greater estimates of selection (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasWides)).
 <!-- Likely a result of the higher frequencies matching more accurately with the time-scale of selection, whereas duration tends to buffer against the extremes regardless. -->
 The choice of stratified versus random available point positioning $\beta$ `r brmWides_rEst_spEffect` and the available points multiplier $\beta$ `r brmWides_rEst_avpEffect` have less of an impact, mirroring the smaller effects seen in the absolute deviation model. 
 All area related choices do not move relative to each other, and reveal that MCPs as an area method to lead to lower estimates of selection in this scenario.
@@ -575,70 +576,66 @@ All area related choices do not move relative to each other, and reveal that MCP
 
 ```{r rsfModelEffects, echo=FALSE, message=FALSE}
 brmrsf_dEst_tdEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_tfEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_csEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_contourScaled") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_avpEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_availPointsPerScaled") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_spEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_samplingPatternst") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
 brmrsf_dEst_akdeEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_areaAKDE") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_areaAKDE") %>% 
   pull(inTextSummary)
 brmrsf_dEst_kdeEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_areaKDEhref") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_areaKDEhref") %>% 
   pull(inTextSummary)
 brmrsf_dEst_dbmEffect <- brmEstResults %>% 
-  filter(model == "rsf_dEstRSF") %>% 
-  filter(.variable == "b_areadBBMM") %>% 
+  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(.variable == "b_areadBBMM") %>% 
   pull(inTextSummary)
 
 brmrsf_rEst_tdEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_tfEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_spEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_samplingPatternst") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
 brmrsf_rEst_avpEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_availPointsPerScaled") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_dbmEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_areadBBMM") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_areadBBMM") %>% 
   pull(inTextSummary)
 brmrsf_rEst_csEffect <- brmEstResults %>% 
-  filter(model == "rsf_rEstRSF") %>% 
-  filter(.variable == "b_contourScaled") %>% 
+  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
-```
-
-```{r dEstBetasRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway."}
-knitr::include_graphics(here::here("notebook", "figures", "rsf_dEstRSF_effectsPlot.png"))
 ```
 
 <!-- model res rsf absolute -->
-Every decision examined by the RSF absolute effect model appears to be make a difference when estimating selection (Fig. \@ref(fig:dEstBetasRSF)).
+Every decision examined by the RSF absolute effect model appears to be make a difference when estimating selection (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasRSF)).
 Like the Wides analysis, data quantity is most important.
 The two largest effects are from tracking duration ($\beta$ `r brmrsf_dEst_tdEffect`) and frequency ($\beta$ `r brmrsf_dEst_tfEffect`), showing that more data leads to more stable estimates of habitat selection (i.e., more likely to get an answer closer to the overall median estimate).
 
@@ -658,7 +655,7 @@ knitr::include_graphics(here::here("notebook", "figures", "rsfEffectPlot_iteract
 ```
 
 <!-- model res rsf raw -->
-The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration $\beta$ `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:rEstBetasRSF)). 
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration $\beta$ `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasRSF)). 
 While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median <!--[NEED LINK TO SUPP MAT HERE]-->) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
@@ -679,29 +676,27 @@ Overall there does not appear to be a decision that leads to great deviation fro
 
 ```{r ssfModelEffects, echo=FALSE, message=FALSE}
 brmssf_dEst_tdEffect <- brmEstResults %>% 
-  filter(model == "ssf_dEstSSF") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "ssf_dEstSSF") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmssf_dEst_tfEffect <- brmEstResults %>% 
-  filter(model == "ssf_dEstSSF") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "ssf_dEstSSF") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 
 brmssf_rEst_sdEffect <- brmEstResults %>% 
-  filter(model == "ssf_rEstSSF") %>% 
-  filter(.variable == "b_stepDistgamma") %>% 
+  dplyr::filter(model == "ssf_rEstSSF") %>% 
+  dplyr::filter(.variable == "b_stepDistgamma") %>% 
   pull(inTextSummary)
 ```
-```{r dEstBetasSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway."}
-knitr::include_graphics(here::here("notebook", "figures", "ssf_dEstSSF_effectsPlot.png"))
-```
+
 <!-- model res ssf absolute -->
 
-The SSF absolute deviation model very closely matches the previous two models (Fig. \@ref(fig:dEstBetasSSF)), where tracking quantity both in terms of duration ($\beta$ `r brmssf_dEst_tdEffect`) and frequency ($\beta$ `r brmssf_dEst_tfEffect`) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
+The SSF absolute deviation model very closely matches the previous two models (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasSSF)), where tracking quantity both in terms of duration ($\beta$ `r brmssf_dEst_tdEffect`) and frequency ($\beta$ `r brmssf_dEst_tfEffect`) dominate in regards to the explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis, all other decisions made a negligible impact on an estimate's absolute proximity to the median estimate.
 
 <!-- model res ssf raw -->
-Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:rEstBetasSSF)). 
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasSSF)). 
 The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_sdEffect`).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
@@ -709,30 +704,26 @@ However, the large overlap with zero means that in both cases the step distribut
 
 ```{r wrsfModelEffects, echo=FALSE, message=FALSE}
 brmwrsf_dEst_tdEffect <- brmEstResults %>% 
-  filter(model == "wrsf_dEstwrsf") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "wrsf_dEstwrsf") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmwrsf_dEst_tfEffect <- brmEstResults %>% 
-  filter(model == "wrsf_dEstwrsf") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "wrsf_dEstwrsf") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 
 brmwrsf_rEst_tdEffect <- brmEstResults %>% 
-  filter(model == "wrsf_rEstwrsf") %>% 
-  filter(.variable == "b_tdScaled") %>% 
+  dplyr::filter(model == "wrsf_rEstwrsf") %>% 
+  dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmwrsf_rEst_tfEffect <- brmEstResults %>% 
-  filter(model == "wrsf_rEstwrsf") %>% 
-  filter(.variable == "b_tfScaled") %>% 
+  dplyr::filter(model == "wrsf_rEstwrsf") %>% 
+  dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 ```
 
-```{r dEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway."}
-knitr::include_graphics(here::here("notebook", "figures", "wrsf_dEstwrsf_effectsPlot.png"))
-```
-
-The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \@ref(fig:dEstBetasWRSF)).
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_dEst_tfEffect`), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:dEstBetasWRSF)).
+The results from the WRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_dEst_tfEffect`), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
 The only difference (although both effects overlap considerably) is that increased tracking duration tended to be linked more strongly with lower selection estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 # Discussion
@@ -837,7 +828,7 @@ BMM was funded by the Natural Environment Research Council (NERC) via the IAPETU
 
 In addition to packages already mentioned in the methods we also used the following.
 
-We used *R* `r paste0("v.", version$major, ".", version$minor)` [@base] via *RStudio* v.`r rstudioapi::versionInfo()$version` [@rstudio].
+We used *R* `r paste0("v.", version$major, ".", version$minor)` [@base] via *RStudio* v.2023.12.0.369 [@rstudio].
 We used *here* `r paste0("v.", packageVersion("here"))` [@here] and *qs* `r paste0("v.", packageVersion("qs"))` [@qs] to manage directory addresses and saved objects.
 
 We used *raster* `r paste0("v.", packageVersion("raster"))` [@raster] and *RandomFields* `r paste0("v.", packageVersion("RandomFields"))` [@RandomFields] to aid landscape raster creation alongside NLMR `r paste0("v.", packageVersion("NLMR"))` [@NLMR].
@@ -865,7 +856,7 @@ We generated R package citations with the aid of grateful `r paste0("v.", packag
 
 # Supplementary Material
 
-```{r r2table, echo=FALSE, message=FALSE}
+```{r r2table, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::kable(
   brmsR2Results %>% 
     mutate(across(where(is.numeric), round, digits = 3)) %>% 
@@ -873,12 +864,35 @@ knitr::kable(
            response = ifelse(str_detect(model, "dEst"), "Absolute Deviation", "Raw Deviation"),
            method = sub("_", "", str_extract(model, "^.*_")),
            Component = str_to_sentence(Component)
-           ) %>% 
-    select(-model),
-  caption = "$All R^2 values for Bayesian regression models.$", align = "c",
+    ) %>% 
+    dplyr::select(-model),
+  caption = "$All R^2 values for Bayesian regression models.$",
+  format = "latex",
+  align = "lcc",
+  vline = "",
+  toprule = "",
+  # midrule = "",
+  linesep = "",
+  bottomrule = "",
   col.names = c("\\textit{$R^2$}", "Standard error", "Confidence interval", "CI Lower", "CI Upper",
-                "Component", "Response", "Model Method"), escape = FALSE
-)
+                "Component", "Response", "Model Method"), escape = FALSE) %>%
+  kableExtra::kable_styling(font_size = 8, latex_options = "scale_down")
+```
+
+```{r dEstBetasWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the Wides analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wides_dEstWides_effectsPlot.png"))
+```
+
+```{r dEstBetasRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the RSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "rsf_dEstRSF_effectsPlot.png"))
+```
+
+```{r dEstBetasSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the SSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "ssf_dEstSSF_effectsPlot.png"))
+```
+
+```{r dEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain absolute deviation from the median in the wRSF analysis pathway."}
+knitr::include_graphics(here::here("notebook", "figures", "wrsf_dEstwrsf_effectsPlot.png"))
 ```
 
 ```{r rEstBetasWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the Wides analysis pathway."}
