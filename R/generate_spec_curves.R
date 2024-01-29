@@ -24,7 +24,6 @@ generate_spec_curves <- function(compiledResults, method){
   # spec curve adaptation ---------------------------------------------------
   # https://hal.inria.fr/hal-03558950/document has great ideas
   palette <- multiverseHabitat::get_palette()
-  # summary plots draft -----------------------------------------------------
 
   # targets::tar_load(areaResults)
   # compiledResults <- areaResults
@@ -645,7 +644,7 @@ generate_spec_curves <- function(compiledResults, method){
 
     ggsave(filename = here("notebook", "figures", "wrsfSpecCurve.png"),
            plot = wrsfSpecComplete,
-           width = 360, height = 200, units = "mm", dpi = 300)
+           width = 360, height = 140, units = "mm", dpi = 300)
 
     return(wrsfSpecComplete)
 

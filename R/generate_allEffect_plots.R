@@ -42,11 +42,11 @@ generate_allEffect_plots <- function(modelExtracts){
                        "b_contourScaled",
                        "b_weightingScaled",
                        "b_availPointsPerScaled",
-                       "b_samplingPatternst") ~  "<b style='color:#E87D13'>Area Based Only</b>",
+                       "b_samplingPatternst") ~  "<b style='color:#AD6DED'>Area Based Only</b>",
     ), levels = c(
       "Sampling Choices",
       "<b style='color:#4F0E99'>SSF Only</b>",
-      "<b style='color:#E87D13'>Area Based Only</b>")
+      "<b style='color:#AD6DED'>Area Based Only</b>")
     )) %>%
     mutate(
       .variable = factor(case_when(
@@ -110,11 +110,11 @@ generate_allEffect_plots <- function(modelExtracts){
   labelText <- c("Closer to\nmed. est.",
                  "Farther from\nmed. est.")
   arrowAdj <- c(0, 0)
-  facetSplit <- factor(rep("<b style='color:#E87D13'>Area Based Only</b>", 2), levels = c(
+  facetSplit <- factor(rep("<b style='color:#AD6DED'>Area Based Only</b>", 2), levels = c(
     "Sampling Choices",
     "Step Generation Choices",
     "<b style='color:#4F0E99'>SSF Only</b>",
-    "<b style='color:#E87D13'>Area Based Only</b>")
+    "<b style='color:#AD6DED'>Area Based Only</b>")
   )
   hjust <- c(0,1)
 
@@ -123,8 +123,8 @@ generate_allEffect_plots <- function(modelExtracts){
 
   modelLabels <- tribble(
     ~x, ~y, ~text, ~hjust, ~vjust, ~facetSplit, ~rawAbs, ~labCol,
-    4.35,   -0.65, "<b style='color:#AD6DED'>\u25CF = Wides</b>", 0.5, 0, "<b style='color:#E87D13'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
-    5.40,   -0.65, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#E87D13'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    4.35,   -0.65, "<b style='color:#AD6DED'>\u25CF = Wides</b>", 0.5, 0, "<b style='color:#AD6DED'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
+    5.40,   -0.65, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
     2.55,   -0.78, "<b style='color:#4F0E99'>\u25C6 = Step Selection</b>", 0.5, 0, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
     1.20,   -0.72, "<b style='color:#E87D13'>\u25BC = wRSF</b>", 0.5, 1, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
@@ -132,12 +132,12 @@ generate_allEffect_plots <- function(modelExtracts){
     mutate(facetSplit = factor(facetSplit, levels = c(
       "Sampling Choices",
       "<b style='color:#4F0E99'>SSF Only</b>",
-      "<b style='color:#E87D13'>Area Based Only</b>")))
+      "<b style='color:#AD6DED'>Area Based Only</b>")))
 
   arrowsDF <- tribble(
     ~x, ~y, ~xend, ~yend, ~facetSplit, ~rawAbs, ~labCol,
-    4.30,   -0.65, 2.84, -0.04, "<b style='color:#E87D13'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
-    4.82,   -0.65, 3.25, -0.22, "<b style='color:#E87D13'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    4.30,   -0.65, 2.84, -0.04, "<b style='color:#AD6DED'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
+    4.82,   -0.65, 3.25, -0.22, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
     2.51,   -0.75, 0.91, -0.06, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
     1.12,   -0.48, 1.61, -0.28, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
@@ -145,7 +145,7 @@ generate_allEffect_plots <- function(modelExtracts){
     mutate(facetSplit = factor(facetSplit, levels = c(
       "Sampling Choices",
       "<b style='color:#4F0E99'>SSF Only</b>",
-      "<b style='color:#E87D13'>Area Based Only</b>")))
+      "<b style='color:#AD6DED'>Area Based Only</b>")))
 
   allEffectsPlot <- betasOutputsPlotData %>%
     ggplot() +

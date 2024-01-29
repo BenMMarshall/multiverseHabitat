@@ -10,6 +10,13 @@
 uncertainty_vs_estimate <- function(aResults, sResults, wResults){
 
   palette <- multiverseHabitat::get_palette()
+  modelPalette <- unname(palette[1:4])
+  names(modelPalette) <- c(
+    "<b style='color:#AD6DED'>Wides</b>",
+    "<b style='color:#7D26D4'>RSF</b>",
+    "<b style='color:#4F0E99'>SSF</b>",
+    "<b style='color:#E87D13'>wRSF</b>"
+  )
 
   areaResults <- multiverseHabitat::parse_combined_results(aResults)
 
@@ -25,16 +32,17 @@ uncertainty_vs_estimate <- function(aResults, sResults, wResults){
                linetype = 2) +
     geom_point(aes(x = Estimate, y = uncertainty, colour = Estimate), alpha = 0.25,
                pch = 3, size = 0.75) +
-    labs(y = "Range of 95%\nconfidence intervals", x = "Estimate") +
+    labs(y = "Range of\n95% CI", x = "Estimate", title = "<b style='color:#7D26D4'>RSF</b>") +
     scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
-    scale_y_log10(breaks = c(c(0,1,5) %o% 10^(1:7))) +
+    scale_y_log10(breaks = c(c(0,1) %o% 10^(1:7))) +
     theme_bw() +
     theme(
       line = element_line(colour = palette["coreGrey"]),
       text = element_text(colour = palette["coreGrey"]),
+      plot.title = element_markdown(size = 9),
       strip.background = element_blank(),
       axis.title.y = element_text(hjust = 1, vjust = 1,
-                                  angle = 0),
+                                  angle = 0, face = 4, size = 7),
       axis.text.y = element_text(margin = margin(0, 5, 0, 10)),
       axis.line.y = element_line(),
       axis.line.x = element_line(),
@@ -56,16 +64,17 @@ uncertainty_vs_estimate <- function(aResults, sResults, wResults){
                linetype = 2) +
     geom_point(aes(x = Estimate, y = uncertainty, colour = Estimate), alpha = 0.25,
                pch = 3, size = 0.75) +
-    labs(y = "Range of 95%\nconfidence intervals", x = "Estimate") +
+    labs(y = "Range of\n95% CI", x = "Estimate", title = "<b style='color:#4F0E99'>SSF</b>") +
     scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
-    scale_y_log10(breaks = c(c(0,1,5) %o% 10^(1:7))) +
+    scale_y_log10(breaks = c(c(0,1) %o% 10^(1:7))) +
     theme_bw() +
     theme(
       line = element_line(colour = palette["coreGrey"]),
       text = element_text(colour = palette["coreGrey"]),
+      plot.title = element_markdown(size = 9),
       strip.background = element_blank(),
       axis.title.y = element_text(hjust = 1, vjust = 1,
-                                  angle = 0),
+                                  angle = 0, face = 4, size = 7),
       axis.text.y = element_text(margin = margin(0, 5, 0, 10)),
       axis.line.y = element_line(),
       axis.line.x = element_line(),
@@ -86,16 +95,17 @@ uncertainty_vs_estimate <- function(aResults, sResults, wResults){
                  linetype = 2) +
       geom_point(aes(x = Estimate, y = uncertainty, colour = Estimate), alpha = 0.5,
                  pch = 3, size = 0.75) +
-      labs(y = "Range of 95%\nconfidence intervals", x = "Estimate") +
+      labs(y = "Range of\n95% CI", x = "Estimate", title = "<b style='color:#E87D13'>wRSF</b>") +
       scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
-      scale_y_log10(breaks = c(c(0,1,5) %o% 10^(1:7))) +
+      scale_y_log10(breaks = c(c(0,1) %o% 10^(1:7))) +
       theme_bw() +
       theme(
         line = element_line(colour = palette["coreGrey"]),
         text = element_text(colour = palette["coreGrey"]),
+        plot.title = element_markdown(size = 9),
         strip.background = element_blank(),
         axis.title.y = element_text(hjust = 1, vjust = 1,
-                                    angle = 0),
+                                    angle = 0, face = 4, size = 7),
         axis.text.y = element_text(margin = margin(0, 5, 0, 10)),
         axis.line.y = element_line(),
         axis.line.x = element_line(),
@@ -117,7 +127,7 @@ uncertainty_vs_estimate <- function(aResults, sResults, wResults){
 
   ggsave(filename = here("notebook", "figures", "uncertaintyPlot.png"),
          plot = completePlot,
-         width = 220, height = 180, units = "mm", dpi = 300)
+         width = 180, height = 140, units = "mm", dpi = 300)
 
 }
 

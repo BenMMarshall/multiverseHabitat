@@ -328,11 +328,16 @@ extrasForRMD <- list(
     multiverseHabitat::generate_iteraction_plot()
   ),
   tar_target(
+    landscapeExamplePlot,
+    multiverseHabitat::plot_landscape_example()
+  ),
+  tar_target(
     rmdRender,
     render_rmd(extractedValues,
                effectPlots,
                allEffectPlot,
                iteractionPlot,
+               landscapeExamplePlot,
                uncertaintyPlot,
                areaSpecCurves_wides,
                areaSpecCurves_rsf,

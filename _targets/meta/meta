@@ -1,6 +1,6 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 .Random.seed|object|004bd6d68bb849f3|||||||||||||||
-allEffectPlot|stem|bb72c69562db0bab|7bf6e01b90040a8a|0742f4ae7df99718|414677313||t19739.6315825622s|f81edac748f54b5c|127609|qs|local|vector|||0.9||
+allEffectPlot|stem|737653ce20b7ea22|7bf6e01b90040a8a|2fee0819a5e63438|414677313||t19751.5327314561s|be6010b8aa199b98|127616|qs|local|vector|||0.905||
 allIndividualEstimatesList|object|431e93187c3b3439|||||||||||||||
 apply_to_leaves|function|b1d46ba8693c70e2|||||||||||||||
 areaBrms_rsf|stem|7d64f10a417e28eb|cddd5c49138854cf|026bcfb63f97500c|-1018173552||t19737.8636661848s|0d745ad43a485d79|109303009|qs|local|vector|||33437.292|There were 346 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.11, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess. There were 292 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.09, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess|
@@ -601,8 +601,8 @@ areaMethodsOUT_7_2_6_KINGCOBRA|stem|5c300ba9bd7e515b|5d409b55befc4360|e1797c0274
 areaMethodsOUT_7_2_6_VULTURE|stem|c3d119f063429f75|9802f5d37a198ec8|517d2a1abbae515a|486238602||t19389.5627516321s|1db4d73a55537957|2.2250738585072e-308|qs|local|vector|||26.819|CRS object has comment, which is lost in output in tests, seehttpscran.rproject.orgwebpackagesspvignettesCRS_warnings.html. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to nonlist or vector of type S4. is.na applied to non|
 areaResults|stem|8540d18c1306c132|afe5c3df814bbc4a|fb4b758d56451267|1363725402||t19737.451090398s|8ded893846b48cf4|10623498|qs|local|vector|||2.505||
 areaSpecCurves|stem|ae0b00d590c59ddf|6ad31a8a0c514f1d|a06af953420715c5|-2022559680||t19444.572321927s|f70012cadfc433ad|2.2250738585072e-308|qs|local|vector|||2.805|1m22mRemoved 8 rows containing missing values geom_point.. 1m22mRemoved 48 rows containing missing values geom_point.|
-areaSpecCurves_rsf|stem|81276402e9cac079|f50c0675f2ef0093|4c9b9029f5aaac54|-2117326114||t19737.4678249579s|68d64e6f9d86ca2f|594962583|qs|local|vector|||36.186||
-areaSpecCurves_wides|stem|8c74d0f3744137fa|34fa1e22a475b4d7|4c9b9029f5aaac54|-113799238||t19737.4673324937s|9c85ae275f28844c|32655774|qs|local|vector|||9.482|1m22mRemoved 1516 rows containing missing values geom_point.. 1m22mRemoved 7580 rows containing missing values geom_point.|
+areaSpecCurves_rsf|stem|81276402e9cac079|f50c0675f2ef0093|5d5fea1da0b89314|-2117326114||t19751.4751467508s|68d64e6f9d86ca2f|594962583|qs|local|vector|||37.516||
+areaSpecCurves_wides|stem|8c74d0f3744137fa|34fa1e22a475b4d7|5d5fea1da0b89314|-113799238||t19751.4752558723s|9c85ae275f28844c|32655774|qs|local|vector|||7.588|1m22mRemoved 1516 rows containing missing values geom_point.. 1m22mRemoved 7580 rows containing missing values geom_point.|
 brmsCompiled|object|741c21d0571c58ba|||||||||||||||
 build_available_area|function|7762b2ec3d2e7353|||||||||||||||
 build_available_polygon|function|c4b0a854a5948c49|||||||||||||||
@@ -619,16 +619,17 @@ extract_estimate|function|291fc3380242fac4|||||||||||||||
 extract_model_values|function|d86bd51c20a18299|||||||||||||||
 extract_values_rmd|function|aa7b8d4a4c112fa3|||||||||||||||
 extractedValues|stem|4bc00b2b5cc4da7c|b8109fa1802f787f|268b55c9c6ae9bb8|1202805663||t19739.6713108454s|fb35830066535703|3169|qs|local|vector|||9.457|NAs introduced by coercion|
-extrasForRMD|object|3067d0011ae1daa1|||||||||||||||
-generate_allEffect_plots|function|f6a2f2fe6de84426|||||||||||||||
+extrasForRMD|object|b32e23334a4d6f31|||||||||||||||
+generate_allEffect_plots|function|914ba6b3f80cdb45|||||||||||||||
 generate_effect_plots|function|bedeb79c380983a6|||||||||||||||
 generate_iteraction_plot|function|155816568f4a1111|||||||||||||||
-generate_spec_curves|function|15784f9974ac33df|||||||||||||||
+generate_spec_curves|function|9c801d9a643485c8|||||||||||||||
 get_palette|function|bb7836c7efd341bc|||||||||||||||
 iteractionPlot|stem|8bae4ade0491fdaf|2628df4af6e0def9|c3b5fc02cdc369c1|571119991||t19500.6443117176s|f02b269bc80ae470|129|qs|local|vector|||4.342||
 landscape_BADGER|stem|94996971be9b26da|8bedc1f6307100ff|57a37b93bf38157d|1817666615||t19726.5149907419s|4522739a149ee986|68399533|qs|local|vector|||43.463||
 landscape_KINGCOBRA|stem|83c45df56d57e8e7|a0bc6e79ef9adc26|57a37b93bf38157d|-1205708112||t19726.5149871769s|c3e4bd4b02455b80|68174045|qs|local|vector|||43.138||
 landscape_VULTURE|stem|85445ce828df362a|8e1c92ce954e78da|57a37b93bf38157d|-1650950429||t19726.5149938901s|793e7696333bf94c|35059862|qs|local|vector|||43.85||
+landscapeExamplePlot|stem|0f7060d287c87495|5f15aabc124022e5|c3b5fc02cdc369c1|1159998650||t19751.5272719562s|e92536e5890953e5|126|qs|local|vector|||71.758||
 method_BRMS|object|719c6cd5e91f1914|||||||||||||||
 method_indi_rsf|function|c4437c4189d9eb74|||||||||||||||
 method_indi_ssf|function|a86877d9577d5c48|||||||||||||||
@@ -639,10 +640,10 @@ optionsList_area|object|a69f74189a539b4c|||||||||||||||
 optionsList_area_wRSFSplit|object|980f04fa3b7f9b94|||||||||||||||
 optionsList_sff|object|e623730bae56c0c4|||||||||||||||
 parse_combined_results|function|ec21fc6540b11cb4|||||||||||||||
-plot_landscape_example|function|07e925fab03f1bf9|||||||||||||||
+plot_landscape_example|function|2c7ee99b7127bd2b|||||||||||||||
 prefix_all|function|29fdba172e3ba648|||||||||||||||
 render_rmd|function|fcf47d65aee0a616|||||||||||||||
-rmdRender|stem|1fc299ea6939a567|92225978c113182f|6dfde50035c3cf09|-796373120||t19739.6360831796s|24d52ebf1535bba2|123|qs|local|vector|||24.544|LaTeX Warning Float too large for page by 44.48126pt on input line 276.. LaTeX Warning Float too large for page by 33.9117pt on input line 276.|
+rmdRender|stem|1fc299ea6939a567|839cd7fd50842bed|cd703e95e371d5cb|-796373120||t19751.5510390495s|24d52ebf1535bba2|123|qs|local|vector|||31.967|LaTeX Warning Float too large for page by 44.48126pt on input line 276.. LaTeX Warning Float too large for page by 33.9117pt on input line 276.|
 run_brms|function|f3df13d84cb7baa8|||||||||||||||
 sampDuraFreqData_120_0.5_1_BADGER|stem|85ed61122cefd8d3|94e83c5572bbba6f|a134d4df46840be8|1461233018||t19726.5436568134s|3271cfd7a741d246|196426|qs|local|vector|||3.062||
 sampDuraFreqData_120_0.5_1_KINGCOBRA|stem|e88561ce68e293da|1e94c9fc8edbadaf|3f74eba9a68bfd50|-773549326||t19726.5413879143s|ad128e216d1e4641|191081|qs|local|vector|||3.239||
@@ -1855,15 +1856,15 @@ ssfOUT_7_2_6_BADGER|stem|6dcc8697cdb93a4f|9236f9ae810e70ad|244258202181f99c|-572
 ssfOUT_7_2_6_KINGCOBRA|stem|e4a79277cd580f9a|44b50b6b229a991e|264b9e675f09f93a|-57519035||t19389.6350144973s|06b78018fc4fdfd3|2.2250738585072e-308|qs|local|vector|||5.687|NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced|
 ssfOUT_7_2_6_VULTURE|stem|c2b7d98d53dc9875|4d67661fd6e6c96a|6f956c465f68f540|1466667541||t19389.5642478737s|e2f51e1bcbe8c4b0|2.2250738585072e-308|qs|local|vector|||7.495|NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite. . NaNs produced. NaNs produced. NaNs produced. NaNs produced. NaNs produced. Loglik converged before variable  1,2  beta may be infinite.|
 ssfResults|stem|88aab69784c6d6b3|615096820192ded8|7b6d8c9ae2b225de|1439985569||t19730.4529962806s|807892f470b7bf14|707211|qs|local|vector|||0.055||
-ssfSpecCurves|stem|92d973cfbe411561|6ad31a8a0c514f1d|4237412fbf5da6a4|374132051||t19737.4672056391s|0df180d9e26856c0|14941422|qs|local|vector|||4.807||
+ssfSpecCurves|stem|92d973cfbe411561|6ad31a8a0c514f1d|e5e8a2b475ebaff2|374132051||t19751.4746400327s|0df180d9e26856c0|14941422|qs|local|vector|||3.991||
 subset_duration|function|23d51a061493df33|||||||||||||||
 subset_frequency|function|9638bba5d1e2e1f2|||||||||||||||
 summaryBrms_rsf|stem|6dd71d12008128c1|7be333ed18f0d527|052093c5acd05000|-1873173221||t19739.4315838655s|de1c6d017cb4e8a8|38|qs|local|vector|||6.945|The facets argument of facet_grid is deprecated as of ggplot2 2.2.0.ℹ Please use the rows argument instead.ℹ The deprecated feature was likely used in the bayesplot package.  Please report the issue at httpsgithub.comstandevbayesplotissues.|
 summaryBrms_ssf|stem|6dd71d12008128c1|2cbc940bc0123fb6|a7f35139e006dabf|957753259||t19739.4315038186s|de1c6d017cb4e8a8|38|qs|local|vector|||4.746|The facets argument of facet_grid is deprecated as of ggplot2 2.2.0.ℹ Please use the rows argument instead.ℹ The deprecated feature was likely used in the bayesplot package.  Please report the issue at httpsgithub.comstandevbayesplotissues.|
 summaryBrms_wides|stem|6dd71d12008128c1|7374aeffe5283953|573a1d5306482b7a|-63544205||t19739.4316714587s|de1c6d017cb4e8a8|38|qs|local|vector|||6.533||
 summaryBrms_wrsf|stem|6dd71d12008128c1|5d09ae18952a16e3|2a8c5ac0582bd209|-406798362||t19739.4320461837s|de1c6d017cb4e8a8|38|qs|local|vector|||2.081||
-uncertainty_vs_estimate|function|657570a9eed3df51|||||||||||||||
-uncertaintyPlot|stem|5815b5128b04dc6f|1f6a8871be4b353a|ed2138506d700f00|-1835890423||t19739.4320606282s|24d52ebf1535bba2|123|qs|local|vector|||9.143|NAs introduced by coercion. Transformation introduced infinite values in continuous yaxis. Transformation introduced infinite values in continuous yaxis. Transformation introduced infinite values in continuous yaxis|
+uncertainty_vs_estimate|function|74649d33610b6972|||||||||||||||
+uncertaintyPlot|stem|5815b5128b04dc6f|1f6a8871be4b353a|4577e899b47a451b|-1835890423||t19751.5505042755s|24d52ebf1535bba2|123|qs|local|vector|||10.346|NAs introduced by coercion. 1m22mTransformation introduced infinite values in continuous yaxis. 1m22mTransformation introduced infinite values in continuous yaxis. 1m22mTransformation introduced infinite values in continuous yaxis|
 values_MethodCTM|object|53fdc05abf40dc8c|||||||||||||||
 values_Sampling|object|60ccb9c2b2adc44d|||||||||||||||
 values_SimIndi|object|fc969e1a355a332f|||||||||||||||
@@ -2268,5 +2269,5 @@ wrsfMethodsOUT_7_2_3_VULTURE|stem|4bb0c148eb6dcf73|189335b140dbd99a|c9e9066725d0
 wrsfMethodsOUT_7_2_4_BADGER|stem|4bb0c148eb6dcf73|f410a2fe6010b26a|64b83290ec8570b5|-2145270303||t19733.2086468332s|253a8b79276e1ed4|185|qs|local|vector|||12.354||
 wrsfMethodsOUT_7_2_4_KINGCOBRA|stem|4bb0c148eb6dcf73|ac209e9b0c6b23ee|f027d6239f398dd9|326922545||t19733.0430393706s|253a8b79276e1ed4|185|qs|local|vector|||5.909||
 wrsfMethodsOUT_7_2_4_VULTURE|stem|4bb0c148eb6dcf73|e33a9396e7b2d38e|9151010f5b14c156|-1805915853||t19732.848978939s|253a8b79276e1ed4|185|qs|local|vector|||6.582||
-wrsfpecCurves|stem|5d21078d1384670f|472b3655e9fef93e|99b06fc721cbeffb|1584261705||t19739.4319652572s|ab688e4f18b46b4e|224296|qs|local|vector|||0.692|NAs introduced by coercion|
+wrsfpecCurves|stem|c3ef20158ace95f2|472b3655e9fef93e|25be0235da40367c|1584261705||t19751.4752709187s|f548bf4c83143e9b|227271|qs|local|vector|||0.56|NAs introduced by coercion|
 wrsfResults|stem|76e97d7bfbcadfea|0d65d9e3f8e18b4f|acde917e6199de37|1717232675||t19737.4750084191s|bf83f6682f49c458|8257|qs|local|vector|||0.039||
