@@ -127,7 +127,7 @@ uncertainty_vs_estimate <- function(aResults, sResults, wResults){
 
   ggsave(filename = here("notebook", "figures", "uncertaintyPlot.png"),
          plot = completePlot,
-         width = 180, height = 140, units = "mm", dpi = 300)
+         width = 140, height = 140, units = "mm", dpi = 300)
 
 }
 
