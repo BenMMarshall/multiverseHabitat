@@ -434,28 +434,34 @@ knitr::include_graphics(here::here("notebook", "figures", "widesSpecCurve.png"))
 
 <!-- spec curve wides -->
 Starting with the Wides results, we see a quite gentle *S* shape (Fig. \@ref(fig:specCurveWides)), with most estimates falling in the range of 0.5 to 2.
-While there is a clear agreement of positive selection for habitat 2 as expected, the exact estimate appears relatively sensitive to the choices made. 
+There is a clear agreement of positive selection for habitat 2 as expected, and a stronger selection identified in the selection scenario compared to the scrambled raster (no selection) scenario.
+While the positive selection appears in good agreement, the exact estimate appears relatively sensitive to the choices made. 
 Looking at the specific choices, we can see several weak patterns.
-The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations.
+The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations, when selection is present.
 The same is not clear in tracking frequency because the lower tracking frequency could not be combined with lower tracking durations, resulting in fewer estimates for low frequency scenarios.
 Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher.
-Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a greater agreement between estimates.
+Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a slightly greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
-Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the left of the 0 line in Fig. \@ref(fig:specCurveWides)).
+Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the right of the 0 line in Fig. \@ref(fig:specCurveWides)).
 The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
+This difference disappears under the scrambled habitat classification, and in that scenario all analytical choices appear to make little impact on the median estimate.
 
 ```{r specCurveRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the RSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
 knitr::include_graphics(here::here("notebook", "figures", "rsfSpecCurve.png"))
 ```
 
 <!-- spec curve rsf -->
-The Resource Selection Function (RSF) specification curve shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer (Fig. \@ref(fig:specCurveRSF)).
-Similar to the Wides analysis, the majority of the answers and medians show selection for habitat 2; and while there are answers suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest selection.
+The Resource Selection Function (RSF) specification curves shows a more ideal *S* shape, with the majority of estimates clearly converging on a common answer (Fig. \@ref(fig:specCurveRSF)).
+Similar to the Wides analysis, the majority of the answers and medians show selection for habitat 2 in the selection scenario.
+The no selection scenario still overall shows selection, but it is considerably lower.
+While there are answers incorrectly suggesting avoidance of habitat 2, all bar two medians connected to a specific choice (the lowest two tracking frequencies) suggest selection.
 To best see the changes in variation connected to a given choice, we can look at the rates and position of the outliers (highlighted in purple and orange).
 Although weak patterns, tracking duration, frequency, and multiplier of available points see slight reductions in the number of estimates very high or very low.
+This is particularly apparent in the no selection scenario, where higher tracking frequencies led to very similar answers surrounding zero.
 Other patterns are difficult to discern, except for the weighting of used points that has a clear impact on the outlying low estimates.
 The distinct step-like pattern is a result of the logarithmic scale the weighting varies over (required to capture such a wide range of possible values), which can been seen reflected in other choices' groupings of estimates.
-The weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results. 
+The weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results.
+Comparing the selection scenario to the no selection scenario, we can see that the selection scenario is more likely to produce larger outlying results, both positive and negative.
 
 ```{r uncertaintyPlot, echo=FALSE, out.width='100%', fig.height=3, fig.width=2, fig.align="centre", fig.cap="All standard errors associated with estimates of habitat selection from RSF, SSF, and wRSF analysis pathways. N.b., y axis is log scaled."}
 knitr::include_graphics(here::here("notebook", "figures", "uncertaintyPlot.png"))
@@ -477,6 +483,7 @@ The stand out patterns are more easily seen in the outlying high estimates.
 Once again, there are indications of fewer outlying high estimates when data quantity increases, both with duration and frequency.
 The number of points per step (or strata) appears to intuitively follow that more available steps leads to more consistent estimations, and also the outliers that exist appear to become less extreme.
 The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not, appear to make little difference to the final estimates.
+The impact of analysis choice on the SSF method appears to be more consistent between the two scenarios.
 
 Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate (Fig. \@ref(fig:uncertaintyPlot)).
 
@@ -489,6 +496,7 @@ knitr::include_graphics(here::here("notebook", "figures", "wrsfSpecCurve.png"))
 The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates (Fig. \@ref(fig:specCurveWRSF)). 
 The highest estimates appear connected to the lower tracking frequencies, but like the SSF results, those high estimates also tend to have large confidence intervals (Fig. \@ref(fig:uncertaintyPlot)).
 The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
+As with RSF and SSF methods, the wRSF is very likely to correctly identify the positive selection and the median selection under the no selection scenario is lower.
 
 ## Model exploration
 
