@@ -8,7 +8,7 @@
 #'
 #' @export
 extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
-                               areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms){
+                               brmModels){
 
   # write csv files of the raw estimate data
   # areaResults <- qs::qread(here::here("_targets", "objects", "areaResults"))
@@ -33,7 +33,7 @@ extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
   # wrsfBrms <- qs::qread(here::here("_targets", "objects", "wrsfBrms"))
 
 
-# compile all R2 from all models ------------------------------------------
+  # compile all R2 from all models ------------------------------------------
   # library(performance)
   # as.data.frame(wrsfBrms$modOUT_dEst_r2)
   # data.frame(
@@ -47,106 +47,42 @@ extract_values_rmd <- function(areaResults, ssfResults, wrsfResults,
   #       attr(wrsfBrms$modOUT_dEst_r2,"CI")$R2_Bayes_marginal),
   # Component = c("conditional", "marginal")
   # )
-  r2_allModels <- do.call(rbind, lapply(list(areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms),
-                                        function(x){
-    models <- paste0(sub("_.*$", "_", x[[1]][1]), x[[1]][3:4])
+  r2_allModels <- do.call(rbind, lapply(brmModels, function(x){
+
+    model <- names(x)[1]
     r2df_1 <- data.frame(
-      R2 = c(unlist(
-        x[[4]][1]),
-        unlist(x[[4]][2])
-      ),
-      SE = c(attr(x[[4]],"SE")$R2_Bayes,
-             attr(x[[4]],"SE")$R2_Bayes_marginal),
-      rbind(attr(x[[4]],"CI")$R2_Bayes,
-            attr(x[[4]],"CI")$R2_Bayes_marginal),
+      model = model,
+      R2 = unlist(
+        x[[2]]),
+      SE = c(attr(x[[2]],"SE")$R2_Bayes,
+             attr(x[[2]],"SE")$R2_Bayes_marginal),
+      rbind(attr(x[[2]],"CI")$R2_Bayes,
+            attr(x[[2]],"CI")$R2_Bayes_marginal),
       Component = c("conditional", "marginal")
     )
-    # r2df_1 <- data.frame(x[[4]])
-    r2df_1$model <- models[1]
-    # r2df_2 <- data.frame(x[[5]])
-    r2df_2 <- data.frame(
-      R2 = c(unlist(
-        x[[5]][1]),
-        unlist(x[[5]][2])
-      ),
-      SE = c(attr(x[[5]],"SE")$R2_Bayes,
-             attr(x[[5]],"SE")$R2_Bayes_marginal),
-      rbind(attr(x[[5]],"CI")$R2_Bayes,
-            attr(x[[5]],"CI")$R2_Bayes_marginal),
-      Component = c("conditional", "marginal")
-    )
-    r2df_2$model <- models[2]
-    r2_all <- rbind(r2df_1, r2df_2)
-    return(r2_all)
+    return(r2df_1)
   }))
 
   write.csv(r2_allModels, file = here::here("data", "brmsR2Results.csv"),
             row.names = FALSE)
 
 
-# get all betas -----------------------------------------------------------
+  # get all betas -----------------------------------------------------------
 
-  modelBetas <- lapply(areaBrms_wides, function(x){
-    if(class(x) == "brmsfit"){
-      out <- ggdist::median_hdci(tidybayes::gather_draws(x,
-                                                         `b_.*`, regex = TRUE),
-                                 .width = c(0.95))
-      return(out)
-    } else (
-      return(NULL)
-    )
+  brmEst_ext <- do.call(rbind, lapply(brmModels, function(x){
+    for(i in 1:length(x)){
+      if(class(x[[i]]) == "brmsfit"){
+        out <- ggdist::median_hdci(tidybayes::gather_draws(x[[i]],
+                                                           `b_.*`, regex = TRUE),
+                                   .width = c(0.95))
+        out$model <- names(x)[1]
+        return(out)
+      } else (
+        return(NULL)
+      )
+    }
   })
-  modelBetas$modOUT_dEst$model <- areaBrms_wides$modelNames[1]
-  modelBetas$modOUT_rEst$model <- areaBrms_wides$modelNames[2]
-  modelBetas[sapply(modelBetas, is.null)] <- NULL
-  widesBetas <- do.call(rbind, modelBetas)
-
-  modelBetas <- lapply(areaBrms_rsf, function(x){
-    if(class(x) == "brmsfit"){
-      out <- ggdist::median_hdci(tidybayes::gather_draws(x,
-                                                         `b_.*`, regex = TRUE),
-                                 .width = c(0.95))
-      return(out)
-    } else (
-      return(NULL)
-    )
-  })
-  modelBetas$modOUT_dEst$model <- areaBrms_rsf$modelNames[1]
-  modelBetas$modOUT_rEst$model <- areaBrms_rsf$modelNames[2]
-  modelBetas[sapply(modelBetas, is.null)] <- NULL
-  rsfBetas <- do.call(rbind, modelBetas)
-
-  modelBetas <- lapply(ssfBrms, function(x){
-    if(class(x) == "brmsfit"){
-      out <- ggdist::median_hdci(tidybayes::gather_draws(x,
-                                                         `b_.*`, regex = TRUE),
-                                 .width = c(0.95))
-      return(out)
-    } else (
-      return(NULL)
-    )
-  })
-  modelBetas$modOUT_dEst$model <- ssfBrms$modelNames[1]
-  modelBetas$modOUT_rEst$model <- ssfBrms$modelNames[2]
-  modelBetas[sapply(modelBetas, is.null)] <- NULL
-  ssfBetas <- do.call(rbind, modelBetas)
-
-  modelBetas <- lapply(wrsfBrms, function(x){
-    if(class(x) == "brmsfit"){
-      out <- ggdist::median_hdci(tidybayes::gather_draws(x,
-                                                         `b_.*`, regex = TRUE),
-                                 .width = c(0.95))
-      return(out)
-    } else (
-      return(NULL)
-    )
-  })
-  modelBetas$modOUT_dEst$model <- wrsfBrms$modelNames[1]
-  modelBetas$modOUT_rEst$model <- wrsfBrms$modelNames[2]
-  modelBetas[sapply(modelBetas, is.null)] <- NULL
-  wrsfBrms <- do.call(rbind, modelBetas)
-
-  brmEst_ext <- do.call(rbind, list(widesBetas, rsfBetas, ssfBetas, wrsfBrms))
+  )
 
   write.csv(brmEst_ext, file = here::here("data", "brmsEstResults.csv"),
             row.names = FALSE)

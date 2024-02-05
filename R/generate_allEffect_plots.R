@@ -85,12 +85,12 @@ generate_allEffect_plots <- function(modelExtracts){
         "\u03B2 Available Points Weighting"
       ))
       )) %>%
-    mutate(rawAbs = str_extract(model, "dEst|rEst"),
-           method = str_extract(model, "Wides|RSF|SSF|wrsf")) %>%
+    mutate(rawAbs = str_extract(model, "abs|raw"),
+           method = str_extract(model, "wides|rsf|ssf|wrsf")) %>%
     mutate(method = factor(case_when(
-      method == "Wides" ~ "<b style='color:#AD6DED'>Wides</b>",
-      method == "RSF" ~ "<b style='color:#7D26D4'>RSF</b>",
-      method == "SSF" ~ "<b style='color:#4F0E99'>SSF</b>",
+      method == "wides" ~ "<b style='color:#AD6DED'>Wides</b>",
+      method == "rsf" ~ "<b style='color:#7D26D4'>RSF</b>",
+      method == "ssf" ~ "<b style='color:#4F0E99'>SSF</b>",
       method == "wrsf" ~ "<b style='color:#E87D13'>wRSF</b>"),
       levels = c(
         "<b style='color:#E87D13'>wRSF</b>",
@@ -100,7 +100,7 @@ generate_allEffect_plots <- function(modelExtracts){
       ))
     ) %>%
     filter(!.variable == "b_Intercept") %>%
-    mutate(rawAbs = ifelse(rawAbs == "dEst", "Absolute difference from median",
+    mutate(rawAbs = ifelse(rawAbs == "abs", "Absolute difference from median",
                            "Raw difference from median"))
 
 

@@ -213,46 +213,128 @@ directCompiled <- list(
 )
 
 method_BRMS <- tibble(
-  method = c("rsf", "wides")
+  # method = c("rsf", "wides"),
+  resp = c("abs", "raw")
 )
 
 brmsCompiled <- list(
   # area method models
   tar_map(
     values = method_BRMS,
-    tar_target(areaBrms,
+    # RSF
+    tar_target(rsfBrmsModel,
                run_brms(
                  compiledResults = areaResults,
-                 method = method),
+                 method = "rsf",
+                 response = resp,
+                 iter = 500,
+                 warmup = 150),
                priority = 0.71
     ),
-    tar_target(areaSpecCurves,
-               generate_spec_curves(
+    # WIDES
+    tar_target(widesBrmsModel,
+               run_brms(
                  compiledResults = areaResults,
-                 method = method),
+                 method = "wides",
+                 response = resp,
+                 iter = 1500,
+                 warmup = 500),
                priority = 0.71
     ),
-    ## EFFECT SIZE TARGET HERE
-    tar_target(effectSizeBrms,
+    # SSF
+    tar_target(ssfBrmsModel,
+               run_brms(
+                 compiledResults = ssfResults,
+                 method = "ssf",
+                 response = resp,
+                 iter = 1500,
+                 warmup = 250),
+               priority = 0.72
+    ),
+    # WRSF
+    tar_target(wrsfBrmsModel,
+               run_brms(
+                 compiledResults = wrsfResults,
+                 method = "wrsf",
+                 response = resp,
+                 iter = 2000,
+                 warmup = 500),
+               priority = 0.71
+    ),
+    # EFFECT SIZES
+    tar_target(effectSizeBrms_rsf,
                generate_effect_plots(
-                 brmsResults = areaBrms,
-                 method = method
+                 brmsResults = rsfBrmsModel,
+                 method = "rsf",
+                 response = resp
                ),
                priority = 0.74
     ),
-    tar_target(summaryBrms,
+    tar_target(effectSizeBrms_wides,
+               generate_effect_plots(
+                 brmsResults = widesBrmsModel,
+                 method = "wides",
+                 response = resp
+               ),
+               priority = 0.74
+    ),
+    tar_target(effectSizeBrms_ssf,
+               generate_effect_plots(
+                 brmsResults = ssfBrmsModel,
+                 method = "ssf",
+                 response = resp
+               ),
+               priority = 0.74
+    ),
+    tar_target(effectSizeBrms_wrsf,
+               generate_effect_plots(
+                 brmsResults = wrsfBrmsModel,
+                 method = "wrsf",
+                 response = resp
+               ),
+               priority = 0.70
+    ),
+    # SUMMARY DIAGNOSTICS
+    tar_target(summaryBrms_rsf,
                diagnostics_brms(
-                 brmsResults = areaBrms
+                 brmsResults = rsfBrmsModel,
+                 response = resp
                ),
                priority = 0.71
+    ),
+    tar_target(summaryBrms_wides,
+               diagnostics_brms(
+                 brmsResults = widesBrmsModel,
+                 response = resp
+               ),
+               priority = 0.71
+    ),
+    tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
+               diagnostics_brms(
+                 brmsResults = ssfBrmsModel,
+                 response = resp
+               ),
+               priority = 0.73
+    ),
+    tar_target(summaryBrms_wrsf, ## added _ssf to match name style of the area methods
+               diagnostics_brms(
+                 brmsResults = wrsfBrmsModel,
+                 response = resp
+               ),
+               priority = 0.70
     )
   ),
-  #ssf models
-  tar_target(ssfBrms,
-             run_brms(
-               compiledResults = ssfResults,
-               method = "ssf"),
-             priority = 0.72
+  tar_target(rsfSpecCurves,
+             generate_spec_curves(
+               compiledResults = areaResults,
+               method = "rsf"),
+             priority = 0.71
+  ),
+  tar_target(widesSpecCurves,
+             generate_spec_curves(
+               compiledResults = areaResults,
+               method = "wides"),
+             priority = 0.71
   ),
   tar_target(ssfSpecCurves,
              generate_spec_curves(
@@ -261,47 +343,12 @@ brmsCompiled <- list(
              ),
              priority = 0.72
   ),
-  ### SSF EFFECT SIZE TARGET HERE
-  tar_target(effectSizeBrms_ssf,
-             generate_effect_plots(
-               brmsResults = ssfBrms,
-               method = "ssf"
-             ),
-             priority = 0.74
-  ),
-  tar_target(summaryBrms_ssf, ## added _ssf to match name style of the area methods
-             diagnostics_brms(
-               brmsResults = ssfBrms
-             ),
-             priority = 0.73
-  ),
-  #wrsf models
-  tar_target(wrsfBrms,
-             run_brms(
-               compiledResults = wrsfResults,
-               method = "wrsf"),
-             priority = 0.71
-  ),
   tar_target(wrsfpecCurves,
              generate_spec_curves(
                compiledResults = wrsfResults,
                method = "wrsf"
              ),
              priority = 0.71
-  ),
-  ### WRSF EFFECT SIZE TARGET HERE
-  tar_target(effectSizeBrms_wrsf,
-             generate_effect_plots(
-               brmsResults = wrsfBrms,
-               method = "wrsf"
-             ),
-             priority = 0.70
-  ),
-  tar_target(summaryBrms_wrsf, ## added _ssf to match name style of the area methods
-             diagnostics_brms(
-               brmsResults = wrsfBrms
-             ),
-             priority = 0.70
   ),
   tar_target(uncertaintyPlot,
              uncertainty_vs_estimate(
@@ -313,11 +360,19 @@ brmsCompiled <- list(
   )
 )
 
+brmAllModels <- tar_combine(
+  brmModels,
+  brmsCompiled[[1]][grep("BrmsModel", names(brmsCompiled[[1]]))],
+  command = list(!!!.x),
+  # command = rbind(!!!.x),
+  priority = 0.8
+)
+
 extrasForRMD <- list(
   tar_target(
     extractedValues,
     multiverseHabitat::extract_values_rmd(areaResults, ssfResults, wrsfResults,
-                                          areaBrms_wides, areaBrms_rsf, ssfBrms, wrsfBrms)
+                                          brmModels)
   ),
   tar_target(
     allEffectPlot,
@@ -353,6 +408,7 @@ list(allIndividualEstimatesList,
      ssfCompiled,
      simsCompiled,
      brmsCompiled,
+     brmAllModels,
      directCompiled,
      extrasForRMD)
 

@@ -6,11 +6,11 @@
 #' @return a
 #'
 #' @export
-diagnostics_brms <- function(brmsResults){
+diagnostics_brms <- function(brmsResults, ...){
 
-  for(n in 2:length(brmsResults)){
+  for(n in 1:length(brmsResults)){
 
-    name <- brmsResults$modelNames[n-1]
+    name <- names(brmsResults)[1]
     currMod <- brmsResults[[n]]
 
     if(class(currMod) == "brmsfit"){

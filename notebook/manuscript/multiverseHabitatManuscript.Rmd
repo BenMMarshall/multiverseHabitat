@@ -500,7 +500,7 @@ As with RSF and SSF methods, the wRSF is very likely to correctly identify the p
 
 ## Model exploration
 
-```{r targetsBRMS, echo=FALSE, message=FALSE}
+```{r targetsBRMS, echo=FALSE, message=FALSE, warning=FALSE}
 brmEstResults <- read.csv(here::here("data", "brmsEstResults.csv"))
 
 brmEstResults <- brmEstResults %>% 
@@ -534,38 +534,38 @@ knitr::include_graphics(here::here("notebook", "figures", "_allEffectsPlot.png")
 
 <!-- WIDES MODELS -->
 
-```{r widesModelEffects, echo=FALSE, message=FALSE}
+```{r widesModelEffects, echo=FALSE, message=FALSE, warning=FALSE}
 brmWides_dEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_abs") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_abs") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_avpEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_abs") %>% 
   dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmWides_dEst_csEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_dEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_abs") %>% 
   dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
 
 brmWides_rEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_raw") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_raw") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_avpEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_raw") %>% 
   dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmWides_rEst_spEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wides_rEstWides") %>% 
+  dplyr::filter(model == "modOUT_wides_raw") %>% 
   dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
 ```
@@ -585,62 +585,62 @@ All area related choices do not move relative to each other, and reveal that MCP
 
 <!-- RSF MODELS -->
 
-```{r rsfModelEffects, echo=FALSE, message=FALSE}
+```{r rsfModelEffects, echo=FALSE, message=FALSE, warning=FALSE}
 brmrsf_dEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_csEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_avpEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmrsf_dEst_spEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
 brmrsf_dEst_akdeEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_areaAKDE") %>% 
   pull(inTextSummary)
 brmrsf_dEst_kdeEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_areaKDEhref") %>% 
   pull(inTextSummary)
 brmrsf_dEst_dbmEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_dEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_abs") %>% 
   dplyr::filter(.variable == "b_areadBBMM") %>% 
   pull(inTextSummary)
 
 brmrsf_rEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_spEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_samplingPatternst") %>% 
   pull(inTextSummary)
 brmrsf_rEst_avpEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_availPointsPerScaled") %>% 
   pull(inTextSummary)
 brmrsf_rEst_dbmEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_areadBBMM") %>% 
   pull(inTextSummary)
 brmrsf_rEst_csEffect <- brmEstResults %>% 
-  dplyr::filter(model == "rsf_rEstRSF") %>% 
+  dplyr::filter(model == "modOUT_rsf_raw") %>% 
   dplyr::filter(.variable == "b_contourScaled") %>% 
   pull(inTextSummary)
 ```
@@ -685,18 +685,18 @@ Overall there does not appear to be a decision that leads to great deviation fro
 
 <!-- SSF MODELS -->
 
-```{r ssfModelEffects, echo=FALSE, message=FALSE}
+```{r ssfModelEffects, echo=FALSE, message=FALSE, warning=FALSE}
 brmssf_dEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "ssf_dEstSSF") %>% 
+  dplyr::filter(model == "modOUT_ssf_abs") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmssf_dEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "ssf_dEstSSF") %>% 
+  dplyr::filter(model == "modOUT_ssf_abs") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 
 brmssf_rEst_sdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "ssf_rEstSSF") %>% 
+  dplyr::filter(model == "modOUT_ssf_raw") %>% 
   dplyr::filter(.variable == "b_stepDistgamma") %>% 
   pull(inTextSummary)
 ```
@@ -707,28 +707,28 @@ The SSF absolute deviation model very closely matches the previous two models (F
 Unlike the other analysis, all other decisions made a negligible impact on an estimate's absolute proximity to the median estimate.
 
 <!-- model res ssf raw -->
-Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasSSF)). 
+Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasSSF)).
 The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_sdEffect`).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
 <!-- WRSF MODELS -->
 
-```{r wrsfModelEffects, echo=FALSE, message=FALSE}
+```{r wrsfModelEffects, echo=FALSE, message=FALSE, warning=FALSE}
 brmwrsf_dEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wrsf_dEstwrsf") %>% 
+  dplyr::filter(model == "modOUT_wrsf_abs") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmwrsf_dEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wrsf_dEstwrsf") %>% 
+  dplyr::filter(model == "modOUT_wrsf_abs") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 
 brmwrsf_rEst_tdEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wrsf_rEstwrsf") %>% 
+  dplyr::filter(model == "modOUT_wrsf_raw") %>% 
   dplyr::filter(.variable == "b_tdScaled") %>% 
   pull(inTextSummary)
 brmwrsf_rEst_tfEffect <- brmEstResults %>% 
-  dplyr::filter(model == "wrsf_rEstwrsf") %>% 
+  dplyr::filter(model == "modOUT_wrsf_raw") %>% 
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 ```
@@ -865,19 +865,20 @@ We generated R package citations with the aid of grateful `r paste0("v.", packag
 
 <!-- add zenodo archived snapshot of github -->
 
+\clearpage
+
 # Supplementary Material
 
 ```{r r2table, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::kable(
-  brmsR2Results %>% 
-    mutate(across(where(is.numeric), round, digits = 3)) %>% 
-    mutate(model = sub("_r2$", "", model),
-           response = ifelse(str_detect(model, "dEst"), "Absolute Deviation", "Raw Deviation"),
-           method = sub("_", "", str_extract(model, "^.*_")),
+  brmsR2Results %>%
+    dplyr::mutate(across(where(is.numeric), round, digits = 3)) %>%
+    dplyr::mutate(response = ifelse(str_detect(model, "abs"), "Absolute Deviation", "Raw Deviation"),
+           method = sub("modOUT_", "", sub("_abs|_raw", "", model)),
            Component = str_to_sentence(Component)
-    ) %>% 
+    ) %>%
     dplyr::select(-model),
-  caption = "$All R^2 values for Bayesian regression models.$",
+  caption = "All \\textit{$R^2$} values for Bayesian regression models.",
   format = "latex",
   align = "lcc",
   vline = "",
@@ -921,6 +922,7 @@ knitr::include_graphics(here::here("notebook", "figures", "ssf_rEstSSF_effectsPl
 ```{r rEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway."}
 knitr::include_graphics(here::here("notebook", "figures", "wrsf_rEstwrsf_effectsPlot.png"))
 ```
+
 \clearpage
 
 # References
