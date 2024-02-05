@@ -107,8 +107,10 @@ generate_allEffect_plots <- function(modelExtracts){
   gradLimits <- range(c(betasOutputsPlotData$.lower, betasOutputsPlotData$.upper))
   labelLocation <- data.frame(gradLimits)
   labelLocationText <- data.frame(gradIndent = gradLimits + c(0.05, -0.05))
-  labelText <- c("Closer to\nmed. est.",
+  labelText_abs <- c("Closer to\nmed. est.",
                  "Farther from\nmed. est.")
+  labelText_raw <- c("Closer to\nmed. est.",
+                 "+ skew from\nmed. est.")
   arrowAdj <- c(0, 0)
   facetSplit <- factor(rep("<b style='color:#AD6DED'>Area Based Only</b>", 2), levels = c(
     "Sampling Choices",
@@ -117,9 +119,13 @@ generate_allEffect_plots <- function(modelExtracts){
     "<b style='color:#AD6DED'>Area Based Only</b>")
   )
   hjust <- c(0,1)
-
-  annotationDF <- cbind(labelLocation, labelLocationText, labelText, arrowAdj,
+  annotationDF_raw <- cbind(labelLocation, labelLocationText, "labelText" = labelText_raw, arrowAdj,
                         facetSplit, hjust)
+  annotationDF_raw$rawAbs <- "Raw difference from median"
+  annotationDF_abs <- cbind(labelLocation, labelLocationText, "labelText" = labelText_abs, arrowAdj,
+                        facetSplit, hjust)
+  annotationDF_abs$rawAbs <- "Absolute difference from median"
+  annotationDF_facets <- rbind(annotationDF_raw, annotationDF_abs)
 
   modelLabels <- tribble(
     ~x, ~y, ~text, ~hjust, ~vjust, ~facetSplit, ~rawAbs, ~labCol,
@@ -167,13 +173,13 @@ generate_allEffect_plots <- function(modelExtracts){
                    colour = labCol),
                curvature = 0.35,
                arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")))+
-    geom_segment(data = annotationDF,
+    geom_segment(data = annotationDF_facets,
                  aes(x = -0.2, xend = -0.2,
                      y = 0.02, yend = gradLimits),
                  colour = "#9F9FA0",
                  arrow = arrow(angle = 30, type = "closed", length = unit(2, "mm")),
                  linewidth = 1.25) +
-    geom_text(data = annotationDF,
+    geom_text(data = annotationDF_facets,
               aes(x = -0.1, y = gradIndent,
                   label = labelText, hjust = hjust),
               colour = "#9F9FA0", vjust = 0.65, lineheight = 1.25,
@@ -181,8 +187,8 @@ generate_allEffect_plots <- function(modelExtracts){
     geom_point(aes(x = .variable, y = .value,
                    colour = method, shape = method, fill = method),
                position = position_dodge(0.75), size = 2) +
-    geom_point(data = annotationDF,
-               aes(x = -0.75, y = 0)) +
+    geom_point(data = annotationDF_facets,
+               aes(x = -0.75, y = 0), colour = palette["coreGrey"]) +
     scale_fill_manual(values = modelPalette,
                       breaks = c(
                         "<b style='color:#E87D13'>wRSF</b>",
@@ -233,7 +239,7 @@ generate_allEffect_plots <- function(modelExtracts){
 
   ggsave(allEffectsPlot,
          filename = here("notebook", "figures", "_allEffectsPlot.png"),
-         dpi = 300, width = 260, height = 200,
+         dpi = 300, width = 250, height = 190,
          units = "mm")
 
   return(allEffectsPlot)

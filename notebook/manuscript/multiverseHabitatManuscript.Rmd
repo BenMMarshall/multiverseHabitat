@@ -198,7 +198,7 @@ In brief:
 
 * Species 3, King cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
-Each simulation generated a year's worth of movement data with a data point recorded every minute.
+Each simulation generated a year's worth of movement data with a data point recorded every minute, and we simulated `r nrow(optionsCompleteList$individual)` individuals per species.
 
 <!-- Weighted landscapes translated into three-tier categories -->
 The agent-based animal movement simulation require an environment to guide movement.
@@ -212,16 +212,12 @@ Broadly, we created: core resource areas (e.g., forests) with higher foraging qu
 All shelter sites occurred within the higher quality core resource areas.
 
 While our simulation landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
-Therefore, to simplify the interpretation of the multiverse we simplify out landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
+Therefore, to simplify the interpretation of the multiverse, we simplified out landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
 This results in a classified matrix/raster of habitat types usable for downstream analyses (Fig. \@ref(fig:landscapeExample)).
 While the categorisation of landscapes is a major decision during the analysis of habitat selection, we elected to keep the landscape classification constant to maintain an feasible multiverse analysis.
-<!-- figure here of landscapes turned into categories -->
 However, to provide a point of comparison and to begin to explore the impact of selection strength on the analysis choices and estimates, we re-ran the entire multiverse with an scrambled habitat raster.
 The scrambled habitat raster contained the same three classifications, but their positions were randomised, resulting in a habitat raster detached from the underlying simulated selection thereby representing low or no selection (Fig. \@ref(fig:landscapeExample)).
 
-<!-- POSSIBLE EXPANSION - The current multiverse(s) are examining movement data with a known positive selection, but it would be very easy to re-run the whole thing with no selection. I think this could be done by just scrambling the classified raster used in the habitat selection analyses –breaking any connection between the movement (and the underlying foraging, resting, movement layers) and the simplified layers used for the analyses. I am going to focus on getting what I have tidied up and the preprint better before exploring this, but it does strike me as an interesting and simple angle to explore: what does the variation look like when there is no selection? Adding this to the paper I think would give more of an insight into whether the variation can cause false positives; as it stands now, the papers are more about spotting the variation causing false negatives (given a certain hard to define level of habitat selection). So in lieu of being able to run a suite of scenarios with different habitat selection strengths, a comparison of zero selection to some-positive selection might be the next best thing. -->
-
-<!-- make the text and overall feel of the figure larger and clearer, question the need for the x and y axes -->
 ```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
 knitr::include_graphics(here::here("notebook", "figures", "landscapeExample.png"))
 ```
@@ -239,7 +235,7 @@ No multiverse can ever be entirely comprehensive, but we endeavoured to include 
 <!-- Tracking consistency - might be very difficult to define systematically -->
 The first decisions concern data quantity.
 We varied tracking duration and tracking frequency primarily, while keeping consistency fixed.
-While tracking consistency, or random/systematic data loss during tracking is an element affecting data quantity, the numerous ways of defining consistency means we did not explore tracking consistency.
+While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity the numerous ways of defining consistency means we did not explore tracking consistency.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
 For this exploration, we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
 Timing only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
@@ -251,7 +247,7 @@ Data or location quality is another point of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 As the causes and measurement of error, as well as the solutions to, location error are numerous; we will not explore the impact of error during this exploration in favour of more variation in other decision nodes.
 
-In summary, the sampling decisions will cover variation in species represented by four independent individuals, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)).
+In summary, the sampling decisions will cover variation in three species represented by `r nrow(optionsCompleteList$individual)` independent individuals, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)).
 
 ```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An illustration of the different decisions creating the multiverse, split between sampling and analysis. Grey choices pertain to data simulation and sampling. Species: the three different movement archetypes the simulations were loosely based upon. Individual: the number of individuals simulated per each species. Tracking duration: the length in days of the tracking data sampled from the overall simulated year. Tracking frequency: the frequency of the sampling of data points from the 1-per-minute simulated data. Purple choices concerned with analysis pathways using area-based estimations of availability (Wides: Wides selection ratios, RSF: Resource Selection Function). Area method: the method used to generate the available area polygon for the individual (MCP: Minimum Convex Polygon, KDE: Kernel Density Estimator, AKDE: Autocorrelated Kernel Density Estimator, dBBMM: dynamic Brownian Bridge Movement Model). Contour: the threshold used to convert the utilisation/occurrence distribution into a polygon. Available points: the number of generated points to extract available habitat within the polygon. Points pattern: whether the random points were generated in a stratified or random pattern. Weighting: the weighting of the available points in relation to the used points in the RSF formula. Light orange choices pertain to the SSF (Step Selection Function) analysis pathways. Model formula: whether the step and turn angles were added as interactions to the habitat variable (integrated if added). Available points: the number of randomly generated available points per step/used point. Turn angle: the distribution used to generate the turn angles of the available points. Step distribution: the distribution used to generate the step distances of the available points. Dark orange is the WRSF (Weighted Resource Selection Function) analysis. Decisions that required discrete choices are illustrated with circles, whereas those that continuous are depicted as triangles."}
 knitr::include_graphics(here::here("notebook", "ext_images", "Decision Visualisation.png"))
@@ -285,7 +281,7 @@ While type II habitat selection can identify individual selection, it requires h
 As movement data presents an opportunity to estimate individual selection, and we are not simulating a true interacting population, we focus on type III.
 Type III and the need to individually define available habitat opens up many different analytically decisions concerning how that availability is defined.
 
-We used a range of methods to build areas that could be considered available to the animal from the recorded locations of the animal: Minimum convex polygons (MCPs), Kernel Density Estimations (KDEs), Autocorrelated Kernel Density Estimations (AKDEs), and dynamic Brownian Bridge Movement Models (dBBMMs).
+We used a range of methods to build areas that could be considered available to the animal from the recorded locations of the animal: Minimum Convex Polygons (MCPs), Kernel Density Estimations (KDEs), Autocorrelated Kernel Density Estimations (AKDEs), and dynamic Brownian Bridge Movement Models (dBBMMs).
 
 Minimum convex polygons (MCPs) simply creates a polygon based on the out most locations, where the interior angles sum to less than 180 degrees.
 
@@ -304,14 +300,14 @@ The movement models include different levels of autocorrelative structure: Ornst
 Each model type is also fitted in isotropic (circular) or anisotropic (elliptical) forms. 
 The movement model used would constitute a decision during analysis; however, the ctmm package allows for model comparisons (using AICc) to chose a single best model.
 Therefore, we use the guidance from [@silva_autocorrelationinformed_2022] to generate weighted AKDEs using perturbative hybrid residual maximum likelihood method (pHREML), and select the best performing by AICc for inclusion in further analysis.
-Using weighted AKDEs means the area estimates better address gaps between locations [@silva_autocorrelationinformed_2022], with no apparent drawbacks nor large computational cost. 
+Using weighted AKDEs means the area estimates better address gaps between locations [@silva_autocorrelationinformed_2022], with no apparent drawbacks nor prohibitively large computational cost. 
 
 The second movement-specific method we used was dynamic Brownian Bridge Movement Models (dBBMMs) [@Kranstauber2012] from the move package [@move], which estimates movement capacity of the animal to calibrate repeated random walks between known locations.
 DBBMMs require a window and margin size that defines the number of data points over which movement capacity (motion variance) is calculated [@Kranstauber2012]. 
 <!-- Fortunately the areas resulting from dBBMMs are largely insensitive to this choice, especially when large windows and margins are used. -->
 Window and margin are defined by a number of data points; therefore, to keep the time they represent the same between different tracking frequencies, we changed their values for each tracking frequency. 
 As our most infrequent tracking is `r max(optionsCompleteList$regime$tf)` hours (`r max(optionsCompleteList$regime$tf)/24` week), we set the window to the number of data points collected over 168 hours, and a margin of 48 hours.
-The broader window and margin sizes helped reduce computational costs, a major concern when so many dBBMMs are being calculated.
+The broader window and margin sizes helped reduce computational costs, a consideration when many dBBMMs require calculation.
 <!-- In these instances we will report an NA as a final result. -->
 
 Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
@@ -340,21 +336,21 @@ There are suggestions that altering the weighing can improve model convergence a
 
 In addition to the area based methods of Wides and RSF, we explored of Step Selection Functions (SSF) and Weighted Resource Selection Functions (wRSF).
 
-Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., for each data point in the dataset; strata).
+Instead of estimating habitat availability using area, SSFs use observed step lengths and turn angles to generate available locations at each time step (i.e., in our case for each data point in the dataset; strata).
 Consequently, SSFs have a number of decisions not shared with the area methods.
 
 We explored three decisions associated with the generation of random (available but unused) locations for each step.
 The first is similar to the area methods, we varied the number of random locations generated per step from `r paste0(min(optionsCompleteList$ssf$MethodSSF_as), " to ", max(optionsCompleteList$ssf$MethodSSF_as))`.
-The second and third are concerning the distributions used to generate the random step and turn angles.
+The second and third decisions are concerning the distributions used to generate the random step and turn angles.
 Step lengths were tested with a Gamma and Exponential distributions, while turn angle was tested with Von-Mises and Uniform distributions.
 
 The other decisions we explored in SSFs were whether to run the model as a standard step selection or an integrated step selection function.
 The standard step selection model is a conditional logistic regression, where we aim to estimate the used/unused by the habitat values (case_ ~ values + strata(step_id_)).
-The integrated step selection model is very similar, apart from the predictors also included step length and turn angle.
+The integrated step selection model is very similar, apart from the predictors also included step length and turn angle as interactive terms with the habitat values.
 The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artefact of the movements of the animal rather than active habitat selection [@avgar_integrated_2016].
 
 We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of "bursts".
-Bursts are used when the researcher wants to look at selection over a given timeframe; therefore. locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
+Bursts are used when the researcher wants to look at selection over a given timeframe; therefore, locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
 Such grouping of data deserves investigation, but there are myriad of ways bursts can be defined, and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
 As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
 
@@ -377,12 +373,13 @@ The single seed means that all simulated individuals, and subsequent analysis us
 
 Further examination was complicated by the four methods described above producing habitat selection values on different scales with different decisions associated with them.
 We elected to analyse the impact of the decisions separately.
-For each method, we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated selection, 2) which decisions best explain the transformed deviation from the median estimated selection.
-The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased noise surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat selection.
-All models included individual and species as nested group effects, as well as a group effect accounting for whether the classified landscape was scrambled or not (for example, the formula for the SSF model looking at absolute deviation: absDeltaEst ~ 1 + tdScaled + tfScaled + modelForm + stepDist + turnDist + availablePerStepScaled + (1|classLandscape) + (1|species/indi)).
+For each method, we ran two Bayesian regression models to explore: 1) which decisions best explain the absolute deviation from the median estimated selection, 2) which decisions best explain the raw deviation from the median estimated selection.
+The first model provides us with an idea of the decisions that can lead to random, but potentially unbiased variation surrounding the median estimate; whereas the second model highlights decisions that lead to systematic over or under estimation of a habitat selection.
+All models included individual and species as nested group effects, as well as a group effect accounting for whether the classified landscape was scrambled or not.
+For example, the formula for the SSF model looking at absolute deviation: "absolute delta from median estimate" ~ 1 + "tracking duration scaled" + "tracking frequency scaled" + "integrated formula" + "step distribution" + "turn distribution" + "available points per step scaled" + "(1|landscape scrambled)" + "(1|species/individual)".
 We normalised all predictor variables because they all existed on vastly different scales, as we wanted to assess relative impact.
 
-We elected to have the model try and predict the deviation from the median estimate of habitat selection because the simulation cannot provide a direct analogous value to the outputs of all three methods.
+We elected to have the model try and predict the deviation from the median estimate of habitat selection because the simulation cannot provide a direct analogous value to the outputs of all four methods.
 The analysis closest to mirroring the agent-based model of the simulated data is the SSF.
 The simulation is a discrete time model, where the animal makes decisions based upon a number of options making it similar to a SSF step-wise model structure.
 Despite this similarity the decision making of the animal is made on two time frames; thereby, breaking our ability to directly compare simulation values with step selection outputs.
@@ -390,11 +387,11 @@ Further, the simulated selection of the animal is balanced against other demands
 The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
 We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioural state switch.
 These model results, while not strictly comparable to the other outputs, help confirm the animal was correctly preferring the chosen habitat.
-The estimates calculated this way likely underestimate selection further as the rest sites were only generated within the preferred habitat (a simulated strict selection), and the no selection exploratory state that would dampen an observed selection.
+The estimates calculated this way likely underestimate selection further as the rest sites were only generated within the preferred habitat (a simulated strict selection), and the no selection exploratory behavioural state that would dampen an observed selection.
 The lack of direct comparability between simulated parameters and analysed estimates of selection support the use of the median estimate to explore the cause behind the most deviant estimates.
 <!-- should have link to supp mat for all the direct estimates -->
 
-We assessed Bayesian model convergence using rhat values, acf, and trace plots.
+We assessed Bayesian model convergence using R-hat values, acf, and trace plots.
 Based on these assessments we modified the running parameters <!-- [FINAL VALUES HERE: warmup = 200, iter = 1000, chains = 4, adapt_delta = 0.90, max_treedepth = 15] -->.
 
 # Results
@@ -443,7 +440,7 @@ Despite this, we do see a slight reduction in estimate variation from frequencie
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a slightly greater agreement between estimates.
 So to does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
 Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the right of the 0 line in Fig. \@ref(fig:specCurveWides)).
-The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to lower estimates in general.
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to slightly lower estimates in general in the selection scenario.
 This difference disappears under the scrambled habitat classification, and in that scenario all analytical choices appear to make little impact on the median estimate.
 
 ```{r specCurveRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the RSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
@@ -482,8 +479,8 @@ There are also considerably fewer estimates that indicate avoidance of habitat 2
 The stand out patterns are more easily seen in the outlying high estimates.
 Once again, there are indications of fewer outlying high estimates when data quantity increases, both with duration and frequency.
 The number of points per step (or strata) appears to intuitively follow that more available steps leads to more consistent estimations, and also the outliers that exist appear to become less extreme.
-The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not, appear to make little difference to the final estimates.
-The impact of analysis choice on the SSF method appears to be more consistent between the two scenarios.
+The decisions concerning the distributions used to model step lengths and turn angles, as well as whether the model is integrated or not, appear to make little difference to the spread of final estimates.
+The impact of analysis choice on the SSF method appears to be more consistent between the two selection scenarios.
 
 Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate (Fig. \@ref(fig:uncertaintyPlot)).
 
@@ -524,7 +521,8 @@ condRange <- brmsR2Results %>%
 ```
 
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew the interpretation of which choices have the largest impact.
-Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations (i.e., variation between individuals and species).
+Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations and the variation between species.
+
 All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \@ref(tab:r2table)).
 The conditional *R^2* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
 
@@ -670,12 +668,12 @@ The RSF model examining raw deviation from the median estimate reveals a general
 While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median <!--[NEED LINK TO SUPP MAT HERE]-->) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
-Stratified available point sampling was associated with more positive estimates of selection ($\beta$ `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous model).
+Stratified available point sampling was associated with more positive estimates of selection ($\beta$ `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous absolute deviation model).
 This suggests that random point sampling, by contrast, leads to more variable estimates that tend to be lower.
 The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$ `r brmrsf_rEst_avpEffect`).
 
 The area method choices reveal a similar pattern.
-Dynamic Brownian Bridge Movement models were connected to the more variable estimates, but this model reveals that the variability did not tend towards a particular direction ($\beta$ `r brmrsf_rEst_dbmEffect`).
+Dynamic Brownian Bridge Movement models were connected to the more variable estimates, and that variability did tended towards a lower estimates ($\beta$ `r brmrsf_rEst_dbmEffect`).
 Whereas the other methods are connected to lower deviation from the median estimate, but higher raw estimates.
 The area contour selected also reflects this ($\beta$ `r brmrsf_rEst_csEffect`).
 Taken together it appears that methods capturing a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of selection.
@@ -695,9 +693,9 @@ brmssf_dEst_tfEffect <- brmEstResults %>%
   dplyr::filter(.variable == "b_tfScaled") %>% 
   pull(inTextSummary)
 
-brmssf_rEst_sdEffect <- brmEstResults %>% 
+brmssf_rEst_mfEffect <- brmEstResults %>% 
   dplyr::filter(model == "modOUT_ssf_raw") %>% 
-  dplyr::filter(.variable == "b_stepDistgamma") %>% 
+  dplyr::filter(.variable == "b_modelFormmf.ss") %>% 
   pull(inTextSummary)
 ```
 
@@ -708,7 +706,7 @@ Unlike the other analysis, all other decisions made a negligible impact on an es
 
 <!-- model res ssf raw -->
 Due to the one sided variability of the SSF estimates the raw deviation model mirrors the absolute deviations almost exactly (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasSSF)).
-The only noticeable difference is in the step distribution decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_sdEffect`).
+The only noticeable difference is in the model formula decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_mfEffect`).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
 <!-- WRSF MODELS -->

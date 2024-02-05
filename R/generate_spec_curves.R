@@ -51,9 +51,10 @@ generate_spec_curves <- function(compiledResults, method){
                               sort(unique(rsfResults$contour)),
                               sort(unique(rsfResults$availPointsPer)),
                               sort(unique(rsfResults$samplingPattern)),
-                              sort(unique(rsfResults$weighting))))
+                              sort(format(unique(rsfResults$weighting), big.mark = ","))))
 
     rsfResultsPlotData <- rsfResults %>%
+      dplyr::mutate(weighting = format(weighting, big.mark = ",")) %>%
       dplyr::select(Estimate, Lower, Upper, indi, species,
                     td,  tf,
                     area, contour, availPointsPer, samplingPattern, weighting, sigColour,
@@ -76,7 +77,16 @@ generate_spec_curves <- function(compiledResults, method){
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE)) %>%
       dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::mutate(d_medEst = Estimate - medEst) %>%
-      dplyr::ungroup()
+      dplyr::ungroup() %>%
+      dplyr::mutate(variable = factor(variable, levels = c(
+        "Tracking Duration (days)",
+        "Tracking Frequency (points/hour)",
+        "Available Area Method",
+        "Available Area Contour (%)",
+        "Available Points Multipiler",
+        "Sampling Pattern",
+        "Weighting of Available Points")
+      ))
 
     medData <- rsfResultsPlotData %>%
       dplyr::group_by(variable, value, classLandscape) %>%
@@ -106,7 +116,8 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 1, size = 1, colour = "#403F41") +
         geom_hline(yintercept = seq(0.5,10.5,1), linewidth = 0.5, alpha = 0.25, colour = "#403F41",
                    linetype = 2) +
-        facet_grid(variable~classLandscape, scales = "free_y", space = "free", switch = "y") +
+        facet_grid(variable~classLandscape,
+                   scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         scale_colour_gradient2(low = palette["BADGER"], mid = palette["coreGrey"], high = palette["2"]) +
         theme_bw() +
@@ -191,7 +202,7 @@ generate_spec_curves <- function(compiledResults, method){
 
     ggsave(filename = here("notebook", "figures", "rsfSpecCurve.png"),
            plot = rsfSpecComplete,
-           width = 360, height = 240, units = "mm", dpi = 300)
+           width = 265, height = 240, units = "mm", dpi = 300)
     # ggsave(filename = here("notebook", "figures", "rsfSpecCurve.pdf"),
     #        plot = rsfSpecComplete,
     #        width = 360, height = 240, units = "mm", device = cairo_pdf)
@@ -232,7 +243,14 @@ generate_spec_curves <- function(compiledResults, method){
         ),
         indi = as.factor(indi),
         species = as.factor(species),
-        value = factor(value, levels = levelOrdering))
+        value = factor(value, levels = levelOrdering)) %>%
+      dplyr::mutate(variable = factor(variable, levels = c(
+          "Tracking Duration (days)",
+          "Tracking Frequency (points/hour)",
+          "Available Area Method",
+          "Available Area Contour (%)",
+          "Available Points Multipiler"
+      )))
 
     medData <- widesResultsPlotData %>%
       dplyr::group_by(variable, value, classLandscape) %>%
@@ -338,11 +356,14 @@ generate_spec_curves <- function(compiledResults, method){
 
     ggsave(filename = here("notebook", "figures", "widesSpecCurve.png"),
            plot = widesSpecComplete,
-           width = 360, height = 240, units = "mm", dpi = 300)
+           width = 240, height = 220, units = "mm", dpi = 300)
 
     return(widesSpecComplete)
 
   } else if(method == "ssf"){
+
+    # targets::tar_load(ssfResults)
+    # compiledResults <- ssfResults
 
     ssfResults <- multiverseHabitat::parse_combined_results(compiledResults)
 
@@ -388,7 +409,15 @@ generate_spec_curves <- function(compiledResults, method){
         value = factor(value, levels = levelOrdering)) %>%
       dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::mutate(d_medEst = Estimate - median(Estimate, na.rm = TRUE)) %>%
-      dplyr::ungroup()
+      dplyr::ungroup() %>%
+      dplyr::mutate(variable = factor(variable, levels = c(
+        "Tracking Duration (days)",
+        "Tracking Frequency (points/hour)",
+        "Available points per step",
+        "Model formula (SSF or iSSF)",
+        "Distribution of step lengths",
+        "Distribution of turn angles"
+      )))
 
     medData <- ssfResultsPlotData %>%
       dplyr::group_by(variable, value, classLandscape) %>%
@@ -452,10 +481,10 @@ generate_spec_curves <- function(compiledResults, method){
                    alpha = 0.25,
                    pch = 3, size = 0.25)+
         geom_segment(data = overallMed,
-                   aes(x = medEst, xend = medEst, y = Inf,
-                       yend = -Inf),
-                   alpha = 1, linewidth = 0.45, linetype = 1,
-                   colour = palette["BADGER"]) +
+                     aes(x = medEst, xend = medEst, y = Inf,
+                         yend = -Inf),
+                     alpha = 1, linewidth = 0.45, linetype = 1,
+                     colour = palette["BADGER"]) +
         geom_text(data = overallMed, aes(x = medEst, y = 0,
                                          label = paste0(" Median = ",
                                                         round(medEst, digits = 2))),
@@ -491,12 +520,13 @@ generate_spec_curves <- function(compiledResults, method){
 
     ggsave(filename = here("notebook", "figures", "ssfSpecCurve.png"),
            plot = ssfSpecComplete,
-           width = 360, height = 240, units = "mm", dpi = 300)
+           width = 240, height = 220, units = "mm", dpi = 300)
 
     return(ssfSpecComplete)
 
   } else if(method == "wrsf"){
 
+    # targets::tar_load(wrsfResults)
     # compiledResults <- wrsfResults
 
     wrsfResults <- multiverseHabitat::parse_combined_results(compiledResults[!is.na(compiledResults$Estimate),])
@@ -504,8 +534,8 @@ generate_spec_curves <- function(compiledResults, method){
     wrsfResults$tf <- round(wrsfResults$tf, digits = 2)
 
     wrsfResults$classLandscape <- ifelse(str_detect(wrsfResults$classLandscape, "Scram"),
-                                        "Scrambled Habitat Layer (i.e., No selection)",
-                                        "Correct Habitat Layer (i.e., Positive selection)")
+                                         "Scrambled Habitat Layer (i.e., No selection)",
+                                         "Correct Habitat Layer (i.e., Positive selection)")
 
     levelOrdering <- unique(c(sort(unique(wrsfResults$td)),
                               sort(unique(wrsfResults$tf))))
@@ -527,7 +557,10 @@ generate_spec_curves <- function(compiledResults, method){
       dplyr::mutate(medEst = median(Estimate, na.rm = TRUE)) %>%
       dplyr::group_by(variable, value, classLandscape) %>%
       dplyr::mutate(d_medEst = Estimate - medEst) %>%
-      dplyr::ungroup()
+      dplyr::ungroup() %>%
+      dplyr::mutate(variable = factor(variable, levels = c(
+        "Tracking Duration (days)",
+        "Tracking Frequency (points/hour)")))
 
     medData <- wrsfResultsPlotData %>%
       dplyr::group_by(variable, value, classLandscape) %>%
@@ -644,7 +677,7 @@ generate_spec_curves <- function(compiledResults, method){
 
     ggsave(filename = here("notebook", "figures", "wrsfSpecCurve.png"),
            plot = wrsfSpecComplete,
-           width = 360, height = 140, units = "mm", dpi = 300)
+           width = 240, height = 100, units = "mm", dpi = 300)
 
     return(wrsfSpecComplete)
 
