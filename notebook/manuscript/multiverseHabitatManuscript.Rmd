@@ -27,7 +27,7 @@ csl: peerj.csl
 editor_options: 
   markdown: 
     wrap: sentence
-abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask 10 researchers to answer the same question with the same dataset, you will receive likely 10 different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat selection, studies vary as a result of differing analytical choices. We conducted a multiverse analysis to explore over 15,000 ways of determining habitat selection from animal tracking data. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat selection. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
+abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask ten researchers to answer the same question with the same dataset, you will receive likely ten different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat selection, studies vary as a result of differing analytical choices. We conducted a multiverse analysis on around 800 synthetic animal movement datasets, exploring over 700 pathways to determine habitat selection, resulting in approximately half a million unique estimates of selection. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat selection. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
 keywords: Movement ecology, simulation, Wides, resource selection functions, step selection function, habitat preference, habitat selection, animal movement, multiverse, research choice, researcher degrees for freedom,
 ---
 
@@ -49,7 +49,7 @@ But when examined closer, the impact factor appears detached from the robustness
 A decrease in robustness can be seen in the increases in effect sizes inflation, p-value misreporting, and other measures of quality [@Brembs2018].
 Similarly, novelty has been promoted by journals to the detriment of replications studies [@forstmeier_detecting_2017; @vinkers_use_2015; @brembs_reliable_2019], despite widespread agreement on the importance of replications [@fraser_role_2020].
 There is a bias towards positive, statistically significant results [@cassey_survey_2004; @jennions_publication_2002].
-Due to the nature of frequentist statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates [@albers_problem_2019; @forstmeier_cryptic_2011]. 
+Due to the nature of statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates [@albers_problem_2019; @forstmeier_cryptic_2011]. 
 
 Unfortunately, there is evidence that the system of incentives trickle down to impact the decisions of researchers while undertaking research and publishing results.
 The more detrimental of these decisions have been termed questionable research practices [@fraser_questionable_2018; @bishop_rein_2019].
@@ -62,12 +62,13 @@ Arguably, the existence of p-hacking is enabled by an over-reliance on p-value t
 Questionable research practices can be viewed as methods to achieve a neat, statistically significant, and publishable narrative [@oboyle_chrysalis_2014].
 In the worse cases, narratives can be prioritised over transparently reported results.
 
-There is a fear that questionable research practices, and the broader incentives they are connected to, are responsible for the replicability crisis (often referred to as the "reproducibility crisis"). Across many disciplines, there are examples of replication studies being unable to replicate prior research [@open_science_collaboration_estimating_2015; @freedman_economics_2015; @kelly_rate_2019].
+There is a fear that questionable research practices, and the broader incentives they are connected to, are responsible for the replicability crisis (often referred to as the "reproducibility crisis").
+Across many disciplines, there are examples of replication studies being unable to replicate prior research [@open_science_collaboration_estimating_2015; @freedman_economics_2015; @kelly_rate_2019].
 Often these replication efforts are conducted with larger sample sizes, or rely on the consolidation of many independent studies (often in the form of meta-analyses).
 The implication is not that the original studies were necessarily flawed; but, in the absence of questionable research practices, sufficient variation exists in the study subjects or methods to obscure a consistent effect [i.e., variation other than that stemming from sampling alone @simonsohn_small_2015].
 <!-- devezer et al 2021, or that models mismatch with reality or each other, insufficiently tight definitions of the study system? -->
 
-However, variation can also stem from analysis flexibility (i.e., the presence of many ways to analyse the same data to answer the same question).
+However, variation can also stem from analysis flexibility; i.e., the presence of many ways to analyse the same data to answer the same question.
 This flexibility helps enable questionable research practices [@fraser_questionable_2018], and is potentially steered by publication bias [@cassey_survey_2004; @jennions_publication_2002] if more publishable results are prioritised/rewarded over less exciting but robust results.
 Given the prominence of questionable research practices and publication bias, the inconsistencies between initial and replication studies warrant investigation [especially when analysis flexibility is also implicated in potentially flawed replications @bryan_replicator_2019].
 Analysis flexibility can still lead to variable results in the absence of any undesirable incentives simply as the result of researchers considering different approaches of differing validities for a given dataset [@gelman_garden_2013; @gould_same_2023].
@@ -78,12 +79,11 @@ Early significant results can dictate the direction of research and grow resista
 
 In medical fields, a lack of replicability comes with direct monetary and well-being costs [@freedman_economics_2015].
 Like the medical field, ecological studies can come with well-being costs to the study subjects [e.g., direct surgery/marking of the animal @Reinert1982; @Winne2006], as well as impacts on stakeholders stemming from management decisions.
-There are fears that the lack of replicability will feed distrust of science more generally [@anvari_replicability_2018].
+<!-- There are fears that the lack of replicability will feed distrust of science more generally [@anvari_replicability_2018]. -->
 Therefore, maximising replicability in ecology is key to minimising research waste [@grainger_evidence_2019] and the negative impacts on study subjects and systems.
 
 The impacts on the study subjects, paired with the often high monetary costs of ecological studies [particularly bio-logging where animals may undergo surgery, @weaver_technology_2021] means that replications can be more difficult to justify.
 Since ecological systems are also complex and in constant flux, often frustrating perfect replications due to changes in space and time [@nakagawa_replicating_2015; @schnitzer_would_2016], researchers are left with a distinct lack of direct replications in ecology [@kelly_rate_2019].
-
 The low prevalence ecological replication studies makes it difficult to assess the overall rate of replication in ecology [@kelly_rate_2019], but there are several examples that suggest irreplicabilty is something ecologists should be wary of [@clark_ocean_2020; @roche_behavioural_2020; @sanchez-tojar_meta-analysis_2018; @wang_irreproducible_2018].
 The potential for irreplicabilty is further supported by evidence of positive publication bias [@fanelli_positive_2010; @fanelli_negative_2012], and links between smaller sample sizes and inflated effect sizes [@lemoine_underappreciated_2016].
 
@@ -96,7 +96,7 @@ Both partial and conceptual can be classed as quasi-replications if the concept 
 Conceptual replications are extremely valuable, but rely on our ability to compare replication efforts to previous findings.
 An important aspect of those comparisons is accounting for factors differing between the studies that are not salient to the effect of interest [@forstmeier_detecting_2017]; e.g., those linked to sampling differences [@simonsohn_small_2015].
 An example of sampling differences leading to differences in results can be seen in the case of reptile space use.
-@silva_reptiles_2020 showed how frequently a reptile was located by a researcher interacted with the space-use estimation method, leading to large differences in area estimates even when using the same estimation method.
+@silva_reptiles_2020 showed how frequently a reptile was located by a researcher interacted with the space-use estimation method, leading to differences in area estimates even when using the same estimation method.
 What is revealing is not only how the choices during analysis (e.g., choice of area estimation method) impacted results, but how the error introduced by those choices changed depending on the sampling.
 It presents a scenario where the _correct_ choice was dependent on preceding decisions when designing the study; thereby, highlighting the need to explore the impacts of multiple decisions simultaneously. 
 
@@ -162,7 +162,7 @@ Such retroactive assessment is an attractive option when other methods to explor
 Ideally we can use multiverse analysis with preregistrations to boost transparency surrounding the inclusion of decisions and the rationale behind others exclusions [@simonsohn_specification_2020; @dragicevic_increasing_2019].
 Given the success of meta-analyses to overcome short-comings in the publication record [e.g., p-hacking; @head_extent_2015], multiverse analysis may aid the direction of future research efforts by providing a means of meeting calls to replicate results before collecting more [@nuijten_verify_2018].
 
-However, as not all choices are equally valid, so multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
+However, even if all choices are equally valid, multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to identify the amount of variation attributable to different sources [e.g, biological variation vs study design variation; @breznau_observing_2021], and potentially the systematic biases stemming from specific choices [potentially via Bayesian Causal Forests @bryan_replicator_2019].
 
 Use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020], and here we will harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets via a multiverse approach.
@@ -180,6 +180,38 @@ We describe the simulated scenarios we plan to base the study upon and a prelimi
 
 ``` {r openOptions, include=FALSE}
 optionsCompleteList <- readRDS(here::here("data", "optionsCompleteList.rds"))
+
+nDatasets <- length(optionsCompleteList$species$species)*
+  length(optionsCompleteList$individuals$individual)*
+  nrow(optionsCompleteList$regime)
+
+nLandscapes <- length(optionsCompleteList$area$Method_lc)
+
+rsfChoices <- length(optionsCompleteList$area$areaMethod)*
+  length(optionsCompleteList$area$areaContour)*
+  length(optionsCompleteList$area$Method_ap)*
+  length(optionsCompleteList$area$Method_sp)*
+  length(optionsCompleteList$area$Method_we)
+
+widesChoices <- length(optionsCompleteList$area$areaMethod)*
+  length(optionsCompleteList$area$areaContour)*
+  length(optionsCompleteList$area$Method_ap)*
+  length(optionsCompleteList$area$Method_sp)
+
+ssfChocies <- length(optionsCompleteList$ssf$MethodSSF_mf)*
+  length(optionsCompleteList$ssf$MethodSSF_sd)*
+  length(optionsCompleteList$ssf$MethodSSF_td)*
+  length(optionsCompleteList$ssf$MethodSSF_as)
+
+wrsfChocies <- length(optionsCompleteList$wrsf$Method_method)
+
+nAnalysisPaths <- rsfChoices+widesChoices+ssfChocies+wrsfChocies
+
+# nEstimates <- sum(datasets * landscapes * rsfChoices,
+#     datasets * landscapes * widesChoices,
+#     datasets * landscapes * ssfChocies,
+#     datasets * landscapes * wrsfChocies)
+
 ```
 
 ## Simulating the Scenarios
@@ -404,11 +436,6 @@ areaResults <- read_csv(here::here("data", "areaResults.csv.gz"))
 ssfResults <- read_csv(here::here("data", "ssfResults.csv.gz"))
 wrsfResults <- read_csv(here::here("data", "wrsfResults.csv.gz"))
 
-nDatasets <- n_distinct(areaResults$species) *
-  n_distinct(areaResults$indi) *
-  n_distinct(areaResults$td) *
-  n_distinct(areaResults$tf)
-
 nEstimates <- nrow(areaResults) +
   nrow(ssfResults) +
   nrow(wrsfResults)
@@ -417,7 +444,7 @@ nEstimates <- nrow(areaResults) +
 
 The completion of the multiverse resulted in `r nDatasets` datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered `r dplyr::n_distinct(areaResults$species)` virtual species, `r dplyr::n_distinct(areaResults$indi)` individuals per species, frequencies from `r paste(round(range(areaResults$tf), digits = 3), collapse = " to ")` locations per hour, and durations from `r paste(range(areaResults$td), collapse = " to ")` days.
-Each of these datasets underwent every combination of analysis choices resulting in
+Each of these datasets underwent various combinations of analysis choices resulting in
 `r scales::comma(nEstimates)` estimates of habitat selection (`r paste0("Wides: ", scales::comma(sum(areaResults$analysis == "wides")), "; RSF: ", scales::comma(sum(areaResults$analysis == "rsf")), "; SSF: ", scales::comma(dim(ssfResults)[1]), "; wRSF: ", scales::comma(dim(wrsfResults)[1]))`).
 
 ## General patterns
@@ -760,14 +787,14 @@ Two aspects of the results highlight that complacency is unwise.
 First RSF, SSF, and wRSF approaches appear to be more consistent than the more basic and older Wides ratio based approach.
 Both RSF, SSF, and wRSF have improved capacity for accounting for the peculiarities movement data structure (e.g., via random effects) than the Wides approach.
 <!-- and some choices are worse - dBBMMs are a mis conceptualisation that does impact results, and is more sensitive to lower data levels that other analysis methods -->
-Second is the evidence for conceptual mistakes to have impacts on final results, implying that in some cases there are more correct answers to certain analysis decisions.
+Second is the evidence for conceptual mistakes to have impacts on final results, implying that in some cases there are *more correct* answers to certain analysis decisions.
 The use of dBBMMs to define availability is not strictly correct as the (confidence) area generated by dBBMMs reflect uncertainty surrounding use.
 This renders the down stream analysis of habitat selection a comparison of use (measured by points) to use (measured by area of uncertainty surrounding movement trajectories); as opposed to the desired use versus availability.
 The dBBMM results exemplify the need to maintain a connection between abstractions (e.g., an area) of the data and the intended use.
 A similar argument can be made for data quantity, where mismatches between frequency and desired behaviours or an inadequate tracking duration will obscure answers regardless of the analysis applied.
 Our simulations are diurnal and the tracking spacing was skewed towards those diurnal hours for lower tracking frequency regimes.
 Failure to do this, instead allowing locations to be recorded equally at night and day, would have skewed estimates towards the habitat used for shelter rather than foraging.
-Matching question to analysis approach remains important, but the cost of mistakes may be less dramatic than feared.
+Matching question to analysis approach remains important, but the cost of mistakes may be less dramatic than feared for general assessments of habitat selection.
 
 <!-- computational limits for points multiplier - aim to maximise within reason -->
 Further good news is that some decisions that are connected to more stable estimates have very little reason not to be maximised.
@@ -780,6 +807,7 @@ More available points reduces the chances of missing small areas of rare habitat
 
 We did not see large improvements using different step or turn angle distributions; this has been shown to play an increasingly important role in mitigating biased estimates in scenarios with stronger selection strengths [@forester_accounting_2009]. 
 The limited cost of integrating step and turn into SSF formula would suggest iSSF formulation is likely always preferable for estimation of individual habitat selection.
+<!-- was there a citation suggsting this may not be the case for pop level stuff, perhaps in the poission INLA paper? -->
 
 <!-- interactions between method and data - and choice and choice? -->
 <!-- broader contour can have differing impacts depending on analysis -->
@@ -805,8 +833,8 @@ This unclear relationship between consistency of results and the study system is
 We attempted to make our findings more generalisable by simulating three distinct animal species that move in different fashions and that face differing level of habitat connectivity.
 <!-- scale is important always because of interactions between sampling and question/behaviour. Thurfjell -->
 We cannot discount scenarios with different movement characteristics that interact with particular analysis choices to bias habitat selection estimates.
-Scale remains a key consideration for any study [@thurfjell_applications_2014; @northrup_conceptual_2022], and context-specific selection remains difficult to translate [@avgar_habitat_2020].
-The difficulty in generalising a "one-size fits all" approach highlights the benefits of methods that can be parametrised by the underlying characteristics of the data (e.g., wRSF [@alston_mitigating_2023]), and where the uncertainty stemming from sampling can be carried forward to the final estimates.
+Scale remains a key consideration for any study [@thurfjell_applications_2014; @northrup_conceptual_2022], and context-specific selection remains difficult to generalise [@avgar_habitat_2020].
+The difficulty in generalising a "one-size fits all" approach highlights the benefits of methods that can be parametrised by the underlying characteristics of the data (e.g., wRSF @alston_mitigating_2023), and where the uncertainty stemming from sampling can be carried forward to the final estimates.
 
 Despite the inherit limitations of multiverses, the exploration of analysis choice presents an important consideration for any researcher looking to know the reliability of their findings [@hoffmann_multiplicity_2021], in particular model, method, data preprocessing uncertainty (Table \@ref(tab:sourcesVariation)).
 More formal and mathematically based estimates of reliability are available for specific approaches, for example RSFs [@street_solving_2021], and these present an important component when reporting RSFs. 
