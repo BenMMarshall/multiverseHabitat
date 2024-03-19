@@ -424,11 +424,11 @@ list(allIndividualEstimatesList,
 # targets::tar_make()
 # targets::tar_make("effectSizeBrms_ssf")
 # watch out too many workers can hit ram limits
-# targets::tar_make_clustermq(workers = 6, log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 2, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 8, log_worker = TRUE)
 # targets::tar_make_clustermq("wrsfResults", workers = 6, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 12, reporter = "verbose_positives", log_worker = TRUE)
-# targets::tar_make_clustermq(workers = 18, log_worker = TRUE)
+# targets::tar_make_clustermq(workers = 12, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 18, reporter = "verbose_positives", log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 20, log_worker = TRUE)
 # targets::tar_make_clustermq(workers = 20, reporter = "verbose_positives", log_worker = TRUE)

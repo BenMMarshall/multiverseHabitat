@@ -78,7 +78,7 @@ While we can strive to conduct research objectively, research commonly requires 
 Such calls, choices, or decisions occur throughout the research process, encompassing everything from study design (e.g., sample size, sampling intensity, sample stratification) to analysis (e.g., Bayesian or frequentist, ex/inclusion of outliers).
 We draw on our own experience, and the input of peers, to try and ensure the best choices are made to produce robust and reliable results, but we also contend with data, expertise, and interpretability constraints (\protect\hyperlink{ref-liu_paths_2020}{Liu, Althoff \& Heer, 2020}).
 
-Researchers are also influenced by the incentive system around them (\protect\hyperlink{ref-anderson_perverse_2007}{Anderson et al., 2007}).
+Researchers are also influenced by the incentive system around them (\protect\hyperlink{ref-anderson_perverse_2007}{Anderson et al., 2007}; \protect\hyperlink{ref-receveur_david_2024}{Receveur et al., 2024}).
 We cannot undertake research in a vacuum; we often require institutions, funders, and scientific journals to produce and share research.
 These bodies can influence what research is conducted; they are in a position to incentivise or disincentivise research of certain topics or methodologies (\protect\hyperlink{ref-fanelli_pressures_2010}{Fanelli, 2010a}; \protect\hyperlink{ref-ware_significance_2015}{Ware \& Munafò, 2015}; \protect\hyperlink{ref-smaldino_natural_2016}{Smaldino \& McElreath, 2016}).
 The use of impact factor (and other similar metrics) is an example of citations being used as a measure of quality or research worth.
@@ -234,8 +234,8 @@ In summary, the sampling decisions will cover variation in three species represe
 For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
 R is the most common tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
-Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.16 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
-During the writing of this paper, a new method was described as part of the ctmm package v.0.6.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigated.
+Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.17 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.2.1.0 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
+During the writing of this paper, a new method was described as part of the ctmm package v.1.1.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigated.
 
 Combined, the packages offer many options for habitat analysis.
 We focus on four that tackle individual habitat selection:
@@ -345,7 +345,7 @@ Instead we explore only variations in data quantity (i.e., tracking duration and
 \hypertarget{assessing-the-multiverse}{%
 \subsection{Assessing the multiverse}\label{assessing-the-multiverse}}
 
-To generate the multiverse, we used a meta-programming approach via the targets v.0.14.2 and tarchetypes v.0.7.4 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},\protect\hyperlink{ref-tarchetypes}{b}).
+To generate the multiverse, we used a meta-programming approach via the targets v.1.1.2 and tarchetypes v.0.7.6 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},\protect\hyperlink{ref-tarchetypes}{b}).
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing.
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation in a complex workflow that may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
@@ -379,7 +379,7 @@ The lack of direct comparability between simulated parameters and analysed estim
 The completion of the multiverse resulted in 396 datasets representing an individual animals movements sampled via a distinct tracking regime (i.e., a combination of tracking frequency and duration).
 The datasets covered 3 virtual species, 4 individuals per species, frequencies from 0.006 to 2 locations per hour, and durations from 7 to 240 days.
 Each of these datasets underwent various combinations of analysis choices resulting in
-564,432 estimates of habitat selection (Wides: 76,032; RSF: 456,192; SSF: 31,680; wRSF: 528).
+564,696 estimates of habitat selection (Wides: 76,032; RSF: 456,192; SSF: 31,680; wRSF: 792).
 
 \hypertarget{general-patterns}{%
 \subsection{General patterns}\label{general-patterns}}
@@ -517,7 +517,7 @@ The only noticeable difference is in the model formula decision that changes the
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
 The results from the wRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWRSF}).
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.257, 95\% CrI -0.38 -- -0.132 and tracking frequency \(\beta\) -0.196, 95\% CrI -0.315 -- -0.061), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.264, 95\% CrI -0.437 -- -0.1 and tracking frequency \(\beta\) -0.095, 95\% CrI -0.25 -- 0.082; Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWRSF}).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration \(\beta\) -0.264, 95\% CrI -0.377 -- -0.147 and tracking frequency \(\beta\) -0.282, 95\% CrI -0.407 -- -0.167), and the nearly exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration \(\beta\) -0.314, 95\% CrI -0.447 -- -0.168 and tracking frequency \(\beta\) -0.185, 95\% CrI -0.316 -- -0.038; Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:dEstBetasWRSF}).
 The only difference (although both effects overlap considerably) is that increased tracking duration tended to be linked more strongly with lower selection estimates, whereas increased tracking frequency was more connected to less variable estimates in absolute terms.
 
 \hypertarget{discussion}{%
@@ -607,24 +607,24 @@ This work was supported by the Natural Environment Research Council (NERC) via t
 
 In addition to packages already mentioned in the methods we also used the following.
 
-We used \emph{R} v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.12.0.369 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
+We used \emph{R} v.4.3.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.12.0.369 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
 We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}) and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
 
-We used \emph{raster} v.3.6.14 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
+We used \emph{raster} v.3.6.20 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside NLMR v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
 
-We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), and \emph{ggdist} v.3.2.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
+We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), and \emph{ggdist} v.3.3.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
 
-We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.2 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.2 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
+We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.4 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.3 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
 
-We used the \emph{dplyr} v.1.1.3 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
+We used the \emph{dplyr} v.1.1.2 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
 
-We used \emph{sp} v.1.5.1 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.20 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
+We used \emph{sp} v.1.6.0 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.21 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
 
-We used rmarkdown v.2.25 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
+We used rmarkdown v.2.21 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), bookdown v.0.34 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), tinytex v.0.45 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), and knitr v.1.42 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
 
-We generated R package citations with the aid of \emph{grateful} v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
+We generated R package citations with the aid of \emph{grateful} v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
-We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
+We generated R package citations with the aid of grateful v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 \hypertarget{data-availabilty}{%
 \section{Data availabilty}\label{data-availabilty}}
@@ -656,10 +656,10 @@ We generated R package citations with the aid of grateful v.0.1.13 (\protect\hyp
 0.081 & 0.003 & 0.95 & 0.076 & 0.087 & Marginal & Absolute Deviation & ssf\\
 0.196 & 0.003 & 0.95 & 0.190 & 0.203 & Conditional & Raw Deviation & ssf\\
 0.077 & 0.003 & 0.95 & 0.072 & 0.082 & Marginal & Raw Deviation & ssf\\
-0.225 & 0.042 & 0.95 & 0.144 & 0.299 & Conditional & Absolute Deviation & wrsf\\
-0.069 & 0.027 & 0.95 & 0.020 & 0.121 & Marginal & Absolute Deviation & wrsf\\
-0.121 & 0.036 & 0.95 & 0.057 & 0.188 & Conditional & Raw Deviation & wrsf\\
-0.037 & 0.021 & 0.95 & 0.003 & 0.081 & Marginal & Raw Deviation & wrsf\\
+0.127 & 0.021 & 0.95 & 0.089 & 0.169 & Conditional & Absolute Deviation & wrsf\\
+0.038 & 0.012 & 0.95 & 0.014 & 0.062 & Marginal & Absolute Deviation & wrsf\\
+0.059 & 0.016 & 0.95 & 0.029 & 0.095 & Conditional & Raw Deviation & wrsf\\
+0.027 & 0.010 & 0.95 & 0.008 & 0.050 & Marginal & Raw Deviation & wrsf\\
 
 \end{tabular}}
 \end{table}
@@ -943,6 +943,9 @@ Pedersen TL. 2022. \emph{\href{https://CRAN.R-project.org/package=patchwork}{Pat
 
 \leavevmode\vadjust pre{\hypertarget{ref-base}{}}%
 R Core Team. 2023. \emph{\href{https://www.R-project.org/}{R: A language and environment for statistical computing}}. Vienna, Austria: R Foundation for Statistical Computing.
+
+\leavevmode\vadjust pre{\hypertarget{ref-receveur_david_2024}{}}%
+Receveur A, Bonfanti J, D'Agata S, Helmstetter AJ, Moore NA, Oliveira BF, Petit‐Cailleux C, Rievrs Borges E, Schultz M, Sexton AN, Veytia D. 2024. David versus {Goliath}: {Early} career researchers in an unethical publishing system. \emph{Ecology Letters} 27:e14395. DOI: \href{https://doi.org/10.1111/ele.14395}{10.1111/ele.14395}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-rijnhart_assessing_2021}{}}%
 Rijnhart JJM, Twisk JWR, Deeg DJH, Heymans MW. 2021. Assessing the {Robustness} of {Mediation} {Analysis} {Results} {Using} {Multiverse} {Analysis}. \emph{Prevention Science}. DOI: \href{https://doi.org/10.1007/s11121-021-01280-1}{10.1007/s11121-021-01280-1}.
