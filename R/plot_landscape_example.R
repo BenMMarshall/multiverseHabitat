@@ -75,13 +75,12 @@ plot_landscape_example <- function(
       panel.border = element_blank(),
       panel.grid = element_blank(),
       strip.background = element_blank(),
-      strip.text = element_markdown(size = 10, face = 4,
-                                    hjust = 0),
+      strip.text = element_markdown(size = 8.5, face = 4,
+                                    hjust = 0, vjust = 1),
       legend.position = "bottom",
       legend.box.margin = margin(0,0,0,0),
       legend.margin = margin(0,0,0,0),
-      legend.title.align = 0.5,
-      legend.title = element_markdown(size = 8)) +
+      legend.title = element_markdown(size = 8, hjust = 0.5)) +
     guides(fill = guide_colourbar(
       direction = "horizontal",
       title.position = "top",
@@ -107,7 +106,7 @@ plot_landscape_example <- function(
     facet_wrap(.~layer,
                labeller = as_labeller(facetLabels <- c(
                  classified = "<span style='color:#4F0E99'>Classified Habitats</span>",
-                 classifiedScram = "<span style='color:#7D26D4'>Classified Habitats Scrambled</span>"
+                 classifiedScram = "<span style='color:#7D26D4'>Classified Scrambled</span>"
                ))
     ) +
     scale_x_continuous(breaks = seq(0, 2000, 500), expand = c(0,0)) +
@@ -145,13 +144,12 @@ plot_landscape_example <- function(
       panel.border = element_blank(),
       panel.grid = element_blank(),
       strip.background = element_blank(),
-      strip.text = element_markdown(size = 10, face = 4,
-                                    hjust = 0),
+      strip.text = element_markdown(size = 8.5, face = 4,
+                                    hjust = 0, vjust = 1),
       legend.position = "bottom",
       legend.box.margin = margin(0,0,0,0),
       legend.margin = margin(0,0,0,0),
-      legend.title.align = 0.5,
-      legend.title = element_markdown(size = 8)) +
+      legend.title = element_markdown(size = 8, hjust = 0.5)) +
     guides(fill = guide_colourbar(
       direction = "horizontal",
       title.position = "top",
@@ -174,5 +172,5 @@ plot_landscape_example <- function(
   patchwork::wrap_plots(simlandscapesPlot / habitatPlot)
 
   ggsave(filename = here::here("notebook", "figures", "landscapeExample.png"),
-         width = 240, height = 200, dpi = 300, units = "mm")
+         width = 180, height = 140, dpi = 300, units = "mm")
 }

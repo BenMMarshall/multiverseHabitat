@@ -1,8 +1,11 @@
 TO DO
-- add in second branch for scrambled classified raster i.e. null
-- change figures and add in side by side null comparison
-- make median line full vertical on spec curves so it doesn't look like median of y axis
-- make all figure text larger and clearer
+- add numbers of outliers versus normal estimates to the discussion
+- deal with direct estimates, make sure they will be accessible somehow
+
+- DONE add in second branch for scrambled classified raster i.e. null
+- DONE change figures and add in side by side null comparison
+- DONE make median line full vertical on spec curves so it doesn't look like median of y axis
+- DONE make all figure text larger and clearer
 
 
 - DONE - ensure preference or selection is used consistently
