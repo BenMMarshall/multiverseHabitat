@@ -38,8 +38,8 @@ keywords: Movement ecology, simulation, Wides, resource selection functions, ste
 
 Researchers are intrinsically part of the research process [@levins_dialectical_1985; @tang-martinez_history_2020], and our expectations can shape our conclusions [@holman_evidence_2015].
 While we can strive to conduct research objectively, research commonly requires judgement calls [@steegen_increasing_2016].
-Such choices or decisions occur throughout the research process, encompassing everything from study design (e.g., sample size, sampling intensity, sample stratification) to analysis (e.g., Bayesian or frequentist, ex/inclusion of outliers).
-We draw on our own experience, and the input of peers, to try and ensure the best choices are made to produce robust and reliable results, but we also contend with data, expertise, and interpretability constraints [@liu_paths_2020]. 
+Such choices occur throughout the research process, encompassing everything from study design (e.g., sample size, sampling intensity, sample stratification) to analysis (e.g., Bayesian or frequentist, handling of outliers).
+We draw on our own experience, and the input of peers, to try and ensure the best decisions are made to produce robust and reliable results, but we also contend with data, expertise, and interpretability constraints [@liu_paths_2020]. 
 
 Researchers are also influenced by the incentive system around them [@anderson_perverse_2007; @receveur_david_2024].
 We cannot undertake research in a vacuum; we often require institutions, funders, and scientific journals to produce and share research.
@@ -47,14 +47,14 @@ These bodies can influence what research is conducted; they are in a position to
 The use of impact factor (and similar metrics) is an example of citations being used as a measure of quality or research worth.
 But when examined closer, the impact factor appears detached from the robustness or reliability of the research [@Brembs2018].
 A decrease in robustness can be seen in the increases in effect size inflation, p-value misreporting, and other measures of quality [@Brembs2018].
-Similarly, novelty has been promoted by journals to the detriment of replications studies [@forstmeier_detecting_2017; @vinkers_use_2015; @brembs_reliable_2019], despite widespread agreement on the importance of replications [@fraser_role_2020].
+Similarly, novelty has been promoted by journals to the detriment of replication [@forstmeier_detecting_2017; @vinkers_use_2015; @brembs_reliable_2019], despite widespread agreement on the importance of replications [@fraser_role_2020].
 There is a bias towards positive, statistically significant results [@cassey_survey_2004; @jennions_publication_2002].
 Due to the nature of statistical significance, a prioritisation of significant results can elevate underpowered studies and boost false positive rates [@albers_problem_2019; @forstmeier_cryptic_2011]. 
 
 Unfortunately, there is evidence that the systems of incentives trickle down to impact the decisions of researchers while undertaking research and publishing results.
 The more detrimental of these decisions have been termed questionable research practices [@fraser_questionable_2018; @bishop_rein_2019].
-Questionable research practices broadly can be viewed as methods to achieve a neat, statistically significant, and publishable narrative [@oboyle_chrysalis_2014].
-In the worst cases, narratives can be prioritised over transparently reported results.
+Questionable research practices can be broadly viewed as methods to achieve a neat, statistically significant, and publishable narrative [@oboyle_chrysalis_2014].
+In the worst cases, narratives can be prioritised over transparently reporting results.
 
 There is a fear that questionable research practices, and the broader incentives they are connected to, are responsible for the replicability crisis (also referred to as the reproducibility crisis).
 Across many disciplines, there are examples of replication studies being unable to replicate prior research [@open_science_collaboration_estimating_2015; @freedman_economics_2015; @kelly_rate_2019].
@@ -62,32 +62,32 @@ Often these replication efforts are conducted with larger sample sizes, or rely 
 The implication is not that the original studies were necessarily flawed; but, in the absence of questionable research practices, sufficient variation exists in the study subjects or methods to obscure a consistent effect [i.e., variation other than that stemming from sampling alone @simonsohn_small_2015].
 <!-- devezer et al 2021, or that models mismatch with reality or each other, insufficiently tight definitions of the study system? -->
 
-However, variation can also stem from analysis flexibility; i.e., the presence of many ways to analyse the same data to answer the same question.
-This flexibility helps enable questionable research practices by providing a suite of answers to choose between [@fraser_questionable_2018], and is potentially steered by publication bias [@cassey_survey_2004; @jennions_publication_2002] if more publishable results are prioritised/rewarded over less exciting but robust results.
+However, variation can also stem from analysis flexibility; i.e., the presence of many reasonable ways to analyse the same data to answer the same question.
+This flexibility helps enable questionable research practices by providing a suite of answers to choose between [@fraser_questionable_2018], and is potentially steered by publication bias [@cassey_survey_2004; @jennions_publication_2002] if more publishable results are prioritised or rewarded over less exciting but robust results.
 Given the prominence of questionable research practices and publication bias, the inconsistencies between initial and replication studies warrant investigation [especially when analysis flexibility is also implicated in potentially flawed replications @bryan_replicator_2019].
-Analysis flexibility can still lead to variable results in the absence of any undesirable incentives simply as the result of researchers considering approaches of differing validities for a given dataset [@gelman_garden_2013; @gould_same_2023].
+Even in the absence of any undesirable incentives, analysis flexibility can still lead to variable results simply as the result of researchers considering approaches of differing validities for a given dataset [@gelman_garden_2013; @gould_same_2023].
 
-Replications are a key tool for identifying potential areas of variation that lead to differing conclusions.
-For some disciplines, such as ecology, replications can be difficult to justify due to the impacts on the study subjects, paired with the often high monetary costs.
+Replications are a key tool for identifying potential sources of variation that lead to differing conclusions (e.g., subtle differences in methodologies or sampling).
+For some disciplines, such as ecology, replications can be difficult to justify due to the impacts on the study subjects and high monetary costs.
 Ecological systems are also complex and in constant flux, often frustrating perfect replications due to changes in space and time [@nakagawa_replicating_2015; @schnitzer_would_2016], leaving researchers with a distinct lack of direct replications in ecology [@kelly_rate_2019].
-The low prevalence ecological replication studies makes it difficult to assess the overall rate of replication in ecology [@kelly_rate_2019], but there are several examples that suggest irreplicabilty is something ecologists should be wary of [@clark_ocean_2020; @roche_behavioural_2020; @sanchez-tojar_meta-analysis_2018; @wang_irreproducible_2018].
+The low prevalence of ecological replication studies makes it difficult to assess the overall rate of replication in ecology [@kelly_rate_2019], but there are several examples that suggest irreplicabilty is something ecologists should be wary of [@clark_ocean_2020; @roche_behavioural_2020; @sanchez-tojar_meta-analysis_2018; @wang_irreproducible_2018].
 The potential for irreplicabilty is further supported by evidence of positive publication bias [@fanelli_positive_2010; @fanelli_negative_2012], and links between smaller sample sizes and inflated effect sizes [@lemoine_underappreciated_2016].
 
 As direct replications can be difficult to conduct, ecology is often left to assess replicability via conceptual replications [@fraser_role_2020] or efforts broadly referred to as quasi-replications [@palmer_quasi-replication_2000].
 Replications range in intensity.
-Direct (or exact) replications are attempts to replicate a tightly defined concept/hypothesis while duplicating all characteristics of the original study.
-Partial replications are a step looser, where the concept/hypothesis tested is less clearly defined (e.g., applicable to a broader scale) but efforts are made to repeat the same methodology.
-The most general category is conceptual replications, where the subject and method of study varies from the original study, but the replication targets a the same concept/hypothesis [@kelly_rate_2019; @nakagawa_replicating_2015].
+Direct (or exact) replications are attempts to replicate a tightly defined concept or hypothesis while duplicating all characteristics of the original study.
+Partial replications are a step looser, where the concept/hypothesis tested is less clearly defined (e.g., applicable to a broader scale), but efforts are made to repeat the same methodology.
+The most general category is conceptual replications, where the subject and method of study varies from the original study, but the replication targets a the same concept or hypothesis [@kelly_rate_2019; @nakagawa_replicating_2015].
 Both partial and conceptual can be classed as quasi-replications if the concept and scale are broadly defined [@nakagawa_replicating_2015].
 
-Conceptual replications are still valuable, but rely on our ability to compare replication efforts to previous findings.
-An important aspect of those comparisons is accounting for factors differing between the studies that are not salient to the effect of interest [@forstmeier_detecting_2017]; e.g., those linked to sampling differences [@simonsohn_small_2015].
+Conceptual replications are valuable, but rely on researchers' ability to compare replication efforts to previous findings.
+An important aspect of those comparisons is accounting for factors differing between the studies that are not salient to the effect of interest [@forstmeier_detecting_2017], e.g., those linked to sampling differences [@simonsohn_small_2015].
 An example of sampling differences leading to differences in results can be seen in the case of reptile space use.
 @silva_reptiles_2020 showed how the frequency at which a reptile was located (via radio-telemetry) by a researcher interacted with the space-use estimation method, leading to differences in area estimates even when using the same estimation method.
-This reveals not only how the choices during analysis (e.g., choice of area estimation method) impacted results, but how the uncertainty introduced by those choices changed depending on the sampling.
-It presents a scenario where the _correct_ choice was dependent on preceding decisions when designing the study; thereby, highlighting the need to explore the impacts of multiple decisions simultaneously. 
+This reveals how the choices during analysis (e.g., choice of area estimation method) impact results, and how the uncertainty introduced by those choices change depend on the sampling.
+It presents a scenario where the _correct_ choice is dependent on preceding decisions; thereby, highlighting the need to explore the impacts of multiple decisions simultaneously. 
 
-As seen in the reptile space use example, the choices made by the researcher [i.e., researcher degrees of freedom, @simmons_false-positive_2011] is a key source of variation among studies.
+As seen in the reptile space use example, the choices available to the researcher [i.e., researcher degrees of freedom, @simmons_false-positive_2011] is a key source of variation among studies.
 Research degrees of freedom [or flexibility in analysis, @forstmeier_detecting_2017] have been elegantly demonstrated by a number of "many analysts" studies [e.g., @silberzahn_many_2018; @huntingtonklein_influence_2021].
 In these studies, a number of researchers, or research groups, are tasked with answering the same question.
 Naturally each participant takes a slightly different approach, both in how the question is interpreted [@auspurg_has_2021], and the analysis approach chosen [@bastiaansen_time_2020; @gelman_garden_2013; @gould_same_2023], resulting is different final results.
@@ -95,29 +95,30 @@ Such variation in results can be sufficient to change the final conclusions [@sa
 
 ## Multiverse analysis
 
-An approach addressing the unknown impacts of undisclosed researcher degrees of freedom is to fully explore all plausible or reasonable analysis choices open to researchers -- to explore a multiverse of design choices [@steegen_increasing_2016].
-This multiverse analysis -- closely linked to vibration of effects [@patel_assessment_2015], multi-model analysis [@young_model_2017], and specification curve analysis [@simonsohn_specification_2020]-- has the potential to quantify the variation stemming from researcher's analyses choices [@rijnhart_assessing_2021].
+An approach addressing the unknown impacts of undisclosed researcher degrees of freedom is to fully explore all plausible or reasonable analysis choices open to researchers, i.e., to explore a multiverse of design choices [@steegen_increasing_2016].
+This multiverse analysis --closely linked to vibration of effects [@patel_assessment_2015], multi-model analysis [@young_model_2017], and specification curve analysis [@simonsohn_specification_2020]-- has the potential to quantify the variation stemming from researcher's analyses choices [@rijnhart_assessing_2021].
 Choices can include everything from from sample sizes and splits [e.g., @webb_multiverse_2021] to measurement and summary statistics [e.g., @parsons_exploring_2020], but crucially should only include options that are reasonable [@simonsohn_specification_2020; @del_giudice_travelers_2021].
 What counts as reasonable is not necessarily obvious, and inclusion of irrelevant choices can easily mask important choices because of the multiplicative nature of a branching path network [@del_giudice_travelers_2021] (Fig. \@ref(fig:multiDiagram)).
-Construction of a multiverse requires justification of which decisions are treated as variable, and why there is not an _a priori_ and defensible single solution [@del_giudice_travelers_2021].
-A multiverse populated with well-justified decisions allows the exploration of which choices inflate variation between analysis universes, while also offering insights into how to deflate variation [e.g., refinement of initial study design, the removal of ambiguities like tightening categories definitions, @steegen_increasing_2016].
+Construction of a multiverse requires justification for which decisions are treated as variable, and why there is not an _a priori_ and defensible single solution [@del_giudice_travelers_2021].
+A multiverse populated with well-justified decisions allows the exploration of which choices inflate variation among analysis universes, while also offering insights into how to deflate variation [e.g., refinement of initial study design, the removal of ambiguities like tightening categories definitions, @steegen_increasing_2016].
 
 ```{r multiDiagram, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Diagram showing how multiverse analysis differs from other approaches. Each branch node represents a choice made during analysis. Based on Figure 1 from Dragicevic et al. (2019)."}
 knitr::include_graphics(here::here("notebook", "ext_images", "Multiverse compared diagram updated.png"))
 ```
 
-However, even if all choices are equally valid, multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016] --the "average" result is not necessarily the closest to the truth.
+However, even if all choices are equally valid, multiverse analysis cannot simply provide a correct answer [@steegen_increasing_2016].
+The "average" result is not necessarily the closest to the truth.
 If we were to undertake a multiverse analysis in a scenario with a "known truth", i.e., using a simulated dataset [@bastiaansen_time_2020], we may be able to identify the amount of variation attributable to different sources [e.g., biological variation vs study design variation, @breznau_observing_2021], and potentially the systematic biases stemming from specific choices.
 The use of simulated data is an established way to explore the robustness of methodologies [@minchin_simulation_1987; @silva_reptiles_2020], and here we harness the benefits of simulated data to assess the impacts of researcher degrees of freedom on the results garnered from animal movement datasets.
 
-As mentioned, ecological systems are complex to study and frustrate replication efforts [@nakagawa_replicating_2015; @schnitzer_would_2016]; and in the case of movement ecology and animal movement this can be especially true.
+As mentioned, ecological systems are complex to study and frustrate replication efforts [@nakagawa_replicating_2015; @schnitzer_would_2016]; this can be especially true in the case of movement ecology and animal movement.
 Studying animal movement is often conducted using bio-telemetry/bio-logging devices that when attached to an animal record their location [@joo_recent_2022].
 From the resulting dataset of times and locations, researchers can derive a multitude of insights about the animal's life, ranging from more surface, such as movement characteristics (e.g., speed, turn angle), to more in-depth such as home range or habitat selection. 
 For the deeper insights a greater number of decisions are required during the analysis process, opening up the possibility that different researchers will take different pathways to answer the same question.
-With many forking pathways, analysis of movement data to determine an animal's habitat selection presents a perfect setting for a multiverse exploration of how the decisions impact the final results.
+With many forking pathways, analysis of movement data to determine an animal's habitat selection presents a perfect setting for a multiverse exploration of how the researcher decisions impact the final results.
 
 Here we construct a multiverse of analyses to explore how decisions concerning the design and analysis of an animal tracking data can impact the findings on habitat selection.
-Using a branching set of sampling and analysis options we examine which decisions lead to greater variation in estimated habitat preference for three distinct simulated animal species.
+Using a branching set of sampling and analysis options, we examine which decisions lead to the most variation in estimated habitat preference for three distinct simulated animal species.
 
 # Methods
 
@@ -160,12 +161,12 @@ nAnalysisPaths <- rsfChoices+widesChoices+ssfChocies+wrsfChocies
 ## Simulating the Scenarios
 
 <!-- Three scenarios - three species - three landscapes -->
-We simulated three scenarios/species, comprising of different animals and landscapes.
+We simulated three scenarios each represented by a different species, on different landscapes.
 We simulated the landscapes using the NLMR `r paste0("v.", packageVersion("NLMR"))` package [@NLMR], and the animal movement using abmAnimalMovement `r paste0("v.", packageVersion("abmAnimalMovement"))` package [@abmAnimalMovement].
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-Further details of how the scenarios were parametrised can be found in [@abmAnimalMovement], and also in the abmAnimalMovement github repository along with associated documentation ([abmAnimalMovement Github: https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
+Further details of how the scenarios were parametrised can be found in @abmAnimalMovement, and also in the abmAnimalMovement github repository along with associated documentation ([abmAnimalMovement Github: https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
 
-In brief:
+The simulated species are as follows:
 
 * Species 1, Badger: site fidelity to two shelter sites, a low movement speed constrained by terrestrial environment and territoriality, an 8-12 hour activity cycle with seasonal shifts.
 
@@ -174,28 +175,29 @@ In brief:
 * Species 3, King Cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
 Each simulation generated a year's worth of movement data with a data point recorded every minute, and we simulated `r nrow(optionsCompleteList$individual)` individuals per species.
+The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate_individual.R function (available at: [multiverseHabitat Github: https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at: [multiverseHabitat Zenodo: LINK](https://LINK)).
 
 <!-- Weighted landscapes translated into three-tier categories -->
 The agent-based animal movement simulations require an environment to guide movement.
 Our landscapes are defined as three stacked matrices, where the rows and columns of the matrix represent the X and Y locations in the landscape, and the value in each cell numerically describes the quality of a given resource the animal can consider when deciding where to move.
 Each of the three matrices' describe one resource: foraging quality, shelter site quality, or movement ease (Fig. \@ref(fig:landscapeExample)), which are evaluated by the animal differently depending on the behavioural state the animal is in (resting, exploring, foraging).
-All three are non-independent, and based on a single initial random generation using a Gaussian field.
+All three are based on a single initial random generation using a Gaussian field.
 
 <!-- [More settings here?, already a very long methods section...] -->
-From the initial Gaussian field we altered the values to exaggerate the difference between high resource areas and low value areas. 
+From the initial independent Gaussian fields, we altered the values to exaggerate the difference between high resource areas and low value areas; there-by generating non-independence of resources. 
 Broadly, we created: core resource areas with higher foraging quality but lower movement ease, edge areas that overlap with the forest with better movement ease, and more barren areas with high movement ease but with minimal foraging value.
 All shelter sites occurred within the higher quality core resource areas.
 
-While our simulation landscapes comprise of continuous values that determine the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
+While our simulation landscapes used to generate the simulated animal movement comprise of continuous values that affect the probability of a simulated animal using a cell or not, many habitat selection studies use categorical habitat metrics or land use types.
 Therefore, to simplify the interpretation of the multiverse, we simplified our landscape into three distinct categories for analysis (Fig. \@ref(fig:landscapeExample)): a low quality area where resources are low but movement is easy (class 0 in the figure), an edge habitat with middling resources and high movement ease (class 1), and a high resource habitat with low movement ease (class 2).
 This results in a classified matrix/raster of habitat types usable for downstream analyses (Fig. \@ref(fig:landscapeExample)).
 Class/habitat 2 was our target for all downstream analysis as it represents a preferred foraging area for the simulated species.
 
 While the categorisation of landscapes is a major decision during the analysis of habitat selection, we elected to keep the landscape classification constant to maintain a feasible multiverse analysis.
 However, to provide a point of comparison and to begin to explore the impact of selection strength on the analysis choices and estimates, we re-ran the entire multiverse with a scrambled habitat raster.
-The scrambled habitat raster contained the same three classifications, but their positions were randomised, resulting in a habitat raster detached from the underlying simulated selection thereby representing low or no selection (Fig. \@ref(fig:landscapeExample)).
+The scrambled habitat raster contained the same three classifications, but their positions were randomised, resulting in a habitat raster detached from the underlying simulated selection thereby representing low or no selection (i.e., random independent cell assignment, Fig. \@ref(fig:landscapeExample)).
 
-```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
+```{r landscapeExample, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An example of the underlying environmental matricies used during the Badger species simulation, and the subsequent habitat classes to be used in the habitat selection analysis."}
 knitr::include_graphics(here::here("notebook", "figures", "landscapeExample.png"))
 ```
 
@@ -212,7 +214,7 @@ No multiverse can ever be entirely comprehensive, but we endeavoured to include 
 <!-- Tracking consistency - might be very difficult to define systematically -->
 The first decisions concern data quantity.
 We varied tracking duration and tracking frequency, while keeping consistency fixed.
-While tracking consistency, or random/systematic data loss during tracking, is an element affecting data quantity, the numerous ways of defining consistency led us to avoid exploring tracking consistency.
+While tracking consistency, or data loss during tracking, is an element affecting data quantity, the numerous ways of defining consistency led us to avoid exploring tracking consistency.
 Tracking timing is also an important consideration; for example, recording the locations of a diurnal animal only at night is highly unlikely to be a viable way of determining foraging choices.
 For this exploration, we assumed that the researcher has sufficient knowledge about the animal's ecology to prioritise tracking during active hours.
 Timing only becomes a consideration when tracking frequency lowers to the point where the tracks performed during a day could occur entirely outside the animal's active period.
@@ -224,35 +226,40 @@ Data or location accuracy is another aspect of sampling variation.
 Different bio-logging equipment, terrain, animal behaviour, and weather can all impact the location error when tracking an animal.
 The causes of and solutions to location error are numerous; therefore, we did not explore the impact of error, instead prioritising more variation in other decision nodes.
 
-In summary, the sampling decisions will cover: variation in three species represented by `r nrow(optionsCompleteList$individual)` independent individuals, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)).
+In summary, the sampling decisions covered: variation in three species represented by `r nrow(optionsCompleteList$individual)` independent individuals, tracking frequency, and tracking duration (Fig. \@ref(fig:decisionTrees)).
 
-```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An illustration of the different decisions creating the multiverse. Grey choices pertain to data simulation and sampling. Species: the three different movement archetypes the simulations were loosely based upon. Individual: the number of individuals simulated per each species. Tracking duration: the length in days of the tracking data sampled from the overall simulated year. Tracking frequency: the frequency of the sampling of data points from the 1-per-minute simulated data. Selection scenarioes: the two classified habitat landscapes used during analysis. Purple choices concerned with analysis pathways using area-based estimations of availability (Wides: Wides selection ratios, RSF: Resource Selection Function). Area method: the method used to generate the available area polygon for the individual (MCP: Minimum Convex Polygon, KDE: Kernel Density Estimator, AKDE: Autocorrelated Kernel Density Estimator, dBBMM: dynamic Brownian Bridge Movement Model). Contour: the threshold used to convert the utilisation/occurrence distribution into a polygon. Available points: the number of generated points to extract available habitat within the polygon. Points pattern: whether the random points were generated in a stratified or random pattern. Weighting: the weighting of the available points in relation to the used points in the RSF formula. Light orange choices pertain to the SSF (Step Selection Function) analysis pathways. Model formula: whether the step and turn angles were added as interactions to the habitat variable (integrated if added). Available points: the number of randomly generated available points per step/used point. Turn angle: the distribution used to generate the turn angles of the available points. Step distribution: the distribution used to generate the step distances of the available points. Dark orange is the WRSF (Weighted Resource Selection Function) analysis. Decisions that required discrete choices are illustrated with circles, whereas those that continuous are depicted as triangles."}
+```{r decisionTrees, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="An illustration of the different decisions creating a multiverse examing animal movement. Grey choices pertain to data simulation and sampling. Species: the three different movement archetypes the simulations were loosely based upon. Individual: the number of individuals simulated per each species. Tracking duration: the length in days of the tracking data sampled from the overall simulated year. Tracking frequency: the frequency of the sampling of data points from the 1-per-minute simulated data. Selection scenarioes: the two classified habitat landscapes used during analysis. Purple choices concerned with analysis pathways using area-based estimations of availability (Wides: Wides selection ratios, RSF: Resource Selection Function). Area method: the method used to generate the available area polygon for the individual (MCP: Minimum Convex Polygon, KDE: Kernel Density Estimator, AKDE: Autocorrelated Kernel Density Estimator, dBBMM: dynamic Brownian Bridge Movement Model). Contour: the threshold used to convert the utilisation/occurrence distribution into a polygon. Available points: the number of generated points to extract available habitat within the polygon. Points pattern: whether the random points were generated in a stratified or random pattern. Weighting: the weighting of the available points in relation to the used points in the RSF formula. Light orange choices pertain to the SSF (Step Selection Function) analysis pathways. Model formula: whether the step and turn angles were added as interactions to the habitat variable (integrated if added). Available points: the number of randomly generated available points per step/used point. Turn angle: the distribution used to generate the turn angles of the available points. Step distribution: the distribution used to generate the step distances of the available points. Dark orange is the WRSF (Weighted Resource Selection Function) analysis. Decisions that required discrete choices are illustrated with circles, whereas those that continuous are depicted as triangles."}
 knitr::include_graphics(here::here("notebook", "ext_images", "Decision Visualisation.png"))
 ```
 
 ### Analysis
 
-For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
+For the analysis, we focused entirely on decisions that result from an R analysis workflow (Fig. \@ref(fig:decisionTrees)).
 R is the most common tool for analysing animal movement data [@joo_recent_2022].
-@joo_navigating_2020 provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
+@joo_navigating_2020 provide a review of the packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
 Specifically, we explored a subset of decisions made during the workflows using adehabitatHS `r paste0("v.", packageVersion("adehabitatHS"))` [@adehabitatHS], and amt `r paste0("v.", packageVersion("amt"))` [@amt] R packages.
 During the writing of this paper, a new method was described as part of the ctmm package `r paste0("v.", packageVersion("ctmm"))` [@ctmm], which we also preliminarily investigated.
 
 Combined, the packages offer many options for habitat analysis.
 We focus on four that tackle individual habitat selection:
 
-* One from the adehabitatHS package: resource selection ratios (Wides)
+* From the adehabitatHS package: resource selection ratios (Wides)
 
-* Two from the amt package: Resource Selection Function (RSF), Step Selection Function (SSF)
+* From the amt package: Resource Selection Function (RSF)
 
-* And the newly described Weighted Resource Selection Function [wRSF @alston_mitigating_2023] from the ctmm package.
+* From the amt package: Step Selection Function (SSF)
+
+* From the ctmm package: the newly described Weighted Resource Selection Function [wRSF @alston_mitigating_2023].
 
 Each of the methods require downstream decisions resulting in a "garden of forking paths" to a final estimate of habitat selection (Fig. \@ref(fig:decisionTrees)).
 
 #### Area based approaches
 
-The Wides and RSF methods share many analysis decisions, principally concerned with how available habitat is defined.
-The first decisions is whether to approach the habitat selection analysis as a type I, II or III design.
+The Wides and RSF methods share many analysis decisions.
+The Wides approach aims to calculate selection ratios of used habitat compared to those available [@manly2007resource]; whereas the RSF approach uses a logistic regression to compare the used and available habitats.
+Therefore, a principal concern in both approaches is how available habitat is defined.
+
+The first decisions is whether to approach the habitat selection analysis as a type I (population habitat use compared to landscape-level habitat availability), II (individual habitat use compared to landscape-level habitat availability) or III design (individual habitat use compared to individual-level habitat availability).
 We are concerned with an individuals' habitat selection, so ignored type I.
 While type II habitat selection can identify individual selection, it requires habitat availability to be defined on a population or landscape scale (i.e., a universal availability).
 As movement data presents an opportunity to estimate individual selection, and we are not simulating a true interacting population, we focus on type III.
@@ -263,8 +270,8 @@ We used a range of methods to build areas that could be considered available to 
 Minimum convex polygons (MCPs) simply creates a polygon based on the outermost locations, where the interior angles sum to less than 180 degrees.
 
 Kernel Density Estimations (KDEs) use kernel smoothing to build a heat map of use or utilisation.
-Critical to KDEs operation is a bandwidth or smoothing factor (h) that alters the resulting area treated as used by the animal [@silva_reptiles_2020].
-For this analysis we use the the reference bandwidth (href) as it is commonly used [@crane_lots_2020], while also quickly and consistently calculable on a individual by individual basis.
+Critical to KDEs, operation is a bandwidth or smoothing factor (h) that alters the resulting area treated as used by the animal [@silva_reptiles_2020].
+For this analysis, we use the reference bandwidth (href) as it is commonly used [@crane_lots_2020], while also quickly and consistently calculable on a individual-by-individual basis.
 An alternative common method to determine smoothing factor is Least Squares Cross Validation (LSCV).
 However, we avoided the LSCV method for two reasons: 1) the LSCV method can fail to converge on a smoothing factor, thereby introducing an unpredictable fail state in any potential multiverse, and 2) the more limited area estimate it produces makes it less suitable for defining habitat availability.
 
@@ -287,10 +294,10 @@ As our most infrequent tracking is `r max(optionsCompleteList$regime$tf)` hours 
 The broader window and margin sizes helped reduce computational costs, a consideration when many dBBMMs require calculation.
 <!-- In these instances we will report an NA as a final result. -->
 
-Unlike the AKDEs, dBBMMs do not produce an utilisation distribution.
+Unlike the AKDEs, dBBMMs do not produce utilisation distributions.
 As dBBMMs are estimating the uncertainty surrounding potential movement pathways, the resulting distribution is better described as an occurrence distribution.
 This occurrence distribution describes the within-sample uncertainty rather than the potential areas available to the animal beyond the sampling period (i.e., it possess little to no predictive capabilities).
-Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more closely comparing habitat use to an alternative measure of habitat use.
+Therefore, using dBBMMs to define habitat availability means rather than comparing the habitat use (derived from the movement data) to availability (broader area predicted by the movement data), we are more comparing habitat use (derived from the movement data) to an alternative measure of habitat use (an area estimating uncertainty surrounding the movement pathways).
 We included dBBMMs to examine whether this arguably easy-to-make conceptual mistake impacts the final results [@alston_clarifying_2022].
 
 What is considered available to an animal is not cleanly translated from a biological concept to a statistical one.
@@ -323,19 +330,19 @@ Step lengths were tested with a Gamma and Exponential distributions, while turn 
 
 The other decisions we explored in SSFs were whether to run the model as a standard step selection or an integrated step selection function.
 The standard step selection model is a conditional logistic regression, where we aim to identify the association between whether a location is used/unused and the habitat values at that location (case_ ~ values + strata(step_id_)).
-The integrated step selection model is very similar, apart from the predictors also included step length and turn angle as interactive terms with the habitat values.
+The integrated step selection model is very similar, but the predictors also included step length and turn angle as interactive terms with the habitat values.
 The addition of these two components is meant to reduce bias by better accounting for the selection that may simply be an artefact of the movements of the animal rather than active habitat selection [@avgar_integrated_2016].
 
 We have neglected to explore an expansive aspect of SSFs regarding high resolution data and the use of "bursts".
 Bursts are used when the researcher wants to look at selection over a given timeframe; therefore, locations are grouped into bursts and the bursts become the strata in the model rather than timestep.
 Such grouping of data deserves investigation, but there are myriad of ways bursts can be defined, and their interaction with tracking duration, frequency, and consistency would warrant a separate multiverse analysis.
-As such we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
+As such, we have restricted this exploration to step selection functions where the datapoints are equal to the strata in the model.
 
 #### Weighted Resource Selection Functions
 
 Compared to the other methods, Weighted Resource Selection Functions do not have many associated choices.
 Part of the motivation behind their development was to integrate autocorrelation and other critical structures of movement data into the modelling of habitat selection [@alston_mitigating_2023].
-This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on potentially arbitrary decisions with regards to how to mitigate any biasing effects the structures produce.
+This contrasts to the other methods that either ignore the confounding effect of these structures, or rely on potentially arbitrary decisions for how to mitigate any biasing effects the structures produce.
 As a result, we have no exploration of analysis decisions for this method because aspects such an available area or points no longer apply, and availability is estimated as part of the model [@alston_mitigating_2023].
 Instead we explore only variations in data quantity (i.e., tracking duration and frequency).
 
@@ -361,7 +368,7 @@ Based on these assessments we modified the running parameters (RSF 500 iteration
 We elected to have the model try and predict the deviation from the median estimate of habitat selection because the simulation cannot provide a direct analogous value to the outputs of all four methods.
 The analysis closest to mirroring the agent-based model of the simulated data is the SSF.
 The simulation is a discrete time model, where the animal makes decisions based upon a number of options making it similar to a SSF step-wise model structure.
-Despite this similarity the decision making of the animal is made on two time frames; thereby, breaking our ability to directly compare simulation values with step selection outputs.
+Despite this similarity, the decision-making of the animal is made on two time frames; thereby, breaking our ability to directly compare simulation values with step selection outputs.
 Additionally, the simulated selection of the animal is balanced against other demands such as site fidelity, movement resistance, and avoidance of certain locations; therefore, any input habitat selection into the simulation becomes directly incomparable with a derived answer (i.e., analysed) from the simulated movement. 
 The closest analogous values we could generate came from running RSF and iSSF models directly on the simulated decisions made by the animal.
 We ran these models for both time scales: movement decisions every time step, and destination decisions every behavioural state switch.
@@ -396,25 +403,25 @@ Each of these datasets underwent various combinations of analysis choices result
 We can get an initial impression of the pattern of the final selection estimates using a specification curve [@simonsohn_specification_2020; @hall_survey_2022].
 In a scenario where the decisions make little difference, all estimates should group together around a common answer, with the majority of deviation from that common answer being the result of sampling or individual variation.
 
-```{r specCurveWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the Wides analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Left-hand numbers describe the number of NA results connected to each decision, indicating a failure somewhere in the calculations. Solid circles are the medians for each choice."}
+```{r specCurveWides, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the Wides analysis pathways applied to the simulated data. Each point is a estimate of habitat selection. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Left-hand numbers describe the number of NA results connected to each decision, indicating a failure somewhere in the calculations. Solid circles are the medians for each choice."}
 knitr::include_graphics(here::here("notebook", "figures", "widesSpecCurve.png"))
 ```
 
 <!-- spec curve wides -->
 Starting with the Wides results, we see a quite gentle *S* shape (Fig. \@ref(fig:specCurveWides)), with most estimates falling in the range of 0.5 to 2.
 There is an agreement of positive selection for habitat 2 as expected, and a stronger selection identified in the selection scenario compared to the scrambled raster (no selection) scenario.
-While the positive selection appears in reasonable agreement, the exact estimate appears relatively sensitive to the choices made. 
+While the positive selection appears in reasonable agreement that selection is occurring (more estimates toward the higher values than lower), the exact estimate appears relatively sensitive to the choices made. 
 Looking at the specific choices, we can see several weak patterns.
-The first is in tracking duration where we see slight reduction in the spread of estimates with longer tracking durations, when selection is present.
-The same is not clear in tracking frequency because the lower tracking frequency could not be combined with lower tracking durations, resulting in fewer estimates for low frequency scenarios.
+The first is in tracking duration where we see a slight reduction in the spread of estimates with longer tracking durations, when selection is present.
+The same is not clear in tracking frequency because the lower tracking frequency could not be combined with lower tracking durations resulting in fewer estimates for low frequency scenarios.
 Despite this, we do see a slight reduction in estimate variation from frequencies of 0.17 locations per hour and higher, as well as more consistent positive selection estimates.
 Similar to the tracking intensity choices, the contour used during the area generation appears to affect the spread of estimates, with a larger contour leading to a slightly greater agreement between estimates.
 So too does the multiplier of available points, with more points slightly reducing the spread of estimates, although we see no movement in the median estimate.
-Higher numbers of available points, and a higher tracking intensity did appear to lead to a greater chance of a successful estimate being produced (see numbers to the right of the 0 line in Fig. \@ref(fig:specCurveWides)).
-The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs potentially leading to slightly lower estimates in general in the selection scenario.
+Higher numbers of available points, and a higher tracking intensity, did appear to lead to a greater chance of a successful estimate being produced (see numbers to the right of the 0 line in Fig. \@ref(fig:specCurveWides)).
+The choice of area method (MCP = Minimum Convex Polygon, AKDE = Autocorrelated Kernel Density Estimate based on the best performing movement model, KDEhref = Kernel Density Estimate using reference bandwidth selection, dBBMM = dynamic Brownian Bridge Movement Model) appears to suggest more consistently similar estimates with AKDE and KDEhref methods compared to MCPs and dBBMMs, with MCPs leading to slightly lower estimates in the selection scenario.
 This difference disappears under the scrambled habitat classification, and in that scenario all analytical choices appear to make little impact on the median estimate.
 
-```{r specCurveRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the RSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+```{r specCurveRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the RSF analysis pathways applied to the simulated data. Each point is a estimate of habitat selection. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
 knitr::include_graphics(here::here("notebook", "figures", "rsfSpecCurve.png"))
 ```
 
@@ -431,14 +438,14 @@ The distinct step-like pattern is a result of the logarithmic scale the weightin
 The weighting does not appear to impact the overall median, with weighting only appearing to dramatically impact the outlying results.
 Comparing the selection scenario to the no selection scenario, we can see that the selection scenario is more likely to produce larger outlying results, both positive and negative.
 
-```{r uncertaintyPlot, echo=FALSE, out.width='100%', fig.height=3, fig.width=2, fig.align="centre", fig.cap="All standard errors associated with estimates of habitat selection from RSF, SSF, and wRSF analysis pathways. N.b., y axis is log scaled."}
+```{r uncertaintyPlot, echo=FALSE, out.width='100%', fig.height=3, fig.width=2, fig.align="centre", fig.cap="All standard errors associated with estimates of habitat selection from RSF, SSF, and wRSF analysis pathways. More extreme estimates of selection are associated with dramatically larger confidence intervals, N.b., y axis is log scaled."}
 knitr::include_graphics(here::here("notebook", "figures", "uncertaintyPlot.png"))
 ```
 
 For the RSF analyses, we also recovered the range of the 95% confidence intervals surrounding each estimate.
 When plotted against the estimate, we see clear groupings where those most extreme estimates are also, by a significant margin, the most uncertain (Fig. \@ref(fig:uncertaintyPlot)).
 
-```{r specCurveSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the SSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot shows the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+```{r specCurveSSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the SSF analysis pathways applied to the simulated data. Each point is a estimate of habitat selection. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot shows the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
 knitr::include_graphics(here::here("notebook", "figures", "ssfSpecCurve.png"))
 ```
 
@@ -455,7 +462,7 @@ The impact of analysis choice on the SSF method appears to be more consistent be
 
 Very much like the RSF explorations of the raw data, the 95% confidence intervals are dramatically larger (between 100 and 1000 fold) for the outlying estimates than those nearer the median estimate (Fig. \@ref(fig:uncertaintyPlot)).
 
-```{r specCurveWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the wRSF analysis pathways. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
+```{r specCurveWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="A specification curve showing all habitat selection estimates from the wRSF analysis pathways applied to the simulated data. Each point is a estimate of habitat selection. Top plot shows all estimates according to estimate, with an arbitary sorted y-position. Lower plot show the same estimates in relation to the decisions that lead to them. Solid circles are the medians for each choice. Colours illustrate deviation from the median."}
 knitr::include_graphics(here::here("notebook", "figures", "wrsfSpecCurve.png"))
 ```
 
@@ -464,7 +471,7 @@ knitr::include_graphics(here::here("notebook", "figures", "wrsfSpecCurve.png"))
 The Weighted Resource Selection Function approach has very few decisions associated with it currently; however, we still explored the impact of tracking duration and frequency on the estimates (Fig. \@ref(fig:specCurveWRSF)). 
 The highest estimates appear connected to the lower tracking frequencies, but like the SSF results, those high estimates also tend to have large confidence intervals (Fig. \@ref(fig:uncertaintyPlot)).
 The bulk of the estimates agree and are tightly concentrated around the median with very few underestimating.
-As with RSF and SSF methods, the wRSF is very likely to correctly identify the positive selection and the median selection under the no selection scenario is lower, particularly when more data is available.
+As with RSF and SSF methods, the wRSF is very likely to correctly identify the positive selection and the median selection under the no selection scenario is lower, particularly when more data are available.
 
 ## Model exploration
 
@@ -494,10 +501,11 @@ condRange <- brmsR2Results %>%
 While the specification curves are a good way of getting an intuitive sense of variation, the scale and range of estimates can skew the interpretation of which choices have the largest impact.
 Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations and the variation between species.
 
-All models showed that the variation stemming from the analysis choices was greater than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \@ref(tab:r2table)).
+All models showed that the variation stemming from the analysis choices was less than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \@ref(tab:r2table)).
 The conditional *R^2* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
+Largely the marginal *R^2* values were very low (often below 0.1), meaning that while the models reveal clear effects, the overall variation they ascribe to given analysis choices is reasonably limited compared to the overall variation stemming from the different species, individuals, landscape classification, and stochastic nature of the movement data simulation.
 
-```{r brmsAllEffectsPlot, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Estimated betas for each choice's impact on the devation from the median habitat selection estimate."}
+```{r brmsAllEffectsPlot, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Estimated betas for each choice's impact on the deviation from the median habitat selection estimate. Deviation from the median estimate was examined as the absolute deviation (left) and the raw deviation (right). All eight independent models are displayed together, split between analysis method and deviation type. Each point represents the point estimate derived from the 95% median highest density continuous interval, and is plotted alongside a line showing the extent of the 95% credible interval. The y-axis shows all the choices explored in the different analysis methods, grouped by the methods they apply to."}
 knitr::include_graphics(here::here("notebook", "figures", "_allEffectsPlot.png"))
 ```
 
@@ -540,18 +548,18 @@ brmWides_rEst_spEffect <- brmEstResults %>%
 ```
 
 <!-- model res wides absolute -->
-For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWides)), with increases in tracking duration ($\beta$ `r brmWides_dEst_tdEffect`) being marginally more effective than tracking frequency ($\beta$ `r brmWides_dEst_tfEffect`).
+For the decisions connected to Wides results, the absolute deviation was curtailed most effectively by increases in data quantity (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWides)), with increases in tracking duration ($\beta$: `r brmWides_dEst_tdEffect`) being marginally more effective than tracking frequency ($\beta$: `r brmWides_dEst_tfEffect`).
 <!-- ?????????????should we be calculating contrasts here to really support comparative statements like this???????????? -->
-Of the other decisions, only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$ `r brmWides_dEst_avpEffect`), and its effect was much smaller than those concerning data quantity.
+Of the other decisions, only the multiplier of available points appeared to decrease absolute deviation unambiguously ($\beta$: `r brmWides_dEst_avpEffect`), and its effect was much smaller than those concerning data quantity.
 Choice of area method as well as the pattern used to generate random points seem to make little clear difference, with all credible intervals connected to those choices overlapping zero.
-Contour choice increases the absolute deviation from the median estimate $\beta$ `r brmWides_dEst_csEffect`.
+Contour choice increases the absolute deviation from the median estimate $\beta$: `r brmWides_dEst_csEffect`.
 That appears counter to the initial specification curve plot and highlights the difficulty of identifying patterns from the raw data alone. 
 
 <!-- model res wides raw -->
-The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$ `r brmWides_rEst_tfEffect` and tracking duration $\beta$ `r brmWides_rEst_tdEffect`, with the former leading to greater estimates of selection (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasWides)).
+The model examining raw deviation from the median estimate reveals that the Wides approach is contrastingly impacted by tracking frequency $\beta$: `r brmWides_rEst_tfEffect` and tracking duration $\beta$: `r brmWides_rEst_tdEffect`, with the former leading to greater estimates of selection (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasWides)).
 <!-- Likely a result of the higher frequencies matching more accurately with the time-scale of selection, whereas duration tends to buffer against the extremes regardless. -->
-The choice of stratified versus random available point positioning $\beta$ `r brmWides_rEst_spEffect` and the available points multiplier $\beta$ `r brmWides_rEst_avpEffect` have less of an impact, mirroring the smaller effects seen in the absolute deviation model. 
-All area related choices do not move relative to each other, and reveal that MCPs as an area method to lead to lower estimates of selection in this scenario.
+The choice of stratified versus random available point positioning $\beta$: `r brmWides_rEst_spEffect` and the available points multiplier $\beta$: `r brmWides_rEst_avpEffect` have less of an impact, mirroring the smaller effects seen in the absolute deviation model. 
+All area related choices do not move relative to each other, and reveal that MCPs as an area method lead to lower estimates of selection in this scenario.
 
 <!-- RSF MODELS -->
 
@@ -618,14 +626,14 @@ brmrsf_rEst_csEffect <- brmEstResults %>%
 <!-- model res rsf absolute -->
 Every decision examined by the RSF absolute effect model appears to be make a difference when estimating selection (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasRSF)).
 Like the Wides analysis, data quantity is most important.
-The two largest effects are from tracking duration ($\beta$ `r brmrsf_dEst_tdEffect`) and frequency ($\beta$ `r brmrsf_dEst_tfEffect`), showing that more data leads to more stable estimates of habitat selection (i.e., more likely to get an answer closer to the overall median estimate).
+The two largest effects are from tracking duration ($\beta$: `r brmrsf_dEst_tdEffect`) and frequency ($\beta$: `r brmrsf_dEst_tfEffect`), showing that more data leads to more stable estimates of habitat selection (i.e., more likely to get an answer closer to the overall median estimate).
 
 However, unlike with Wides, the other analysis decisions also matter, although to varying extents.
-It appears that larger contours ($\beta$ `r brmrsf_dEst_csEffect`) and a greater multiplier of available points ($\beta$ `r brmrsf_dEst_avpEffect`) decreases the deviation from the median estimate.
-To a small extent, using a stratified available points pattern led to lower deviation from the median than a purely random available points pattern ($\beta$ `r brmrsf_dEst_spEffect`).
+It appears that larger contours ($\beta$: `r brmrsf_dEst_csEffect`) and a greater multiplier of available points ($\beta$: `r brmrsf_dEst_avpEffect`) decreases the deviation from the median estimate.
+To a small extent, using a stratified available points pattern led to lower deviation from the median than a purely random available points pattern ($\beta$: `r brmrsf_dEst_spEffect`).
 Choice of area method can alter results in differing ways.
-Compared to using MCPs, both AKDE ($\beta$ `r brmrsf_dEst_akdeEffect`) and KDEhref ($\beta$ `r brmrsf_dEst_kdeEffect`) produce estimates more likely to be closer to the median estimate, and to similar degrees.
-By contrast, dynamic Brownian Bridge Movement Models are more likely to lead to greater variation in estimates than those analyses that use MCPs ($\beta$ `r brmrsf_dEst_dbmEffect`).
+Compared to using MCPs, both AKDE ($\beta$: `r brmrsf_dEst_akdeEffect`) and KDEhref ($\beta$: `r brmrsf_dEst_kdeEffect`) produce estimates more likely to be closer to the median estimate, and to similar degrees.
+By contrast, dynamic Brownian Bridge Movement Models are more likely to lead to greater variation in estimates than those analyses that use MCPs ($\beta$: `r brmrsf_dEst_dbmEffect`).
 
 Examining the interactions between tracking duration and frequency with the area methods further reveals the connection between dBBMMs and more variable estimates.
 While the other area methods interact with tracking duration in a similar fashion, dBBMMs are more sensitive, meaning that at shorter tracking durations the variation created by choosing dBBMMs over another method is greater (Fig. \@ref(fig:rsfInteractions)).
@@ -636,19 +644,19 @@ knitr::include_graphics(here::here("notebook", "figures", "rsfEffectPlot_iteract
 ```
 
 <!-- model res rsf raw -->
-The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration $\beta$ `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasRSF)). 
-While the simulation parametrisation makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median <!--[NEED LINK TO SUPP MAT HERE]-->) are more likely to be the correct estimation of simulated selection via RSF.
+The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration $\beta$: `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$: `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasRSF)). 
+While the way the movement data is simulated makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median; see associated data for directly estimated selection values) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
-Stratified available point sampling was associated with more positive estimates of selection ($\beta$ `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous absolute deviation model).
+Stratified available point sampling was associated with more positive estimates of selection ($\beta$: `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous absolute deviation model).
 This suggests that random point sampling, by contrast, leads to more variable estimates that tend to be lower.
-The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$ `r brmrsf_rEst_avpEffect`).
+The same pattern is visible in available points multiplier, where more points lead to a more consistent estimate but with a tendency for that estimate to be higher ($\beta$: `r brmrsf_rEst_avpEffect`).
 
 The area method choices reveal a similar pattern.
-Dynamic Brownian Bridge Movement models were connected to the more variable estimates, and that variability tended towards a lower estimates ($\beta$ `r brmrsf_rEst_dbmEffect`).
-Whereas the other methods are connected to lower deviation from the median estimate, but higher raw estimates.
-The area contour selected also reflects this ($\beta$ `r brmrsf_rEst_csEffect`).
-Taken together it appears that methods capturing a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of selection.
+Dynamic Brownian Bridge Movement models were connected to the more variable estimates, and that variability tended towards a lower estimates ($\beta$: `r brmrsf_rEst_dbmEffect`).
+The other methods are connected to lower deviation from the median estimate, but higher raw estimates.
+The area contour selected also reflects this ($\beta$: `r brmrsf_rEst_csEffect`).
+Taken together, it appears that methods capturing a spatially broader picture of availability have a tendency to produce more stable (in relation to other analysis decisions) but higher estimates of selection.
 The dBBMMs, by contrast, are more vulnerable to variation in other decisions, a trait reflected in the interaction with data quantity measures.
 
 Overall there does not appear to be a decision that leads to great deviation from the median estimate in one direction.
@@ -673,12 +681,12 @@ brmssf_rEst_mfEffect <- brmEstResults %>%
 
 <!-- model res ssf absolute -->
 
-The SSF absolute deviation model very closely matches the previous two models (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasSSF)), where tracking quantity both in terms of duration ($\beta$ `r brmssf_dEst_tdEffect`) and frequency ($\beta$ `r brmssf_dEst_tfEffect`) dominate in regards to explaining why estimates tend to be closer to the median estimate.
+The SSF absolute deviation model very closely matches the previous two models (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasSSF)), where tracking quantity both in terms of duration ($\beta$: `r brmssf_dEst_tdEffect`) and frequency ($\beta$: `r brmssf_dEst_tfEffect`) dominate in regards to explaining why estimates tend to be closer to the median estimate.
 Unlike the other analysis, all other decisions made a negligible impact on an estimate's absolute proximity to the median estimate.
 
 <!-- model res ssf raw -->
 Due to the one sided variability of the SSF estimates the raw deviation model mostly mirrors the absolute deviations (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasSSF)).
-The only noticeable difference is in the model formula decision that changes the direction of the beta point estimate from negative to positive ($\beta$ `r brmssf_rEst_mfEffect`).
+The only noticeable difference is in the model formula decision that changes the direction of the beta point estimate from negative to positive ($\beta$: `r brmssf_rEst_mfEffect`).
 However, the large overlap with zero means that in both cases the step distribution decision is not making a considerable impact to the estimates relative to the median estimate.
 
 <!-- WRSF MODELS -->
@@ -704,7 +712,7 @@ brmwrsf_rEst_tfEffect <- brmEstResults %>%
 ```
 
 The results from the wRSF models are largely similar to the SSF models, although with fewer decisions (Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
-Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$ `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_dEst_tfEffect`), and the near-exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$ `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$ `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
+Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$: `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$: `r brmwrsf_dEst_tfEffect`), and the near-exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$: `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$: `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
 The only difference (although both effects overlap considerably) is that increased tracking duration tended to be linked more strongly with lower selection estimates.
 
 # Discussion
@@ -718,12 +726,12 @@ This suggests that advancements in habitat selection analysis methods are not on
 
 <!-- reproducibility implications - no crisis any bigger than any other field - good news not need to immediately panic, the habitat pref looks similar to over fields - point towards other processes under way to improve other fields, same apply nothing dramatic -->
 <!-- ie bad incentives will not be having a disproportionate impact on move eco if the results here hold true -->
-The overall pattern in estimates mirror those seen in other fields, where the bulk of answers converge but outliers remain [@silberzahn_many_2018; @simonsohn_specification_2020; @gould_same_2023].
+The overall pattern in estimates mirrors those seen in other fields, where the bulk of answers converge but outliers remain [@silberzahn_many_2018; @simonsohn_specification_2020; @gould_same_2023].
 While the incentives for findings positive results remain in the publishing system [@fanelli_positive_2010; @fanelli_negative_2012], in the case presented here, using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of extreme estimates is relatively low compared to the majority of estimates that agree near the median.
 If the past habitat selection studies report extreme findings, there is a general tendency for these to be paired with very wide confidence intervals; if the studies have reported the confidence intervals, this provides an additional safeguard against over interpretation of potentially incorrect extreme results.
 
 While the goal of this study was not to review and provide direct guidance for the most effective ways of undertaking habitat selection, our findings show several key patterns that reflect previous guidance in the literature.
-In particular the benefits of larger datasets and the importance of defining availability [@street_solving_2021; @northrup_practical_2013], the latter is particularly key because of the potential for subjective definitions [@beyer_interpretation_2010]. 
+In particular the benefits of larger datasets and the importance of defining availability [@street_solving_2021; @northrup_practical_2013]; the latter is particularly key because of the potential for subjective definitions [@beyer_interpretation_2010]. 
 One specific example would be the tendency for larger area methods and wider contours leading to more stable (nearer the median) estimates; this mirrors previously revealed patterns connecting broader spatial scales and transferability [@paton_defining_2015].
 
 <!-- does not provide an excuse for not caring about analysis choices, as newer methods appear better, progress is progress it seems -->
@@ -744,14 +752,14 @@ Matching question to analysis approach remains important, but the cost of mistak
 <!-- computational limits for points multiplier - aim to maximise within reason -->
 Further good news is that some decisions connected to more stable estimates have very little reason not to be maximised.
 For example, the points multiplier or points per step decision can be maximised to whatever extent allowed by the computational resources available to the researcher.
-Increases in the number of available points will improve accuracy when defining available habitats; @street_solving_2021 indicates that the systematic sampling with high numbers of points is preferable to capture a complete unbiased availability.
+Increases in the number of available points will improve accuracy when defining available habitats; @street_solving_2021 indicate that the systematic sampling with high numbers of points is preferable to capture a complete unbiased availability.
 @fieberg_how_2021 states that available points should be high enough to ensure stable coefficient estimates, that is also aided by increased weighting of available points in the logistic regression.
 <!-- ssf steps per strata key to rare habitat - we had a common one -->
 While we did not see the improvements in points per step in the SSF analysis, the benefits of high available steps is more pronounced when working with rare habitat types [@thurfjell_applications_2014].
 More available points reduces the chances of missing small areas of rare habitat; our analysis would not have revealed this because of the abundance of the preferred habitat type.
 
 We did not see large improvements using different step or turn angle distributions; this has been shown to play an increasingly important role in mitigating biased estimates in scenarios with stronger selection strengths [@forester_accounting_2009]. 
-The limited cost of integrating step and turn into SSF formula would suggest iSSF formulation is likely always preferable for estimation of individual habitat selection.
+The limited cost of integrating step and turn into SSF formulas would suggest iSSF formulation is likely always preferable for estimation of individual habitat selection.
 <!-- was there a citation suggsting this may not be the case for pop level stuff, perhaps in the poission INLA paper? -->
 
 <!-- interactions between method and data - and choice and choice? -->
