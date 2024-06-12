@@ -236,8 +236,8 @@ In summary, the sampling decisions will cover: variation in three species repres
 For the analysis decisions we focused entirely on decisions that result from an R analysis workflow.
 R is the most common tool for analysing animal movement data (\protect\hyperlink{ref-joo_recent_2022}{Joo et al., 2022}).
 Joo et al. (\protect\hyperlink{ref-joo_navigating_2020}{2020}) provides a review of the R packages available to analysis movement data in R, and we used this review as a resource for determining the options for habitat analysis.
-Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.16 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.1.7 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
-During the writing of this paper, a new method was described as part of the ctmm package v.0.6.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigated.
+Specifically, we explored a subset of decisions made during the workflows using adehabitatHS v.0.3.17 (\protect\hyperlink{ref-adehabitatHS}{Calenge \& Mathieu Basille, 2023}), and amt v.0.2.1.0 (\protect\hyperlink{ref-amt}{Signer, Fieberg \& Avgar, 2019}) R packages.
+During the writing of this paper, a new method was described as part of the ctmm package v.1.1.1 (\protect\hyperlink{ref-ctmm}{Fleming \& Calabrese, 2023}), which we also preliminarily investigated.
 
 Combined, the packages offer many options for habitat analysis.
 We focus on four that tackle individual habitat selection:
@@ -347,7 +347,7 @@ Instead we explore only variations in data quantity (i.e., tracking duration and
 \hypertarget{assessing-the-multiverse}{%
 \subsection{Assessing the multiverse}\label{assessing-the-multiverse}}
 
-To generate the multiverse, we used a meta-programming approach via the targets v.0.14.2 and tarchetypes v.0.7.4 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},\protect\hyperlink{ref-tarchetypes}{b}).
+To generate the multiverse, we used a meta-programming approach via the targets v.1.1.2 and tarchetypes v.0.7.6 R packages (\protect\hyperlink{ref-targets}{Landau, 2021a},\protect\hyperlink{ref-tarchetypes}{b}).
 The targets package was created to facilitate reproducible workflows, but is also paired with functionality enabling multiple analysis routes and parallel processing.
 Targets' ability to track analysis task progress and intermediate R objects reduces repeat computation in a complex workflow that may not be able to be run in a single sitting.
 We created a branching analysis workflow based on the decisions we wished to explore, then used targets to iterate over all combinations of all decisions and compile all analysis end points ready for further examination.
@@ -611,22 +611,22 @@ This work was supported by the Natural Environment Research Council (NERC) via t
 
 In addition to packages already mentioned in the methods we also used the following.
 
-We used \emph{R} v.4.2.2 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.12.0.369 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
-We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}), \emph{readr} v.2.1.4 (\protect\hyperlink{ref-readr}{Wickham, Hester \& Bryan, 2023}), and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
+We used \emph{R} v.4.3.3 (\protect\hyperlink{ref-base}{R Core Team, 2023}) via \emph{RStudio} v.2023.12.0.369 (\protect\hyperlink{ref-rstudio}{RStudio Team, 2022}).
+We used \emph{here} v.1.0.1 (\protect\hyperlink{ref-here}{Müller, 2020}), \emph{readr} v.2.1.5 (\protect\hyperlink{ref-readr}{Wickham, Hester \& Bryan, 2023}), and \emph{qs} v.0.25.5 (\protect\hyperlink{ref-qs}{Ching, 2023}) to manage directory addresses and saved objects.
 
-We used \emph{raster} v.3.6.14 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside \emph{NLMR} v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
+We used \emph{raster} v.3.6.20 (\protect\hyperlink{ref-raster}{Hijmans, 2023}) and \emph{RandomFields} v.3.3.14 (\protect\hyperlink{ref-RandomFields}{Schlather et al., 2015}) to aid landscape raster creation alongside \emph{NLMR} v.1.1.1 (\protect\hyperlink{ref-NLMR}{Sciaini et al., 2018}).
 
-We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), \emph{ggtext} v.0.1.2 (\protect\hyperlink{ref-ggtext}{Wilke \& Wiernik, 2022}), and \emph{ggdist} v.3.2.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
+We used \emph{ggplot2} v.3.4.2 for creating figures (\protect\hyperlink{ref-ggplot2}{Wickham, 2016}), with the expansions: \emph{patchwork} v.1.1.2 (\protect\hyperlink{ref-patchwork}{Pedersen, 2022}), \emph{ggridges} v.0.5.4 (\protect\hyperlink{ref-ggridges}{Wilke, 2022}), \emph{ggtext} v.0.1.2 (\protect\hyperlink{ref-ggtext}{Wilke \& Wiernik, 2022}), and \emph{ggdist} v.3.3.0 (\protect\hyperlink{ref-ggdist}{Kay, 2023a}).
 
-We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.2 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.2 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
+We used \emph{brms} v.2.19.0 (\protect\hyperlink{ref-brms}{Bürkner, 2021}) to run Bayesian models, with dianogistics generated used \emph{bayesplot} v.1.10.0 (\protect\hyperlink{ref-bayesplot}{Gabry et al., 2019}), \emph{tidybayes} v.3.0.4 (\protect\hyperlink{ref-tidybayes}{Kay, 2023b}), and \emph{performance} v.0.10.3 (\protect\hyperlink{ref-performance}{Lüdecke et al., 2021}).
 
-We used the \emph{dplyr} v.1.1.3 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
+We used the \emph{dplyr} v.1.1.2 (\protect\hyperlink{ref-dplyr}{Wickham et al., 2023}), \emph{tibble} v.3.2.1 (\protect\hyperlink{ref-tibble}{Müller \& Wickham, 2023}), \emph{reshape2} v.1.4.4 (\protect\hyperlink{ref-reshape2}{Wickham, 2007}), and \emph{stringr} v.1.5.0 (\protect\hyperlink{ref-stringr}{Wickham, 2022}) packages for data manipulation.
 
-We used \emph{sp} v.1.5.1 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.20 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
+We used \emph{sp} v.1.6.0 (\protect\hyperlink{ref-sp}{Bivand, Pebesma \& Gomez-Rubio, 2013}), \emph{adehabitatHR} v.0.4.21 (\protect\hyperlink{ref-adehabitatHR}{Calenge \& Scott Fortmann-Roe, 2023}), \emph{move} v.4.1.12 (\protect\hyperlink{ref-move}{Kranstauber, Smolla \& Scharf, 2023}) for manipulation of spatial data and estimation of space use not otherwise mentioned in the methods.
 
-We used \emph{rmarkdown} v.2.25 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), \emph{bookdown} v.0.33 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), \emph{tinytex} v.0.44 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), \emph{kableExtra} v.1.3.4 (\protect\hyperlink{ref-kableExtra}{Zhu, 2021}), and \emph{knitr} v.1.41 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
+We used \emph{rmarkdown} v.2.21 (\protect\hyperlink{ref-rmarkdown2018}{Xie, Allaire \& Grolemund, 2018}; \protect\hyperlink{ref-rmarkdown2020}{Xie, Dervieux \& Riederer, 2020}; \protect\hyperlink{ref-rmarkdown2023}{Allaire et al., 2023}), \emph{bookdown} v.0.34 (\protect\hyperlink{ref-bookdown2016}{Xie, 2016}, \protect\hyperlink{ref-R-bookdown}{2022}), \emph{tinytex} v.0.45 (\protect\hyperlink{ref-tinytex2019}{Xie, 2019}, \protect\hyperlink{ref-tinytex2023}{2023a}), \emph{kableExtra} v.1.3.4 (\protect\hyperlink{ref-kableExtra}{Zhu, 2021}), and \emph{knitr} v.1.42 (\protect\hyperlink{ref-knitr2014}{Xie, 2014}, \protect\hyperlink{ref-knitr2015}{2015}, \protect\hyperlink{ref-knitr2023}{2023b}) packages to generate type-set outputs.
 
-We generated R package citations with the aid of \emph{grateful} v.0.1.13 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
+We generated R package citations with the aid of \emph{grateful} v.0.2.0 (\protect\hyperlink{ref-grateful}{Francisco Rodríguez-Sánchez, Connor P. Jackson \& Shaurita D. Hutchins, 2023}).
 
 \hypertarget{data-availabilty}{%
 \section{Data availabilty}\label{data-availabilty}}

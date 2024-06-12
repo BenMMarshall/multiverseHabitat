@@ -1,7 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 .Random.seed|object|004bd6d68bb849f3|||||||||||||||
 allEffectPlot|stem|99c653f82a479b6d|7bf6e01b90040a8a|cb9ad02947c19536|414677313||t19801.3805408093s|2547637feb43cf30|128324|qs|local|vector|||0.762||
-allIndividualEstimatesList|object|3dd2d9022e57a022|||||||||||||||
+allIndividualEstimatesList|object|431e93187c3b3439|||||||||||||||
 apply_to_leaves|function|b1d46ba8693c70e2|||||||||||||||
 areaBrms_rsf|stem|7d64f10a417e28eb|cddd5c49138854cf|026bcfb63f97500c|-1018173552||t19737.8636661848s|0d745ad43a485d79|109303009|qs|local|vector|||33437.292|There were 346 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.11, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess. There were 292 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. The largest Rhat is 1.09, indicating chains have not mixed.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlrhat. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess|
 areaBrms_wides|stem|d06c3f0554c90863|27751fadc5a212bb|f4d7e39eaa43c03e|1155429587||t19753.7131136091s|f43fe85461796ff5|99381568|qs|local|vector|||184484.101|Rows containing NAs were excluded from the model.. There were 515 divergent transitions after warmup. Seehttpsmcstan.orgmiscwarnings.htmldivergenttransitionsafterwarmupto find out why this is a problem and how to eliminate them.. There were 5410 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess. Rows containing NAs were excluded from the model.. There were 1041 divergent transitions after warmup. Seehttpsmcstan.orgmiscwarnings.htmldivergenttransitionsafterwarmupto find out why this is a problem and how to eliminate them.. There were 4613 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. Seehttpsmcstan.orgmiscwarnings.htmlmaximumtreedepthexceeded. Examine the pairs plot to diagnose sampling problems. Bulk Effective Samples Size ESS is too low, indicating posterior means and medians may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmlbulkess. Tail Effective Samples Size ESS is too low, indicating posterior variances and tail quantiles may be unreliable.Running the chains for more iterations may help. Seehttpsmcstan.orgmiscwarnings.htmltailess|
@@ -604,13 +604,13 @@ areaSpecCurves|stem|ae0b00d590c59ddf|6ad31a8a0c514f1d|a06af953420715c5|-20225596
 areaSpecCurves_rsf|stem|81276402e9cac079|f50c0675f2ef0093|5d5fea1da0b89314|-2117326114||t19751.4751467508s|68d64e6f9d86ca2f|594962583|qs|local|vector|||37.516||
 areaSpecCurves_wides|stem|8c74d0f3744137fa|34fa1e22a475b4d7|5d5fea1da0b89314|-113799238||t19751.4752558723s|9c85ae275f28844c|32655774|qs|local|vector|||7.588|1m22mRemoved 1516 rows containing missing values geom_point.. 1m22mRemoved 7580 rows containing missing values geom_point.|
 brmModels|stem|5308c632fe7dfdf5|b74e4a3881f0c163|713d90a96114f07c|-1048867622||t19801.3799189944s|5cd03ec45dfabc28|385695305|qs|local|vector|||0||
-brmsCompiled|object|dbd4910c317007fa|||||||||||||||
+brmsCompiled|object|2a8e9a8d9ef3c715|||||||||||||||
 build_available_area|function|7762b2ec3d2e7353|||||||||||||||
 build_available_polygon|function|c4b0a854a5948c49|||||||||||||||
 build_nested_list|function|a5128199400f298e|||||||||||||||
 diagnostics_brms|function|9a2ba75ba42ecabd|||||||||||||||
 direct_estimates|function|4f509d38473392d7|||||||||||||||
-directCompiled|object|dcb8a00c1dfb5058|||||||||||||||
+directCompiled|object|8c941357a6e840e3|||||||||||||||
 directEstimates|stem|bf9f6cd250cdd6e7|7d3bae5ba37a9d05|2ac8efb0457fd764|-547029378||t19739.4864547355s|5da7477cd254b6f9|1464|qs|local|vector|||1478.215|Loglik converged before variable  3  beta may be infinite.|
 effectSizeBrms_rsf|stem|f7de35f88f0d79c5|b6ddb4022dac329b|3f913f7152c9eebd|1412388967||t19739.4315990045s|c3a72b2388c34147|113339470|qs|local|vector|||1.591|no nonmissing arguments to max returning Inf. Removed 9 rows containing missing values geom_segment.. no nonmissing arguments to max returning Inf. Removed 9 rows containing missing values geom_segment.|
 effectSizeBrms_rsf_abs|stem|ed74934c9ce7da96|4c01986e969e8ea5|32261e39c719a913|1065535065||t19757.3437587785s|e5cdea2f9477a074|78487475|qs|local|vector|||1.202|no nonmissing arguments to max returning Inf. 1m22mRemoved 9 rows containing missing values geom_segment.|
@@ -628,7 +628,7 @@ extract_estimate|function|291fc3380242fac4|||||||||||||||
 extract_model_values|function|d86bd51c20a18299|||||||||||||||
 extract_values_rmd|function|193f579277cedd48|||||||||||||||
 extractedValues|stem|d33b67901a216738|47bd56c8849f83d2|4650269ba74d4f0e|1202805663||t19801.3804276132s|72e5469cf7a668a0|3227|qs|local|vector|||12.709|NAs introduced by coercion|
-extrasForRMD|object|58aeb5c23bb734a7|||||||||||||||
+extrasForRMD|object|0d1bd6d77b55ff14|||||||||||||||
 generate_allEffect_plots|function|ba07fa3f47f65c52|||||||||||||||
 generate_effect_plots|function|a24c6bff88606849|||||||||||||||
 generate_iteraction_plot|function|155816568f4a1111|||||||||||||||
@@ -652,7 +652,7 @@ parse_combined_results|function|ec21fc6540b11cb4|||||||||||||||
 plot_landscape_example|function|2c7ee99b7127bd2b|||||||||||||||
 prefix_all|function|29fdba172e3ba648|||||||||||||||
 render_rmd|function|fcf47d65aee0a616|||||||||||||||
-rmdRender|stem|1fc299ea6939a567|839cd7fd50842bed|611a6ea6cf8bcf2f|-796373120||t19801.3809177595s|24d52ebf1535bba2|123|qs|local|vector|||30.333|LaTeX Warning Float too large for page by 11.80159pt on input line 229.. LaTeX Warning Float too large for page by 1.23203pt on input line 229.|
+rmdRender|stem|1fc299ea6939a567|839cd7fd50842bed|611a6ea6cf8bcf2f|-796373120||t19816.3914227922s|24d52ebf1535bba2|123|qs|local|vector|||33.258|LaTeX Warning Float too large for page by 11.78763pt on input line 231.. LaTeX Warning Float too large for page by 1.21806pt on input line 231.|
 rsfBrmsModel_abs|stem|20fec8a6b01118fa|2e9e2518bd5977d5|bec66461bd53f976|1462709181||t19783.2948894388s|dcd4f6e2e667e5c5|70547435|qs|local|vector|||71.287||
 rsfBrmsModel_raw|stem|d61b6ce89ab38bc6|997a3d9fc41666ff|bec66461bd53f976|-352016646||t19783.2956595515s|3d6813bf3d164007|70562453|qs|local|vector|||63.157||
 rsfSpecCurves|stem|cbd58904b0aba8d0|f50c0675f2ef0093|80480b9f3d207c7e|-669172170||t19783.2980025759s|2fdbbd585edc75f6|594224947|qs|local|vector|||80.91||
