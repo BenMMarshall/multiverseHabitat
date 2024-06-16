@@ -35,7 +35,7 @@ build_available_area <- function(movementData,
     suppressWarnings({
       kdeLSCV_UD <- adehabitatHR::kernelUD(spPoints,
                                            h = "LSCV",
-                                           grid = 240,
+                                           grid = 360,
                                            same4all = FALSE,
                                            hlim = c(0.001, 2000), # might need to play with the limits to help convergence
                                            kern = "bivnorm",
@@ -53,7 +53,7 @@ build_available_area <- function(movementData,
     suppressWarnings({
       kdehref_UD <- adehabitatHR::kernelUD(spPoints,
                                            h = "href",
-                                           grid = 240, # needs to be large enough to be smooth-ish
+                                           grid = 360, # needs to be large enough to be smooth-ish
                                            same4all = FALSE,
                                            hlim = c(0.1, 1.5),
                                            kern = "bivnorm",

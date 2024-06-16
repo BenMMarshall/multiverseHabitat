@@ -68,9 +68,6 @@ wrapper_indi_area <- function(
           print(nrow(movementData))
 
           if(class(areaOUT)[1] == "try-error"){
-
-            print(areaOUT)
-
             polyOUT <- NA
 
           } else {
@@ -83,6 +80,10 @@ wrapper_indi_area <- function(
               method = am,
               contour = ac,
               SRS_string = "EPSG:32601")
+
+            if(class(polyOUT)[1] == "try-error"){
+              polyOUT <- NA
+            }
 
             print("polyOUT")
 

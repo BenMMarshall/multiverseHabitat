@@ -846,14 +846,16 @@ The code used to simulate the movement data, perform the multiverse, and analysi
 # Supplementary Material
 
 ```{r r2table, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::kable(
-  brmsR2Results %>%
+tableData <- brmsR2Results %>%
     dplyr::mutate(across(where(is.numeric), round, digits = 3)) %>%
     dplyr::mutate(response = ifelse(str_detect(model, "abs"), "Absolute Deviation", "Raw Deviation"),
            method = sub("modOUT_", "", sub("_abs|_raw", "", model)),
            Component = str_to_sentence(Component)
     ) %>%
-    dplyr::select(-model),
+    dplyr::select(-model)
+
+knitr::kable(
+  tableData,
   caption = "All \\textit{$R^2$} values for Bayesian regression models.",
   format = "latex",
   align = "lcc",

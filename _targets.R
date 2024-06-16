@@ -206,9 +206,16 @@ simsCompiled <- tar_combine(
   priority = 0.8
 )
 
+landscapesCompiled <- tar_combine(
+  landscapesAll,
+  allIndividualEstimatesList[[1]][grep("landscape", names(allIndividualEstimatesList[[1]]))],
+  command = list(!!!.x),
+  # command = rbind(!!!.x),
+  priority = 0.8
+)
 
 directCompiled <- list(
-  tar_target(directEstimates, direct_estimates(simResults),
+  tar_target(directEstimates, direct_estimates(simResults, landscapesAll),
              priority = 0.99)
 )
 
@@ -407,6 +414,7 @@ list(allIndividualEstimatesList,
      wrsfCompiled,
      ssfCompiled,
      simsCompiled,
+     landscapesCompiled,
      brmsCompiled,
      brmAllModels,
      directCompiled,

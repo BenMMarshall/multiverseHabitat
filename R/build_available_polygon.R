@@ -23,11 +23,11 @@ build_available_polygon <- function(areaResource,
 
   } else if(method == "KDElscv"){
 
-    poly_OUT <- adehabitatHR::getverticeshr(areaResource, contour)
+    poly_OUT <- try(adehabitatHR::getverticeshr(areaResource, contour))
 
   } else if(method == "KDEhref"){
 
-    poly_OUT <- adehabitatHR::getverticeshr(areaResource, contour)
+    poly_OUT <- try(adehabitatHR::getverticeshr(areaResource, contour))
 
   } else if(method == "AKDE"){
 
