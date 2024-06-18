@@ -172,7 +172,7 @@ Using a branching set of sampling and analysis options, we examine which decisio
 We simulated three scenarios each represented by a different species, on different landscapes.
 We simulated the landscapes using the NLMR v.1.1.1 package (\citeproc{ref-NLMR}{Sciaini et al., 2018}), and the animal movement using abmAnimalMovement v.0.1.3.0 package (\citeproc{ref-abmAnimalMovement}{Marshall \& Duthie, 2022}).
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-Further details of how the scenarios were parametrised can be found in Marshall \& Duthie (\citeproc{ref-abmAnimalMovement}{2022}), and also in the abmAnimalMovement github repository along with associated documentation (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{abmAnimalMovement Github: https://github.com/BenMMarshall/abmAnimalMovement}).
+Further details of how the scenarios were parametrised can be found in Marshall \& Duthie (\citeproc{ref-abmAnimalMovement}{2022}), and also in the abmAnimalMovement github repository along with associated documentation (\href{https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript}{https://github.com/BenMMarshall/abmAnimalMovement}).
 
 The simulated species are as follows:
 
@@ -186,7 +186,7 @@ The simulated species are as follows:
 \end{itemize}
 
 Each simulation generated a year's worth of movement data with a data point recorded every minute, and we simulated 4 individuals per species.
-The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate\_individual.R function (available at: \href{https://github.com/BenMMarshall/multiverseHabitat}{multiverseHabitat Github: https://github.com/BenMMarshall/multiverseHabitat}, and archived at: \href{https://LINK}{multiverseHabitat Zenodo: LINK}).
+The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate\_individual.R function (available at: \url{https://github.com/BenMMarshall/multiverseHabitat}, and archived at: \href{https://LINK}{Zenodo TBC}).
 
 The agent-based animal movement simulations require an environment to guide movement.
 Our landscapes are defined as three stacked matrices, where the rows and columns of the matrix represent the X and Y locations in the landscape, and the value in each cell numerically describes the quality of a given resource the animal can consider when deciding where to move.
@@ -500,7 +500,7 @@ When interacting with tracking frequency, the sensitivity is less pronounced; in
 \end{figure}
 
 The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration \(\beta\): -0.231, 95\% CrI -0.256 -- -0.207 and tracking frequency \(\beta\): -0.265, 95\% CrI -0.291 -- -0.243; Fig. \ref{fig:brmsAllEffectsPlot}; Fig. \ref{fig:rEstBetasRSF}).
-While the way the movement data is simulated makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median; see associated data for directly estimated selection values) are more likely to be the correct estimation of simulated selection via RSF.
+While the way the movement data is simulated makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median; see associated data for directly estimated selection values, Table. \ref{tab:directTable}) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
 Stratified available point sampling was associated with more positive estimates of selection (\(\beta\): 0.016, 95\% CrI -0.007 -- 0.038), but also those closer to the median (as indicated by the previous absolute deviation model).
@@ -630,10 +630,12 @@ We generated R package citations with the aid of \emph{grateful} v.0.2.4 (\citep
 
 \section{Data availabilty}\label{data-availabilty}
 
-The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: \url{https://github.com/BenMMarshall/multiverseHabitat}, and archived at \href{zenodo.org\%20-\%20FIX\%20THIS}{ZENODO LINK HERE}.
+The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: \url{https://github.com/BenMMarshall/multiverseHabitat}, and archived at \href{https://zenodo.org/}{ZENODO LINK TBC}.
+These locations also include model outputs and results not otherwise displayed here.
 
 \clearpage
 \sloppy
+\beginsupplement
 
 \section{Supplementary Material}\label{supplementary-material}
 
@@ -698,6 +700,92 @@ The code used to simulate the movement data, perform the multiverse, and analysi
 \begin{figure}
 \includegraphics[width=1\linewidth]{../figures/wrsf_rEstwrsf_effectsPlot} \caption{The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway.}\label{fig:rEstBetasWRSF}
 \end{figure}
+
+\begin{table}
+\centering
+\caption{\label{tab:directTable}Analysis results when applied directly to un-resampled movement data at both the decision timescale and movement timescales.}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\fontsize{6}{8}\selectfont
+\begin{tabular}[t]{lcclcc}
+
+Estimate & Standard error & Analysis method & Simulation scale & Individual & Species\\
+\hline
+0.019 & 0.059 & rsf & Movement & 1 & BADGER\\
+1.000 & NA & wides & Movement & 1 & BADGER\\
+0.078 & 0.076 & ssf & Movement & 1 & BADGER\\
+0.281 & 0.223 & rsf & Destination & 1 & BADGER\\
+1.087 & NA & wides & Destination & 1 & BADGER\\
+-0.002 & 0.223 & ssf & Destination & 1 & BADGER\\
+-0.002 & 0.011 & rsf & Movement & 1 & VULTURE\\
+1.002 & NA & wides & Movement & 1 & VULTURE\\
+0.005 & 0.016 & ssf & Movement & 1 & VULTURE\\
+0.344 & 0.065 & rsf & Destination & 1 & VULTURE\\
+1.202 & NA & wides & Destination & 1 & VULTURE\\
+-0.114 & 0.066 & ssf & Destination & 1 & VULTURE\\
+-0.009 & 0.010 & rsf & Movement & 1 & KINGCOBRA\\
+1.001 & NA & wides & Movement & 1 & KINGCOBRA\\
+-0.022 & 0.017 & ssf & Movement & 1 & KINGCOBRA\\
+0.081 & 0.048 & rsf & Destination & 1 & KINGCOBRA\\
+1.082 & NA & wides & Destination & 1 & KINGCOBRA\\
+-0.172 & 0.051 & ssf & Destination & 1 & KINGCOBRA\\
+0.014 & 0.008 & rsf & Movement & 2 & BADGER\\
+1.002 & NA & wides & Movement & 2 & BADGER\\
+0.046 & 0.014 & ssf & Movement & 2 & BADGER\\
+0.357 & 0.054 & rsf & Destination & 2 & BADGER\\
+1.179 & NA & wides & Destination & 2 & BADGER\\
+-0.072 & 0.056 & ssf & Destination & 2 & BADGER\\
+0.004 & 0.013 & rsf & Movement & 2 & VULTURE\\
+1.006 & NA & wides & Movement & 2 & VULTURE\\
+0.027 & 0.019 & ssf & Movement & 2 & VULTURE\\
+0.293 & 0.065 & rsf & Destination & 2 & VULTURE\\
+1.158 & NA & wides & Destination & 2 & VULTURE\\
+-0.183 & 0.066 & ssf & Destination & 2 & VULTURE\\
+-0.001 & 0.018 & rsf & Movement & 2 & KINGCOBRA\\
+1.001 & NA & wides & Movement & 2 & KINGCOBRA\\
+0.017 & 0.028 & ssf & Movement & 2 & KINGCOBRA\\
+0.322 & 0.090 & rsf & Destination & 2 & KINGCOBRA\\
+1.057 & NA & wides & Destination & 2 & KINGCOBRA\\
+0.150 & 0.094 & ssf & Destination & 2 & KINGCOBRA\\
+0.021 & 0.017 & rsf & Movement & 3 & BADGER\\
+1.001 & NA & wides & Movement & 3 & BADGER\\
+0.027 & 0.025 & ssf & Movement & 3 & BADGER\\
+0.789 & 0.086 & rsf & Destination & 3 & BADGER\\
+1.152 & NA & wides & Destination & 3 & BADGER\\
+0.446 & 0.087 & ssf & Destination & 3 & BADGER\\
+0.000 & 0.015 & rsf & Movement & 3 & VULTURE\\
+1.002 & NA & wides & Movement & 3 & VULTURE\\
+0.001 & 0.022 & ssf & Movement & 3 & VULTURE\\
+0.306 & 0.067 & rsf & Destination & 3 & VULTURE\\
+1.173 & NA & wides & Destination & 3 & VULTURE\\
+-0.181 & 0.068 & ssf & Destination & 3 & VULTURE\\
+0.011 & 0.012 & rsf & Movement & 3 & KINGCOBRA\\
+1.002 & NA & wides & Movement & 3 & KINGCOBRA\\
+0.038 & 0.019 & ssf & Movement & 3 & KINGCOBRA\\
+0.194 & 0.056 & rsf & Destination & 3 & KINGCOBRA\\
+1.094 & NA & wides & Destination & 3 & KINGCOBRA\\
+-0.017 & 0.059 & ssf & Destination & 3 & KINGCOBRA\\
+0.079 & 0.061 & rsf & Movement & 4 & BADGER\\
+0.999 & NA & wides & Movement & 4 & BADGER\\
+0.124 & 0.084 & ssf & Movement & 4 & BADGER\\
+-0.117 & 0.125 & rsf & Destination & 4 & BADGER\\
+1.081 & NA & wides & Destination & 4 & BADGER\\
+-0.417 & 0.127 & ssf & Destination & 4 & BADGER\\
+0.007 & 0.011 & rsf & Movement & 4 & VULTURE\\
+1.007 & NA & wides & Movement & 4 & VULTURE\\
+0.032 & 0.017 & ssf & Movement & 4 & VULTURE\\
+0.348 & 0.066 & rsf & Destination & 4 & VULTURE\\
+1.186 & NA & wides & Destination & 4 & VULTURE\\
+-0.139 & 0.067 & ssf & Destination & 4 & VULTURE\\
+0.004 & 0.018 & rsf & Movement & 4 & KINGCOBRA\\
+1.001 & NA & wides & Movement & 4 & KINGCOBRA\\
+0.006 & 0.028 & ssf & Movement & 4 & KINGCOBRA\\
+0.212 & 0.085 & rsf & Destination & 4 & KINGCOBRA\\
+1.069 & NA & wides & Destination & 4 & KINGCOBRA\\
+0.049 & 0.089 & ssf & Destination & 4 & KINGCOBRA\\
+
+\end{tabular}}
+\end{table}
 
 \clearpage
 

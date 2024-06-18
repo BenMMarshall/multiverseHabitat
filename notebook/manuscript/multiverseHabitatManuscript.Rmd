@@ -164,7 +164,7 @@ nAnalysisPaths <- rsfChoices+widesChoices+ssfChocies+wrsfChocies
 We simulated three scenarios each represented by a different species, on different landscapes.
 We simulated the landscapes using the NLMR `r paste0("v.", packageVersion("NLMR"))` package [@NLMR], and the animal movement using abmAnimalMovement `r paste0("v.", packageVersion("abmAnimalMovement"))` package [@abmAnimalMovement].
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-Further details of how the scenarios were parametrised can be found in @abmAnimalMovement, and also in the abmAnimalMovement github repository along with associated documentation ([abmAnimalMovement Github: https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
+Further details of how the scenarios were parametrised can be found in @abmAnimalMovement, and also in the abmAnimalMovement github repository along with associated documentation ([https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
 
 The simulated species are as follows:
 
@@ -175,7 +175,7 @@ The simulated species are as follows:
 * Species 3, King Cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
 Each simulation generated a year's worth of movement data with a data point recorded every minute, and we simulated `r nrow(optionsCompleteList$individual)` individuals per species.
-The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate_individual.R function (available at: [multiverseHabitat Github: https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at: [multiverseHabitat Zenodo: LINK](https://LINK)).
+The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate_individual.R function (available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at: [Zenodo TBC](https://LINK)).
 
 <!-- Weighted landscapes translated into three-tier categories -->
 The agent-based animal movement simulations require an environment to guide movement.
@@ -645,7 +645,7 @@ knitr::include_graphics(here::here("notebook", "figures", "rsfEffectPlot_iteract
 
 <!-- model res rsf raw -->
 The RSF model examining raw deviation from the median estimate reveals a general tendency for higher data quantity to lead to more conservative estimates of selection (tracking duration $\beta$: `r brmrsf_rEst_tdEffect` and tracking frequency $\beta$: `r brmrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:rEstBetasRSF)). 
-While the way the movement data is simulated makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median; see associated data for directly estimated selection values) are more likely to be the correct estimation of simulated selection via RSF.
+While the way the movement data is simulated makes it impossible to definitively determine whether this conservatism is correct, the direct estimates from the simulations using an RSF approach suggest the low positive estimates (also near the median; see associated data for directly estimated selection values, Table. \@ref(tab:directTable)) are more likely to be the correct estimation of simulated selection via RSF.
 This matches the absolute deviation model where more data leads to less deviant estimations.
 
 Stratified available point sampling was associated with more positive estimates of selection ($\beta$: `r brmrsf_rEst_spEffect`), but also those closer to the median (as indicated by the previous absolute deviation model).
@@ -872,11 +872,13 @@ We generated R package citations with the aid of *grateful* `r paste0("v.", pack
 
 # Data availabilty
 
-The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at [ZENODO LINK HERE](zenodo.org - FIX THIS).
+The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at [ZENODO LINK TBC](https://zenodo.org/).
+These locations also include model outputs and results not otherwise displayed here.
 <!-- add zenodo archived snapshot of github -->
 
 \clearpage
 \sloppy
+\beginsupplement
 
 # Supplementary Material
 
@@ -934,6 +936,30 @@ knitr::include_graphics(here::here("notebook", "figures", "ssf_rEstSSF_effectsPl
 
 ```{r rEstBetasWRSF, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="The posterior distributions of the betas from the Bayesian regression model looking to explain raw deviation from the median in the wRSF analysis pathway."}
 knitr::include_graphics(here::here("notebook", "figures", "wrsf_rEstwrsf_effectsPlot.png"))
+```
+
+```{r directTable, echo=FALSE, message=FALSE, warning=FALSE}
+directEstimates <- read.csv(here::here("notebook", "modelOutput", "directEstimates.csv"))
+
+tableDataDirect <- directEstimates %>%
+    dplyr::mutate(across(where(is.numeric), round, digits = 3)) %>%
+    dplyr::mutate(scale = str_to_sentence(scale)
+    ) %>%
+    dplyr::select(-X)
+
+knitr::kable(
+  tableDataDirect,
+  caption = "Analysis results when applied directly to un-resampled movement data at both the decision timescale and movement timescales.",
+  format = "latex",
+  align = "lcc",
+  vline = "",
+  toprule = "",
+  # midrule = "",
+  linesep = "",
+  bottomrule = "",
+  col.names = c("Estimate", "Standard error", "Analysis method", "Simulation scale", "Individual",
+                "Species"), escape = FALSE) %>%
+  kableExtra::kable_styling(font_size = 6, latex_options = "scale_down")
 ```
 
 \clearpage
