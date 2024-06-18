@@ -1,7 +1,7 @@
 Package: multiverseHabitat
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Date: 2022-07-25
+Title: A Habitat Selection Multiverse Reveals Largely Consistent Results Despite a Multitude of Analysis Options
+Version: 0.9.0.9999
+Date: 2024-06-18
 Authors@R: c(
     person(given = "Benjamin Michael",
            family = "Marshall",
@@ -13,7 +13,7 @@ Authors@R: c(
            role = c("aut"),
            email = "alexander.duthie@stir.ac.uk",
            comment = c(ORCID = "0000-0001-8343-4995")))
-Description: What the package does (one paragraph).
+Description: The files included in this repository were used to generate the results for a manuscript entitled: "A Habitat Selection Multiverse Reveals Largely Consistent Results Despite a Multitude of Analysis Options" by Benjamin Michael Marshall and Alexander Brad Duthie.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
