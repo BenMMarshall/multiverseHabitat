@@ -7,4 +7,4 @@
 
 # targets::tar_make()
 # targets::tar_make(names = "areaMethodsOUT_240_0.5_3_BADGER")
-targets::tar_make_clustermq(workers = 2) # nolint
+targets::tar_make_clustermq(names = contains("direct"), workers = 2) # nolint

@@ -130,9 +130,9 @@ generate_allEffect_plots <- function(modelExtracts){
   modelLabels <- tribble(
     ~x, ~y, ~text, ~hjust, ~vjust, ~facetSplit, ~rawAbs, ~labCol,
     4.35,   -0.65, "<b style='color:#AD6DED'>\u25CF = Wides</b>", 0.5, 0, "<b style='color:#AD6DED'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
-    5.40,   -0.65, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    5.38,   -0.63, "<b style='color:#7D26D4'>\u25B2 = RSF</b>", 0.5, 1, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
     2.55,   -0.78, "<b style='color:#4F0E99'>\u25C6 = Step Selection</b>", 0.5, 0, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
-    1.20,   -0.72, "<b style='color:#E87D13'>\u25BC = wRSF</b>", 0.5, 1, "Sampling Choices", "Absolute difference from median", "#E87D13"
+    1.10,   -0.52, "<b style='color:#E87D13'>\u25BC = wRSF</b>", 1, 1, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
   modelLabels <- modelLabels %>%
     mutate(facetSplit = factor(facetSplit, levels = c(
@@ -142,10 +142,10 @@ generate_allEffect_plots <- function(modelExtracts){
 
   arrowsDF <- tribble(
     ~x, ~y, ~xend, ~yend, ~facetSplit, ~rawAbs, ~labCol,
-    4.30,   -0.65, 2.84, -0.04, "<b style='color:#AD6DED'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
-    4.82,   -0.65, 3.25, -0.22, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
-    2.51,   -0.75, 0.91, -0.06, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
-    1.12,   -0.48, 1.61, -0.28, "Sampling Choices", "Absolute difference from median", "#E87D13"
+    4.30,   -0.65, 2.82, -0.04, "<b style='color:#AD6DED'>Area Based Only</b>", "Raw difference from median", "#AD6DED",
+    4.80,   -0.63, 3.22, -0.10, "<b style='color:#AD6DED'>Area Based Only</b>", "Absolute difference from median", "#7D26D4",
+    2.51,   -0.75, 0.97, -0.09, "<b style='color:#4F0E99'>SSF Only</b>", "Raw difference from median", "#4F0E99",
+    0.88,   -0.52, 1.59, -0.32, "Sampling Choices", "Absolute difference from median", "#E87D13"
   )
   arrowsDF <- arrowsDF %>%
     mutate(facetSplit = factor(facetSplit, levels = c(
@@ -221,7 +221,7 @@ generate_allEffect_plots <- function(modelExtracts){
       strip.text.y.left = element_markdown(face = 2, hjust = 0, vjust = 1, angle = 0,
                                            margin = margin(-5,10,0,-152)),
       # strip.text.y.left = element_text(angle = 0, margin = margin(-8,10,0,0)),
-      # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to alligns with facet, 4th gives space left
+      # axis.text.y.left = element_text(margin = margin(0,-119,0,80)), # 2nd value needed to align with facet, 4th gives space left
       axis.title.x = element_text(margin = margin(5,0,0,0)),
       axis.ticks.y.left = element_blank(),
       axis.line.x = element_line(),

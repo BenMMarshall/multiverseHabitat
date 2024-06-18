@@ -222,6 +222,10 @@ direct_estimates <- function(simDataList, landscapesCompiled){
   }
   simDirectResults <- do.call(rbind, simDirectResultsList)
 
+  write.csv(simDirectResults,
+            here("notebook", "modelOutput", "directEstimates.csv"),
+            row.names = TRUE)
+
   return(simDirectResults)
 
 }
