@@ -502,8 +502,8 @@ While the specification curves are a good way of getting an intuitive sense of v
 Our Bayesian models cut through the noise displayed in specification curves to reveal more generalised patterns and absorb variation stemming from the stochastic nature of the animal simulations and the variation between species.
 
 All models showed that the variation stemming from the analysis choices was less than that explained by the group effects of individual, species, and whether the landscape classification was scrambled (Table. \@ref(tab:r2table)).
-The conditional *R^2* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
-Largely the marginal *R^2* values were very low (often below 0.1), meaning that while the models reveal clear effects, the overall variation they ascribe to given analysis choices is reasonably limited compared to the overall variation stemming from the different species, individuals, landscape classification, and stochastic nature of the movement data simulation.
+The conditional *R^2^* values ranged from `r paste0(round(condRange[1], digits = 2), " to ", round(condRange[2], digits = 2))`, with the RSF models performing the worst.
+Largely the marginal *R^2^* values were very low (often below 0.1), meaning that while the models reveal clear effects, the overall variation they ascribe to given analysis choices is reasonably limited compared to the overall variation stemming from the different species, individuals, landscape classification, and stochastic nature of the movement data simulation.
 
 ```{r brmsAllEffectsPlot, echo=FALSE, out.width='100%', fig.height=5, fig.width=3, fig.align="centre", fig.cap="Estimated betas for each choice's impact on the deviation from the median habitat selection estimate. Deviation from the median estimate was examined as the absolute deviation (left) and the raw deviation (right). All eight independent models are displayed together, split between analysis method and deviation type. Each point represents the point estimate derived from the 95% median highest density continuous interval, and is plotted alongside a line showing the extent of the 95% credible interval. The y-axis shows all the choices explored in the different analysis methods, grouped by the methods they apply to."}
 knitr::include_graphics(here::here("notebook", "figures", "_allEffectsPlot.png"))
@@ -715,6 +715,39 @@ The results from the wRSF models are largely similar to the SSF models, although
 Both tracking duration and tracking frequency lead to lower deviation from the median estimate (tracking duration $\beta$: `r brmwrsf_dEst_tdEffect` and tracking frequency $\beta$: `r brmwrsf_dEst_tfEffect`), and the near-exclusively positively skewed outliers mean that lower raw deviation is associated with lower estimates (tracking duration $\beta$: `r brmwrsf_rEst_tdEffect` and tracking frequency $\beta$: `r brmwrsf_rEst_tfEffect`; Fig. \@ref(fig:brmsAllEffectsPlot); Fig. \@ref(fig:dEstBetasWRSF)).
 The only difference (although both effects overlap considerably) is that increased tracking duration tended to be linked more strongly with lower selection estimates.
 
+```{r percentile, echo=FALSE, message=FALSE, warning=FALSE}
+areaQuant <- areaResults %>% 
+  group_by(classLandscape, analysis) %>% 
+  summarise(q10 = quantile(Estimate, probs = 0.1, na.rm = TRUE),
+            q90 = quantile(Estimate, probs = 0.9, na.rm = TRUE)) %>% 
+  mutate(inText = paste0(ifelse(analysis == "rsf", "RSF ", "Wides "),
+                         ifelse(classLandscape == "classRaster", "selection", "scrambled"),
+                         ": ",
+                         "10% ", signif(q10, digits = 3), ", ",
+                         "90% ", signif(q90, digits = 3))) %>% 
+  arrange(desc(analysis))
+
+ssfQuant <- ssfResults %>% 
+  group_by(classLandscape) %>% 
+  summarise(q10 = quantile(Estimate, probs = 0.1, na.rm = TRUE),
+            q90 = quantile(Estimate, probs = 0.9, na.rm = TRUE)) %>% 
+  mutate(inText = paste0("SSF ", ifelse(classLandscape == "classRaster", "selection", "scrambled"),
+                         ": ",
+                         "10% ", signif(q10, digits = 3), ", ",
+                         "90% ", signif(q90, digits = 3)))
+
+wrsfQuant <- wrsfResults %>% 
+  group_by(classLandscape) %>% 
+  summarise(q10 = quantile(Estimate, probs = 0.1, na.rm = TRUE),
+            q90 = quantile(Estimate, probs = 0.9, na.rm = TRUE)) %>% 
+  mutate(inText = paste0("wRSF ", ifelse(classLandscape == "classRaster", "selection", "scrambled"),
+                         ": ",
+                         "10% ", signif(q10, digits = 3), ", ",
+                         "90% ", signif(q90, digits = 3)))
+  
+fullInTextQuant <- paste(c(areaQuant$inText, ssfQuant$inText, wrsfQuant$inText), collapse = "; ")
+```
+
 # Discussion
 
 <!-- overall data matters most -->
@@ -728,6 +761,7 @@ This suggests that advancements in habitat selection analysis methods are not on
 <!-- ie bad incentives will not be having a disproportionate impact on move eco if the results here hold true -->
 The overall pattern in estimates mirrors those seen in other fields, where the bulk of answers converge but outliers remain [@silberzahn_many_2018; @simonsohn_specification_2020; @gould_same_2023].
 While the incentives for findings positive results remain in the publishing system [@fanelli_positive_2010; @fanelli_negative_2012], in the case presented here, using analysis choices to game or mine for a given exciting result appears time consuming because the proportion of extreme estimates is relatively low compared to the majority of estimates that agree near the median.
+For example, the 10 and 90% percentiles easily exclude outlying estimates, particularly those lower estimates, and remain reasonably close to the median estimates `r fullInTextQuant`.
 If the past habitat selection studies report extreme findings, there is a general tendency for these to be paired with very wide confidence intervals; if the studies have reported the confidence intervals, this provides an additional safeguard against over interpretation of potentially incorrect extreme results.
 
 While the goal of this study was not to review and provide direct guidance for the most effective ways of undertaking habitat selection, our findings show several key patterns that reflect previous guidance in the literature.
@@ -842,6 +876,7 @@ The code used to simulate the movement data, perform the multiverse, and analysi
 <!-- add zenodo archived snapshot of github -->
 
 \clearpage
+\sloppy
 
 # Supplementary Material
 
