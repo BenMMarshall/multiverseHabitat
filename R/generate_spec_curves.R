@@ -257,6 +257,23 @@ generate_spec_curves <- function(compiledResults, method){
       dplyr::summarise(medEst = median(Estimate, na.rm = TRUE),
                        nZeroNA = sum(Estimate == 0 | is.na(Estimate)))
 
+    if(method %in% c("wides")){
+      xlimits <- as.vector(quantile(widesResultsPlotData$Estimate, probs = c(.001, .999),
+                                    na.rm = TRUE))
+      xlimits[1] <- 0
+
+      lowerOutliers <- widesResultsPlotData %>%
+        filter(Estimate < xlimits[1]) %>%
+        group_by(classLandscape) %>%
+        count()
+      upperOutliers <- widesResultsPlotData %>%
+        filter(Estimate > xlimits[2]) %>%
+        group_by(classLandscape) %>%
+        count()
+    } else {
+      xlimits <- c(NA, NA)
+    }
+
     (splitSpecCurve_wides <- widesResultsPlotData %>%
         ggplot() +
         geom_vline(xintercept = 0, linewidth = 0.5, alpha = 0.9, colour = "#403F41",
@@ -275,6 +292,7 @@ generate_spec_curves <- function(compiledResults, method){
                    linetype = 2) +
         geom_text(data = medData, aes(x = 0.05, y = value, label = nZeroNA),
                   colour = palette["coreGrey"], fontface = 4, hjust = 0) +
+        scale_x_continuous(limits = xlimits) +
         facet_grid(variable~classLandscape, scales = "free_y", space = "free", switch = "y") +
         labs(y = "", x = "Estimate") +
         theme_bw() +
@@ -325,9 +343,18 @@ generate_spec_curves <- function(compiledResults, method){
                                          label = paste0(" Median = ",
                                                         round(medEst, digits = 2))),
                   hjust = 0, vjust = 0, fontface = 4, colour = palette["BADGER"]) +
+        {if(method %in% c("wides") & nrow(lowerOutliers)>0)geom_text(data = lowerOutliers,
+                                                                     aes(x = xlimits[1], y = 500, label = paste0(n, " outliers\n\u2B9C not shown")),
+                                                                     vjust = 0, hjust = 0, lineheight = 0.95, fontface = 3,
+                                                                     size = 3)} +
+        {if(method %in% c("wides") & nrow(upperOutliers>0))geom_text(data = upperOutliers,
+                                                                     aes(x = xlimits[2], y = nrow(widesResults)-500, label = paste0(n, " outliers\nnot shown \u2B9E")),
+                                                                     vjust = 1, hjust = 1, lineheight = 0.95, fontface = 3,
+                                                                     size = 3)}+
         scale_colour_gradient2(low = palette["BADGER"],
                                mid = palette["coreGrey"],
                                high = palette["2"]) +
+        scale_x_continuous(limits = xlimits) +
         scale_y_continuous(expand = c(0.05, 0)) +
         facet_grid(.~classLandscape,
                    scales = "free_y", space = "free", switch = "y") +

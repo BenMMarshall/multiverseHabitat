@@ -6,8 +6,9 @@
 #' @return a
 #'
 #' @export
-direct_estimates <- function(simDataList){
-
+direct_estimates <- function(simDataList, landscapesCompiled){
+  # landscapesCompiled <- landscapesAll
+  # simDataList <- simResults
   simNames <- names(simDataList)
   simDirectResultsList <- vector("list", length = length(simNames))
   names(simDirectResultsList) <- simNames
@@ -17,8 +18,11 @@ direct_estimates <- function(simDataList){
 
     simSingle <- simDataList[[nameSingle]]
 
-    targets::tar_load(paste0("landscape_", stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA")))
-    landscape <- get(paste0("landscape_", stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA")))
+    landscape <- landscapesCompiled[names(landscapesCompiled) ==
+                    paste0("landscape_", stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA"))][[1]]
+
+    # targets::tar_load(paste0("landscape_", stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA")))
+    # landscape <- get(paste0("landscape_", stringr::str_extract(nameSingle, "BADGER|VULTURE|KINGCOBRA")))
 
     # data prep ---------------------------------------------------------------
 
@@ -217,6 +221,10 @@ direct_estimates <- function(simDataList){
 
   }
   simDirectResults <- do.call(rbind, simDirectResultsList)
+
+  write.csv(simDirectResults,
+            here("notebook", "modelOutput", "directEstimates.csv"),
+            row.names = TRUE)
 
   return(simDirectResults)
 
