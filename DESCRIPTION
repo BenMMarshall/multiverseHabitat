@@ -1,6 +1,6 @@
 Package: multiverseHabitat
 Title: A Habitat Selection Multiverse Reveals Largely Consistent Results Despite a Multitude of Analysis Options
-Version: 0.9.0.9999
+Version: 0.9.3.0000
 Date: 2024-06-18
 Authors@R: c(
     person(given = "Benjamin Michael",

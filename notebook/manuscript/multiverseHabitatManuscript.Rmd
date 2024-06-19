@@ -175,7 +175,7 @@ The simulated species are as follows:
 * Species 3, King Cobra: lower site fidelity making use of many shelter sites, a medium movement speed through a landscape with high resistance barriers, an 8-12 hour activity cycle combined with a approximately weekly forage-digest cycle and a weak seasonal cycle.
 
 Each simulation generated a year's worth of movement data with a data point recorded every minute, and we simulated `r nrow(optionsCompleteList$individual)` individuals per species.
-The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate_individual.R function (available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at: [Zenodo TBC](https://LINK)).
+The full parametrisation of the simulated species can be found in the code associated with this paper, specifically the simulate_individual.R function (available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at: [https://doi.org/10.5281/zenodo.12169335](https://doi.org/10.5281/zenodo.12169335)).
 
 <!-- Weighted landscapes translated into three-tier categories -->
 The agent-based animal movement simulations require an environment to guide movement.
@@ -872,7 +872,7 @@ We generated R package citations with the aid of *grateful* `r paste0("v.", pack
 
 # Data availabilty
 
-The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at [ZENODO LINK TBC](https://zenodo.org/).
+The code used to simulate the movement data, perform the multiverse, and analysis the results is available at: [https://github.com/BenMMarshall/multiverseHabitat](https://github.com/BenMMarshall/multiverseHabitat), and archived at [https://doi.org/10.5281/zenodo.12169335](https://doi.org/10.5281/zenodo.12169335).
 These locations also include model outputs and results not otherwise displayed here.
 <!-- add zenodo archived snapshot of github -->
 

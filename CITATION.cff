@@ -1,0 +1,145 @@
+# --------------------------------------------
+# CITATION file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# --------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "multiverseHabitat" in publications use:'
+type: software
+license: GPL-3.0-or-later
+title: 'multiverseHabitat: A Habitat Selection Multiverse Reveals Largely Consistent
+  Results Despite a Multitude of Analysis Options'
+version: 0.9.3.0000
+abstract: 'The files included in this repository were used to generate the results
+  for a manuscript entitled: "A Habitat Selection Multiverse Reveals Largely Consistent
+  Results Despite a Multitude of Analysis Options" by Benjamin Michael Marshall and
+  Alexander Brad Duthie.'
+authors:
+- family-names: Marshall
+  given-names: Benjamin Michael
+  email: benjaminmichaelmarshall@gmail.com
+  orcid: https://orcid.org/0000-0001-9554-0605
+- family-names: Duthie
+  given-names: Alexander Bradley
+  email: alexander.duthie@stir.ac.uk
+  orcid: https://orcid.org/0000-0001-8343-4995
+preferred-citation:
+  type: article
+  title: 'multiverseHabitat: A Habitat Selection Multiverse Reveals Largely Consistent
+    Results Despite a Multitude of Analysis Options'
+  authors:
+  - family-names: Marshall
+    given-names: Benjamin Michael
+    email: benjaminmichaelmarshall@gmail.com
+    orcid: https://orcid.org/0000-0001-9554-0605
+  - family-names: Duthie
+    given-names: Alexander Bradley
+    email: alexander.duthie@stir.ac.uk
+    orcid: https://orcid.org/0000-0001-8343-4995
+  year: '2024'
+  volume: '0'
+  issue: '0'
+  url: https://github.com/BenMMarshall/multiverseHabitat
+  start: '0'
+date-released: '2024-06-18'
+contact:
+- family-names: Marshall
+  given-names: Benjamin Michael
+  email: benjaminmichaelmarshall@gmail.com
+  orcid: https://orcid.org/0000-0001-9554-0605
+references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2024'
+  version: '>= 3.5.0'
+- type: software
+  title: abmAnimalMovement
+  abstract: 'abmAnimalMovement: An R Package for Simulating Animal Movement Using
+    an Agent-Based Model'
+  notes: Imports
+  url: https://github.com/BenMMarshall/abmAnimalMovement
+  authors:
+  - family-names: Marshall
+    given-names: Benjamin Michael
+    email: benjaminmichaelmarshall@gmail.com
+    orcid: https://orcid.org/0000-0001-9554-0605
+  - family-names: Duthie
+    given-names: Alexander Bradley
+    email: alexander.duthie@stir.ac.uk
+    orcid: https://orcid.org/0000-0001-8343-4995
+  year: '2024'
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2024'
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/rmarkdown/
+  repository: https://CRAN.R-project.org/package=rmarkdown
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@posit.co
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Dervieux
+    given-names: Christophe
+    email: cderv@posit.co
+    orcid: https://orcid.org/0000-0003-4474-2498
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@posit.co
+  - family-names: Luraschi
+    given-names: Javier
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@posit.co
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@posit.co
+  - family-names: Chang
+    given-names: Winston
+    email: winston@posit.co
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@posit.co
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2024'
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2024'
+  version: '>= 3.0.0'
+
