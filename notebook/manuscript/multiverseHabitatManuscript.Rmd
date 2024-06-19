@@ -164,7 +164,7 @@ nAnalysisPaths <- rsfChoices+widesChoices+ssfChocies+wrsfChocies
 We simulated three scenarios each represented by a different species, on different landscapes.
 We simulated the landscapes using the NLMR `r paste0("v.", packageVersion("NLMR"))` package [@NLMR], and the animal movement using abmAnimalMovement `r paste0("v.", packageVersion("abmAnimalMovement"))` package [@abmAnimalMovement].
 The abmAnimalMovement simulations are a discrete time, agent-based modelling approach for simulating animal movement.
-Further details of how the scenarios were parametrised can be found in @abmAnimalMovement, and also in the abmAnimalMovement github repository along with associated documentation ([https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript)).
+Further details of how the scenarios were parametrised can be found in @abmAnimalMovement, and also in the abmAnimalMovement github repository along with associated documentation: [https://github.com/BenMMarshall/abmAnimalMovement](https://github.com/BenMMarshall/abmAnimalMovement/tree/main/notebook/manuscript), also archived: [https://doi.org/10.5281/zenodo.6951937](https://doi.org/10.5281/zenodo.6951937).
 
 The simulated species are as follows:
 
@@ -848,6 +848,7 @@ Newer methods of habitat selection analysis appear to reduce variation from rese
 # Acknowledgements
 
 This work was supported by the Natural Environment Research Council (NERC) via the IAPETUS2 Doctoral Training Partnership held by Benjamin Michael Marshall (grant reference NE/S007431/1).
+We would also like to thank Aubrey Alamshah for their support and manuscript review.
 
 # Software availablity
 
