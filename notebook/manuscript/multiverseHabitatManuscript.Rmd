@@ -27,7 +27,7 @@ csl: peerj.csl
 editor_options: 
   markdown: 
     wrap: sentence
-abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask ten researchers to answer the same question with the same dataset, you will likely receive ten different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat selection, vary as a result of differing analytical choices. We conducted a multiverse analysis on around 800 synthetic animal movement datasets, exploring over 700 pathways to determine habitat selection, resulting in approximately half a million unique estimates of selection. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat selection. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining reliable answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
+abstract: Researchers are intrinsically part of the research process. While we may strive for objectivity, there are always judgement calls required during research. When you ask ten researchers to answer the same question with the same dataset, you will likely receive ten different answers. This variation in answers has been linked to several disciplines’ replication crises. Here, we explore whether answers from movement ecology, specifically habitat selection, vary as a result of differing analytical choices. We conducted a multiverse analysis on around 400 synthetic animal movement datasets, exploring a multitude of analysis pathways to determine habitat selection, resulting in approximately half a million unique estimates of selection. By using simulated virtual animals with a known preference, we were able to show which decisions during analysis could lead to more variable estimates of habitat selection. The multiverse revealed that data quantity (i.e., tracking frequency and duration) was more important to obtaining consistent answers than any analysis choice. Overall, the pattern of estimates shows the majority of analysis pathways provide similar final results, particularly for modern analysis methods. The pattern reflects findings from other disciplines, indicating that while movement ecology is not immune to issues of non-replicability stemming from researcher choice, it is also not at any greater risk than other disciplines.
 keywords: Movement ecology, simulation, Wides, resource selection functions, step selection function, habitat preference, habitat selection, animal movement, multiverse, research choice, researcher degrees for freedom,
 ---
 
@@ -892,6 +892,8 @@ tableData <- brmsR2Results %>%
     ) %>%
     dplyr::select(-model)
 
+write.csv(tableData, here::here("notebook", "tables", "Table S1 - r2 results.csv"), row.names = FALSE)
+
 knitr::kable(
   tableData,
   caption = "All \\textit{$R^2$} values for Bayesian regression models.",
@@ -947,6 +949,8 @@ tableDataDirect <- directEstimates %>%
     dplyr::mutate(scale = str_to_sentence(scale)
     ) %>%
     dplyr::select(-X)
+
+write.csv(tableDataDirect, here::here("notebook", "tables", "Table S2 - direct estimates.csv"), row.names = FALSE)
 
 knitr::kable(
   tableDataDirect,
