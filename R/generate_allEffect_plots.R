@@ -109,7 +109,7 @@ generate_allEffect_plots <- function(modelExtracts){
   labelLocationText <- data.frame(gradIndent = gradLimits + c(0.05, -0.05))
   labelText_abs <- c("Closer to\nmed. est.",
                  "Farther from\nmed. est.")
-  labelText_raw <- c("Closer to\nmed. est.",
+  labelText_raw <- c("- skew from\nmed. est.",
                  "+ skew from\nmed. est.")
   arrowAdj <- c(0, 0)
   facetSplit <- factor(rep("<b style='color:#AD6DED'>Area Based Only</b>", 2), levels = c(
